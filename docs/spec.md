@@ -127,7 +127,7 @@ The MVP focuses on the core workflows required to manage these businesses withou
 
 The MVP supports:
 
-* `planned`
+* `scheduled`
 * `in_progress`
 * `completed`
 * `cancelled`
@@ -218,7 +218,7 @@ ServiceFlow does not provide payment processing, accounting, tax calculations, o
 
 **FR-007:** Each job shall be associated with a valid customer.
 
-**FR-008:** Jobs shall support the defined statuses: `planned`, `in_progress`, `completed`, and `cancelled`.
+**FR-008:** Jobs shall support the defined statuses: `scheduled`, `in_progress`, `completed`, and `cancelled`.
 
 **FR-009:** Jobs shall contain a scheduled date.
 
