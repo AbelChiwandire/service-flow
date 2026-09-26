@@ -1,0 +1,301 @@
+@baseUrl = http://localhost:3000
+
+### =========================================
+### CREATE
+### =========================================
+
+### Create with valid data — expect 201
+# @name createCustomer
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "Test Customer",
+  "email": "test@example.com",
+  "phone": "555-1234",
+  "address": "123 Main St"
+}
+
+# --- Actual response ---
+# Status: 201 Created
+# Body: {
+#   "data": {
+#     "id": "5d22815f-08ce-402f-9d77-eaf6e0383b47",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "name": "Test Customer",
+#     "email": "test@example.com",
+#     "phone": "555-1234",
+#     "address": "123 Main St",
+#     "createdAt": "2026-09-26T13:09:05.102Z",
+#     "updatedAt": "2026-09-26T13:09:05.102Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+### Create with invalid email — expect 400, field-level errors
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "Bad Email Customer",
+  "email": "not-an-email",
+  "phone": "555-1234",
+  "address": "123 Main St"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "email": ["Invalid email address."]
+#   }
+# }
+
+### Create with missing fields — expect 400, field-level errors
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "Incomplete Customer"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "email": [
+#       "Invalid input: expected string, received undefined"
+#     ],
+#     "phone": [
+#       "Invalid input: expected string, received undefined"
+#     ],
+#     "address": [
+#       "Invalid input: expected string, received undefined"
+#     ]
+#   }
+# }
+
+### =========================================
+### READ
+### =========================================
+
+### List customers — expect 200, only current user's customers
+GET {{baseUrl}}/api/customers
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": [
+#     {
+#       "id": "5d22815f-08ce-402f-9d77-eaf6e0383b47",
+#       "userId": "00000000-0000-0000-0000-000000000001",
+#       "name": "Test Customer",
+#       "email": "test@example.com",
+#       "phone": "555-1234",
+#       "address": "123 Main St",
+#       "createdAt": "2026-09-26T13:09:05.102Z",
+#       "updatedAt": "2026-09-26T13:09:05.102Z",
+#       "isDeleted": false,
+#       "deletedAt": null
+#     }
+#   ]
+# }
+
+### Get by valid id — expect 200, customer returned
+GET {{baseUrl}}/api/customers/{{createCustomer.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "5d22815f-08ce-402f-9d77-eaf6e0383b47",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "name": "Test Customer",
+#     "email": "test@example.com",
+#     "phone": "555-1234",
+#     "address": "123 Main St",
+#     "createdAt": "2026-09-26T13:09:05.102Z",
+#     "updatedAt": "2026-09-26T13:09:05.102Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+### Get by well-formed but nonexistent id — expect 404
+GET {{baseUrl}}/api/customers/f47ac10b-58cc-4372-a567-0e02b2c3d479
+
+# --- Actual response ---
+# Status: 404 Not Found
+# Body: {
+#   "error": "Customer not found."
+# }
+
+### Get by malformed id — expect 400 (id validation)
+GET {{baseUrl}}/api/customers/not-a-uuid
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Invalid customer id."
+# }
+
+### =========================================
+### UPDATE
+### =========================================
+
+### Partial update (single field) — expect 200, only phone changes
+PATCH {{baseUrl}}/api/customers/{{createCustomer.response.body.$.data.id}}
+Content-Type: application/json
+
+{
+  "phone": "555-9999"
+}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "5d22815f-08ce-402f-9d77-eaf6e0383b47",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "name": "Test Customer",
+#     "email": "test@example.com",
+#     "phone": "555-9999",
+#     "address": "123 Main St",
+#     "createdAt": "2026-09-26T13:09:05.102Z",
+#     "updatedAt": "2026-09-26T13:14:38.045Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+### Update with invalid data — expect 400, field-level errors
+PATCH {{baseUrl}}/api/customers/{{createCustomer.response.body.$.data.id}}
+Content-Type: application/json
+
+{
+  "email": "not-an-email"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "email": [
+#       "Invalid email address"
+#     ]
+#   }
+# }
+
+### =========================================
+### DELETE
+### =========================================
+
+### Delete with no active jobs — expect 200, soft-deleted
+# @name deleteNoJobsCustomer
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "Delete Me No Jobs",
+  "email": "deleteme@example.com",
+  "phone": "555-0000",
+  "address": "456 Side St"
+}
+
+# --- Actual response ---
+# Status: 201 Created
+# Body: {
+#   "data": {
+#     "id": "607f0230-47cb-4a59-9d67-84693ed400c4",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "name": "Delete Me No Jobs",
+#     "email": "deleteme@example.com",
+#     "phone": "555-0000",
+#     "address": "456 Side St",
+#     "createdAt": "2026-09-26T13:16:02.054Z",
+#     "updatedAt": "2026-09-26T13:16:02.054Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+###
+DELETE {{baseUrl}}/api/customers/{{deleteNoJobsCustomer.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "607f0230-47cb-4a59-9d67-84693ed400c4",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "name": "Delete Me No Jobs",
+#     "email": "deleteme@example.com",
+#     "phone": "555-0000",
+#     "address": "456 Side St",
+#     "createdAt": "2026-09-26T13:16:02.054Z",
+#     "updatedAt": "2026-09-26T13:17:21.731Z",
+#     "isDeleted": true,
+#     "deletedAt": "2026-09-26T13:17:21.731Z"
+#   }
+# }
+
+### Delete with an active job — expect 409, blocked
+### NOTE: before running this, insert a scheduled job for this customer's id:
+###
+###   INSERT INTO jobs ("userId", "customerId", title, status)
+###   VALUES (
+###     '00000000-0000-0000-0000-000000000001',
+###     '<createCustomer response id>',
+###     'Test Job',
+###     'scheduled'
+###   );
+###
+### Then run this delete against the same customer id.
+DELETE {{baseUrl}}/api/customers/{{createCustomer.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 409 Conflict
+# Body: {
+#   "error": "Cannot delete customer with active jobs"
+# }
+
+### Delete after job marked completed — expect 200, succeeds
+### NOTE: run `UPDATE jobs SET status = 'completed' WHERE id = '<job-id>'`
+### via SQL first, then rerun the same delete above.
+DELETE {{baseUrl}}/api/customers/{{createCustomer.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "5d22815f-08ce-402f-9d77-eaf6e0383b47",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "name": "Test Customer",
+#     "email": "test@example.com",
+#     "phone": "555-9999",
+#     "address": "123 Main St",
+#     "createdAt": "2026-09-26T13:09:05.102Z",
+#     "updatedAt": "2026-09-26T13:36:18.136Z",
+#     "isDeleted": true,
+#     "deletedAt": "2026-09-26T13:36:18.136Z"
+#   }
+# }
+
+### =========================================
+### OWNERSHIP / CROSS-USER ACCESS
+### =========================================
+
+### Access another user's customer — expect 404 (ownership scoping)
+### NOTE: this requires a second seeded user with a different userId.
+### Since PLACEHOLDER_USER_ID is currently hardcoded server-side (not
+### passed by the client), this specific case can't be driven through
+### the .http file alone yet — it needs either:
+###   (a) a query param / header override for testing, or
+###   (b) a direct repository-level check (e.g. a small script) rather
+###       than through the API.
+### Documenting this as a known limitation until auth exists — see
+### TESTING.md "Known gaps".
