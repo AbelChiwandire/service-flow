@@ -1,0 +1,283 @@
+@baseUrl = http://localhost:3000
+@customerId = 30ed961e-d56e-42a3-92d1-c6f9d11fc03b
+
+### =========================================
+### CREATE (nested under customer)
+### =========================================
+
+### Create with valid data — expect 201
+# @name createJob
+POST {{baseUrl}}/api/customers/{{customerId}}/jobs
+Content-Type: application/json
+
+{
+  "title": "Fix leaky faucet",
+  "description": "Kitchen sink",
+  "scheduledDate": "2026-10-15",
+  "status": "scheduled"
+}
+
+# --- Actual response ---
+# Status: 201 Created
+# Body: {
+#   "data": {
+#     "id": "e782c641-675e-4b87-be09-110b1002499f",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "customerId": "30ed961e-d56e-42a3-92d1-c6f9d11fc03b",
+#     "title": "Fix leaky faucet",
+#     "description": "Kitchen sink",
+#     "scheduledDate": "2026-10-14T22:00:00.000Z",
+#     "status": "scheduled",
+#     "createdAt": "2026-10-01T22:59:07.141Z",
+#     "updatedAt": "2026-10-01T22:59:07.141Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+### Create with invalid title (too short) — expect 400
+POST {{baseUrl}}/api/customers/{{customerId}}/jobs
+Content-Type: application/json
+
+{
+  "title": "x"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "title": [
+#       "Too small: expected string to have >=2 characters"
+#     ]
+#   }
+# }
+
+### Create against a nonexistent customer — expect 404
+POST {{baseUrl}}/api/customers/f47ac10b-58cc-4372-a567-0e02b2c3d479/jobs
+Content-Type: application/json
+
+{
+  "title": "Should not be created"
+}
+
+# --- Actual response ---
+# Status: 404 Not Found
+# Body: {
+#   "error": "Customer not found."
+# }
+
+### =========================================
+### READ
+### =========================================
+
+### List jobs for a customer — expect 200
+GET {{baseUrl}}/api/customers/{{customerId}}/jobs
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": [
+#     {
+#       "id": "e782c641-675e-4b87-be09-110b1002499f",
+#       "userId": "00000000-0000-0000-0000-000000000001",
+#       "customerId": "30ed961e-d56e-42a3-92d1-c6f9d11fc03b",
+#       "title": "Fix leaky faucet",
+#       "description": "Kitchen sink",
+#       "scheduledDate": "2026-10-14T22:00:00.000Z",
+#       "status": "scheduled",
+#       "createdAt": "2026-10-01T22:59:07.141Z",
+#       "updatedAt": "2026-10-01T22:59:07.141Z",
+#       "isDeleted": false,
+#       "deletedAt": null
+#     }
+#   ]
+# }
+
+### List jobs for a nonexistent customer — expect 404
+GET {{baseUrl}}/api/customers/f47ac10b-58cc-4372-a567-0e02b2c3d479/jobs
+
+# --- Actual response ---
+# Status: 404 Not Found
+# Body: {
+#   "error": "Customer not found."
+# }
+
+### List all jobs — expect 200
+GET {{baseUrl}}/api/jobs
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": [
+#     {
+#       "id": "e782c641-675e-4b87-be09-110b1002499f",
+#       "userId": "00000000-0000-0000-0000-000000000001",
+#       "customerId": "30ed961e-d56e-42a3-92d1-c6f9d11fc03b",
+#       "title": "Fix leaky faucet",
+#       "description": "Kitchen sink",
+#       "scheduledDate": "2026-10-14T22:00:00.000Z",
+#       "status": "scheduled",
+#       "createdAt": "2026-10-01T22:59:07.141Z",
+#       "updatedAt": "2026-10-01T22:59:07.141Z",
+#       "isDeleted": false,
+#       "deletedAt": null
+#     }
+#   ]
+# }
+
+### Get one job — expect 200
+GET {{baseUrl}}/api/jobs/{{createJob.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "e782c641-675e-4b87-be09-110b1002499f",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "customerId": "30ed961e-d56e-42a3-92d1-c6f9d11fc03b",
+#     "title": "Fix leaky faucet",
+#     "description": "Kitchen sink",
+#     "scheduledDate": "2026-10-14T22:00:00.000Z",
+#     "status": "scheduled",
+#     "createdAt": "2026-10-01T22:59:07.141Z",
+#     "updatedAt": "2026-10-01T22:59:07.141Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+### Get a nonexistent job — expect 404
+GET {{baseUrl}}/api/jobs/f47ac10b-58cc-4372-a567-0e02b2c3d479
+
+# --- Actual response ---
+# Status: 404 Not Found
+# Body: {
+#   "error": "Job not found."
+# }
+
+### Get a malformed id — expect 400
+GET {{baseUrl}}/api/jobs/not-a-uuid
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Invalid id."
+# }
+
+### =========================================
+### UPDATE
+### =========================================
+
+### Partial update (title only) — expect 200, other fields unchanged
+PATCH {{baseUrl}}/api/jobs/{{createJob.response.body.$.data.id}}
+Content-Type: application/json
+
+{
+  "title": "Fix leaky faucet (urgent)"
+}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "e782c641-675e-4b87-be09-110b1002499f",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "customerId": "30ed961e-d56e-42a3-92d1-c6f9d11fc03b",
+#     "title": "Fix leaky faucet (urgent)",
+#     "description": "Kitchen sink",
+#     "scheduledDate": "2026-10-14T22:00:00.000Z",
+#     "status": "scheduled",
+#     "createdAt": "2026-10-01T22:59:07.141Z",
+#     "updatedAt": "2026-10-01T23:04:42.416Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+### Clear description — expect 200, description becomes null
+PATCH {{baseUrl}}/api/jobs/{{createJob.response.body.$.data.id}}
+Content-Type: application/json
+
+{
+  "description": null
+}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "e782c641-675e-4b87-be09-110b1002499f",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "customerId": "30ed961e-d56e-42a3-92d1-c6f9d11fc03b",
+#     "title": "Fix leaky faucet (urgent)",
+#     "description": null,
+#     "scheduledDate": "2026-10-14T22:00:00.000Z",
+#     "status": "scheduled",
+#     "createdAt": "2026-10-01T22:59:07.141Z",
+#     "updatedAt": "2026-10-01T23:05:53.536Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+### =========================================
+### DELETE
+### =========================================
+
+### Delete while still scheduled — expect 409
+DELETE {{baseUrl}}/api/jobs/{{createJob.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 409 Conflict
+# Body: {
+#   "error": "Cannot delete a scheduled or in-progress job. Cancel it first."
+# }
+
+### Cancel it first
+PATCH {{baseUrl}}/api/jobs/{{createJob.response.body.$.data.id}}
+Content-Type: application/json
+
+{
+  "status": "cancelled"
+}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "e782c641-675e-4b87-be09-110b1002499f",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "customerId": "30ed961e-d56e-42a3-92d1-c6f9d11fc03b",
+#     "title": "Fix leaky faucet (urgent)",
+#     "description": null,
+#     "scheduledDate": "2026-10-14T22:00:00.000Z",
+#     "status": "cancelled",
+#     "createdAt": "2026-10-01T22:59:07.141Z",
+#     "updatedAt": "2026-10-01T23:07:14.480Z",
+#     "isDeleted": false,
+#     "deletedAt": null
+#   }
+# }
+
+### Now delete — expect 200
+DELETE {{baseUrl}}/api/jobs/{{createJob.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "e782c641-675e-4b87-be09-110b1002499f",
+#     "userId": "00000000-0000-0000-0000-000000000001",
+#     "customerId": "30ed961e-d56e-42a3-92d1-c6f9d11fc03b",
+#     "title": "Fix leaky faucet (urgent)",
+#     "description": null,
+#     "scheduledDate": "2026-10-14T22:00:00.000Z",
+#     "status": "cancelled",
+#     "createdAt": "2026-10-01T22:59:07.141Z",
+#     "updatedAt": "2026-10-01T23:07:55.038Z",
+#     "isDeleted": true,
+#     "deletedAt": "2026-10-01T23:07:55.038Z"
+#   }
+# }
