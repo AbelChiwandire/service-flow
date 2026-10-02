@@ -10,7 +10,7 @@ export interface Job {
     customerId: string;
     title: string;
     description: string | null;
-    scheduledDate: string | null;
+    scheduledDate: Date;
     status: JobStatus;
     createdAt: string;
     updatedAt: string;
@@ -23,7 +23,7 @@ export interface NewJob {
     customerId: string;
     title: string;
     description?: string | null;
-    scheduledDate?: string | null;
+    scheduledDate?: string;
     status?: JobStatus;
 }
 
@@ -83,7 +83,7 @@ export async function createJob(job: NewJob): Promise<Job> {
             c.id,
             ${job.title},
             ${job.description ?? null},
-            ${job.scheduledDate ?? null}::date,
+            ${job.scheduledDate}::date,
             COALESCE(${job.status ?? null}::job_status, 'scheduled')
         FROM customers c
         WHERE c.id = ${job.customerId}
@@ -112,10 +112,7 @@ export async function updateJob(
                 WHEN ${job.description !== undefined}::boolean THEN ${job.description ?? null}
                 ELSE description
             END,
-            "scheduledDate" = CASE
-                WHEN ${job.scheduledDate !== undefined}::boolean THEN ${job.scheduledDate ?? null}::date
-                ELSE "scheduledDate"
-            END,
+            "scheduledDate" = COALESCE(${job.scheduledDate ?? null}::date, "scheduledDate"),
             status = COALESCE(${job.status ?? null}::job_status, status),
             "updatedAt" = CURRENT_TIMESTAMP
         WHERE id = ${id}

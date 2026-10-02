@@ -13,7 +13,7 @@ type UpdateJobFormProps = {
     initialValues: {
         title: string;
         description: string | null;
-        scheduledDate: string | null;
+        scheduledDate: string;
         status: JobStatus;
     };
 };

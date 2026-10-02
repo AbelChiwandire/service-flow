@@ -18,7 +18,7 @@ type JobFormProps = {
     initialValues?: {
         title?: string;
         description?: string | null;
-        scheduledDate?: string | null;
+        scheduledDate?: string;
         status?: JobStatus;
     };
 };
@@ -91,13 +91,14 @@ export function JobForm({
                     htmlFor="scheduledDate"
                     className="block text-sm font-medium text-slate-700 mb-1"
                 >
-                    Scheduled date (optional)
+                    Scheduled date
                 </label>
                 <input
                     id="scheduledDate"
                     name="scheduledDate"
                     type="date"
                     defaultValue={scheduledDate}
+                    required
                     aria-describedby="scheduledDate-error"
                     className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
                 />

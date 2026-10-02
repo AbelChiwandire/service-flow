@@ -8,7 +8,7 @@ export const JobStatusSchema = z.enum(['scheduled', 'in_progress', 'completed', 
 export const JobFormSchema = z.object({
     title: z.string().trim().min(2).max(255),
     description: z.preprocess(emptyToNull, z.string().nullable().optional()),
-    scheduledDate: z.preprocess(emptyToNull, z.iso.date().nullable().optional()),
+    scheduledDate: z.iso.date(),
     status: JobStatusSchema.optional(),
 });
 

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getJobs } from '@/lib/db/jobs/repository';
 import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
 import DeleteJobButton from './delete-job-button';
+import { formatDateDisplay } from '@/lib/db/jobs/date-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,8 +26,7 @@ export default async function JobsPage() {
                             <p className="font-medium">{job.title}</p>
                             <p className="text-sm text-slate-600">
                                 {job.status}
-                                {/* String() so this renders whichever type the driver returns for DATE */}
-                                {job.scheduledDate ? ` · ${String(job.scheduledDate)}` : ''}
+                                {formatDateDisplay(job.scheduledDate)}
                             </p>
                         </div>
                         <div className="flex items-center gap-3">
