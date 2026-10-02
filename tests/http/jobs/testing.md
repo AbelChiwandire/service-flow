@@ -1,15 +1,14 @@
 # Testing — Jobs CRUD
 
 No automated test suite yet. API verification was done manually via
-`test/http/jobs.http` (VS Code REST Client) against a local dev server,
+`tests/http/jobs.http` (VS Code REST Client) against a local dev server,
 with actual responses captured inline in that file as comments beneath
 each request.
 
 ## Environment
 - `next dev`, local Postgres (Neon)
-- Seeded user: `PLACEHOLDER_USER_ID` in `lib/db/job/dev-user.ts`
-  (temporary stand-in until auth is implemented; separate copy from
-  the customer branch's `dev-user.ts` by design — branches share no code)
+- Seeded user: `PLACEHOLDER_USER_ID` in `lib/auth/placeholder-session.ts`
+  (temporary stand-in until auth is implemented)
 - A seeded customer (from the customer branch's seed data) used as
   `@customerId` in `test/http/jobs.http`
 
@@ -31,19 +30,16 @@ each request.
 | Delete while status is `scheduled` | `DELETE /api/jobs/:id` | 409, blocked | ✅ |
 | Set status to `cancelled`, then delete | `PATCH` then `DELETE /api/jobs/:id` | 200, succeeds | ✅ |
 
-## UI / server action paths — not yet verified
+## UI / server action paths — verified
 - `/customers/:id/jobs/new`: create via form
 - `/jobs/:id/edit`: pre-filled form, update via form
 - `/jobs`: placeholder list page, delete button, active-job guard message
 - Failed validation on the form preserves typed values
-- Clearing `description`/`scheduledDate` via an emptied form field
+- Clearing `description` via an emptied form field
 
 ## Known gaps
 - No automated tests. API coverage evidenced by `test/http/jobs.http`;
   UI/action coverage still to be done (see above).
-- `scheduledDate` driver return type (string vs. `Date` object from
-  Neon) not yet confirmed — affects whether `/jobs/:id/edit` renders
-  the date input correctly. To verify during form testing.
 - Auth is not implemented; all scenarios ran against a single seeded
   placeholder user via `PLACEHOLDER_USER_ID` (jobs' own copy, separate
   from the customer branch's).

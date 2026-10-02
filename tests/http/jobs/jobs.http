@@ -201,7 +201,7 @@ PATCH {{baseUrl}}/api/jobs/{{createJob.response.body.$.data.id}}
 Content-Type: application/json
 
 {
-  "description": null
+  "description": ""
 }
 
 # --- Actual response ---
