@@ -23,11 +23,13 @@ export interface NewJob {
     customerId: string;
     title: string;
     description?: string | null;
-    scheduledDate?: string;
+    scheduledDate: string;
     status?: JobStatus;
 }
 
-export type JobUpdate = Partial<Pick<Job, 'title' | 'description' | 'scheduledDate' | 'status'>>;
+export type JobUpdate = Partial<Pick<Job, 'title' | 'description' | 'status'>> & {
+    scheduledDate?: string;
+};
 
 export class JobCustomerNotFoundError extends Error {
     constructor() {
