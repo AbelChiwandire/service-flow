@@ -1,0 +1,278 @@
+@baseUrl = http://localhost:3000
+
+### =========================================
+### SIGNUP
+### =========================================
+
+### Sign up with valid data — expect 201
+# @name signup
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "businessName": "Test Business",
+  "email": "newuser@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+
+# --- Actual response ---
+# Status: 201 Created
+# Body: {
+#   "data": {
+#     "id": "570c4687-e858-409f-8641-2d3b478bf5e3",
+#     "name": "Test User",
+#     "businessName": "Test Business",
+#     "email": "newuser@example.com",
+#     "createdAt": "2026-10-03T22:07:32.005Z",
+#     "updatedAt": "2026-10-03T22:07:32.005Z"
+#   }
+# }
+
+### Sign up with mismatched passwords — expect 400, confirmPassword error
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "businessName": "Test Business",
+  "email": "mismatch@example.com",
+  "password": "password123",
+  "confirmPassword": "different456"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "confirmPassword": [
+#       "Passwords do not match."
+#     ]
+#   }
+# }
+
+### Sign up with a short password — expect 400
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "businessName": "Test Business",
+  "email": "shortpw@example.com",
+  "password": "short",
+  "confirmPassword": "short"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "password": [
+#       "Too small: expected string to have >=8 characters"
+#     ],
+#     "confirmPassword": [
+#       "Too small: expected string to have >=8 characters"
+#     ]
+#   }
+# }
+
+### Sign up with an invalid email — expect 400
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "businessName": "Test Business",
+  "email": "not-an-email",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "email": [
+#       "Invalid email address"
+#     ]
+#   }
+# }
+
+### Sign up with an email that's already taken — expect 409
+### NOTE: run the first signup request above at least once before this one,
+### so newuser@example.com already exists.
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Someone Else",
+  "businessName": "Other Business",
+  "email": "newuser@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+
+# --- Actual response ---
+# Status: 409 Conflict
+# Body: {
+#   "error": "An account with this email already exists."
+# }
+
+### Sign up with mixed-case email, then confirm it was stored lowercase
+### NOTE: check the "Get" request below after running this —
+### the stored email should read "mixedcase@example.com", not "MixedCase@Example.com"
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Case Test",
+  "businessName": "Case Business",
+  "email": "MixedCase@Example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+
+# --- Actual response ---
+# Status: 201 Created
+# Body: {
+#   "data": {
+#     "id": "0bb6a000-e588-4cd5-94d2-728af7066401",
+#     "name": "Case Test",
+#     "businessName": "Case Business",
+#     "email": "mixedcase@example.com",
+#     "createdAt": "2026-10-03T22:10:57.048Z",
+#     "updatedAt": "2026-10-03T22:10:57.048Z"
+#   }
+# }
+
+### =========================================
+### READ
+### =========================================
+
+### Get the signed-up user — expect 200, no passwordHash in the response
+GET {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "570c4687-e858-409f-8641-2d3b478bf5e3",
+#     "name": "Test User",
+#     "businessName": "Test Business",
+#     "email": "newuser@example.com",
+#     "createdAt": "2026-10-03T22:07:32.005Z",
+#     "updatedAt": "2026-10-03T22:07:32.005Z"
+#   }
+# }
+
+### Get by well-formed but nonexistent id — expect 404
+GET {{baseUrl}}/api/users/f47ac10b-58cc-4372-a567-0e02b2c3d479
+
+# --- Actual response ---
+# Status: 404 Not Found
+# Body: {
+#   "error": "User not found."
+# }
+
+### Get by malformed id — expect 400
+GET {{baseUrl}}/api/users/not-a-uuid
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Invalid user id."
+# }
+
+### =========================================
+### UPDATE
+### =========================================
+
+### Partial update (name only) — expect 200, businessName/email unchanged
+PATCH {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}
+Content-Type: application/json
+
+{
+  "name": "Updated Name"
+}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "570c4687-e858-409f-8641-2d3b478bf5e3",
+#     "name": "Updated Name",
+#     "businessName": "Test Business",
+#     "email": "newuser@example.com",
+#     "createdAt": "2026-10-03T22:07:32.005Z",
+#     "updatedAt": "2026-10-03T22:12:54.965Z"
+#   }
+# }
+
+### Update email to one that's already taken — expect 409
+### NOTE: uses the email from the "mixed-case" signup above.
+PATCH {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}
+Content-Type: application/json
+
+{
+  "email": "mixedcase@example.com"
+}
+
+# --- Actual response ---
+# Status: 409 Conflict
+# Body: {
+#   "error": "An account with this email already exists."
+# }
+
+### Update with an invalid email — expect 400
+PATCH {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}
+Content-Type: application/json
+
+{
+  "email": "not-an-email"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "email": [
+#       "Invalid email address"
+#     ]
+#   }
+# }
+
+### =========================================
+### DELETE
+### =========================================
+
+### Delete the signed-up user — expect 200
+### WARNING: this is a hard delete and cascades to any customers/jobs
+### owned by this user. Only run against throwaway test accounts.
+DELETE {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "id": "570c4687-e858-409f-8641-2d3b478bf5e3",
+#     "name": "Updated Name",
+#     "businessName": "Test Business",
+#     "email": "newuser@example.com",
+#     "createdAt": "2026-10-03T22:07:32.005Z",
+#     "updatedAt": "2026-10-03T22:12:54.965Z"
+#   }
+# }
+
+### Delete again (already gone) — expect 404
+DELETE {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}
+
+# --- Actual response ---
+# Status: 404 Not Found
+# Body: {
+#   "error": "User not found."
+# }
