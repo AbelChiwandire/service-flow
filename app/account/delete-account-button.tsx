@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import type { SubmitEvent } from 'react';
 import { deleteUserAction, type State } from '@/lib/db/users/actions';
 
 const initialState: State = { message: null, errors: {} };
@@ -9,7 +10,7 @@ export default function DeleteAccountButton({ userId }: { userId: string }) {
     const boundDeleteUserAction = deleteUserAction.bind(null, userId);
     const [state, formAction, isPending] = useActionState(boundDeleteUserAction, initialState);
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
         const confirmed = window.confirm(
             'Delete your account? This also deletes every customer and job you own. This cannot be undone.'
         );
