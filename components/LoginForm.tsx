@@ -6,16 +6,12 @@
 
 import { useActionState } from 'react';
 import { authenticate } from '@/lib/auth/actions';
-import { useSearchParams } from 'next/navigation';
-
 export function LoginForm() {
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get('callbackUrl') ?? '/';
     const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
 
     return (
         <form action={formAction} className="space-y-5">
-            <input type="hidden" name="redirectTo" value={callbackUrl} />
+            <input type="hidden" name="redirectTo" value="/dashboard" />
             <div className="space-y-1.5">
                 <label htmlFor="email" className="block text-sm font-medium text-slate-700">
                     Email
@@ -38,7 +34,7 @@ export function LoginForm() {
                     type="password"
                     name="password"
                     autoComplete="current-password"
-                    minLength={6}
+                    minLength={8}
                     required
                     className="w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-teal-700 focus:ring-2 focus:ring-teal-700/20"
                 />
