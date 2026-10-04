@@ -15,11 +15,28 @@ export const SignupFormSchema = z
         path: ['confirmPassword'],
     });
 
+export const PasswordChangeFormSchema = z
+    .object({
+        currentPassword: z.string().min(1),
+        newPassword: z.string().min(8),
+        confirmNewPassword: z.string().min(8),
+    })
+    .refine((data) => data.newPassword === data.confirmNewPassword, {
+        message: 'Passwords do not match.',
+        path: ['confirmNewPassword'],
+    });
+
 export const UserProfileFormSchema = z.object({
     name: z.string().trim().min(2).max(255),
     businessName: z.string().trim().min(2).max(255),
     email: z.email().toLowerCase(),
 });
+
+export type PasswordChangeErrors = {
+    currentPassword?: string[];
+    newPassword?: string[];
+    confirmNewPassword?: string[];
+};
 
 export type UserFormErrors = {
     name?: string[];
@@ -39,5 +56,16 @@ export function formatValidationErrors(
         email: tree.properties?.email?.errors,
         password: tree.properties?.password?.errors,
         confirmPassword: tree.properties?.confirmPassword?.errors,
+    };
+}
+
+export function formatPasswordChangeErrors(
+    error: z.ZodError<z.infer<typeof PasswordChangeFormSchema>>
+): PasswordChangeErrors {
+    const tree = z.treeifyError(error);
+    return {
+        currentPassword: tree.properties?.currentPassword?.errors,
+        newPassword: tree.properties?.newPassword?.errors,
+        confirmNewPassword: tree.properties?.confirmNewPassword?.errors,
     };
 }

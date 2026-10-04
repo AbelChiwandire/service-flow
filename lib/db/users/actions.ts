@@ -8,6 +8,8 @@ import {
     updateUser,
     deleteUser,
     EmailAlreadyExistsError,
+    getUserAuthById,
+    updatePassword
 } from './repository';
 import {
     SignupFormSchema,
@@ -15,6 +17,9 @@ import {
     IdSchema,
     formatValidationErrors,
     type UserFormErrors,
+    type PasswordChangeErrors,
+    formatPasswordChangeErrors,
+    PasswordChangeFormSchema,
 } from './schema';
 
 const SALT_ROUNDS = 10;
@@ -27,6 +32,11 @@ export type State = {
         businessName?: string;
         email?: string;
     };
+};
+
+export type PasswordChangeState = {
+    errors?: PasswordChangeErrors;
+    message?: string | null;
 };
 
 function getRawSignupValues(formData: FormData): State['values'] {
@@ -117,6 +127,52 @@ export async function updateUserProfileAction(
     }
 
     // PLACEHOLDER: redirect to actual user profile page after update
+    revalidatePath('/account');
+    redirect('/account');
+}
+
+export async function changePasswordAction(
+    userId: string,
+    prevState: PasswordChangeState,
+    formData: FormData
+): Promise<PasswordChangeState> {
+    const validatedData = PasswordChangeFormSchema.safeParse({
+        currentPassword: formData.get('currentPassword'),
+        newPassword: formData.get('newPassword'),
+        confirmNewPassword: formData.get('confirmNewPassword'),
+    });
+
+    if (!validatedData.success) {
+        return {
+            errors: formatPasswordChangeErrors(validatedData.error),
+            message: 'Missing or invalid fields. Failed to change password.',
+        };
+    }
+
+    const { currentPassword, newPassword } = validatedData.data;
+
+    const user = await getUserAuthById(userId);
+    if (!user) {
+        return { message: 'User not found.' };
+    }
+
+    const currentPasswordMatches = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!currentPasswordMatches) {
+        return {
+            errors: { currentPassword: ['Current password is incorrect.'] },
+            message: 'Current password is incorrect.',
+        };
+    }
+
+    const newPasswordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+    try {
+        await updatePassword(userId, newPasswordHash);
+    } catch (error) {
+        console.error('changePasswordAction failed:', error);
+        throw error;
+    }
+
     revalidatePath('/account');
     redirect('/account');
 }

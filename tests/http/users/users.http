@@ -247,6 +247,65 @@ Content-Type: application/json
 # }
 
 ### =========================================
+### CHANGE PASSWORD
+### =========================================
+
+### Change password with correct current password — expect 200
+PATCH {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}/password
+Content-Type: application/json
+
+{
+  "currentPassword": "password123",
+  "newPassword": "newpassword456",
+  "confirmNewPassword": "newpassword456"
+}
+
+# --- Actual response ---
+# Status: 200 OK
+# Body: {
+#   "data": {
+#     "message": "Password updated."
+#   }
+# }
+
+### Change password with wrong current password — expect 401
+PATCH {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}/password
+Content-Type: application/json
+
+{
+  "currentPassword": "wrongpassword",
+  "newPassword": "newpassword456",
+  "confirmNewPassword": "newpassword456"
+}
+
+# --- Actual response ---
+# Status: 401 Unauthorized
+# Body: {
+#   "error": "Current password is incorrect."
+# }
+
+### Change password with mismatched new passwords — expect 400
+PATCH {{baseUrl}}/api/users/{{signup.response.body.$.data.id}}/password
+Content-Type: application/json
+
+{
+  "currentPassword": "password123",
+  "newPassword": "newpassword456",
+  "confirmNewPassword": "different789"
+}
+
+# --- Actual response ---
+# Status: 400 Bad Request
+# Body: {
+#   "error": "Missing or invalid fields.",
+#   "details": {
+#     "confirmNewPassword": [
+#       "Passwords do not match."
+#     ]
+#   }
+# }
+
+### =========================================
 ### DELETE
 ### =========================================
 
