@@ -8,13 +8,6 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
 
-      // TEST: Protect the /new route for unauthenticated users
-      // Visit /users/new to trigger sign-in
-      if (nextUrl.pathname.endsWith('/new')) {
-        if (isLoggedIn) return true;
-        return false; // redirects to /login
-      }
-
       if (nextUrl.pathname.startsWith('/dashboard') && !isLoggedIn) return false;
 
       // Send logged-in users away from the public landing and login pages

@@ -6,12 +6,15 @@
 
 import { useActionState } from 'react';
 import { authenticate } from '@/lib/auth/actions';
+import { useSearchParams } from 'next/navigation';
 export function LoginForm() {
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard';
     const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
 
     return (
         <form action={formAction} className="space-y-5">
-            <input type="hidden" name="redirectTo" value="/dashboard" />
+            <input type="hidden" name="redirectTo" value={callbackUrl} />
             <div className="space-y-1.5">
                 <label htmlFor="email" className="block text-sm font-medium text-slate-700">
                     Email
