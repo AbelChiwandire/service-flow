@@ -11,9 +11,6 @@ export default async function CustomersPage() {
       <div className="mx-auto max-w-6xl">
         <header className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-semibold tracking-wide text-[#3B28CC]">
-              ServiceFlow
-            </p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
               Customers
             </h1>

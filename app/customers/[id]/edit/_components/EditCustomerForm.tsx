@@ -33,9 +33,6 @@ export default function EditCustomerForm({
                 </Link>
 
                 <header className="mb-8 mt-6">
-                    <p className="text-sm font-semibold tracking-wide text-[#3B28CC]">
-                        ServiceFlow
-                    </p>
                     <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
                         Edit customer
                     </h1>
