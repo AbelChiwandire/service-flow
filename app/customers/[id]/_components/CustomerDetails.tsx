@@ -1,173 +1,18 @@
-"use client";
-
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import type { Customer } from "@/lib/db/customer/repository";
+import DeleteCustomerButton from "../../delete-customer-button";
 import CustomerJobList from "./CustomerJobList";
-
-type Customer = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-};
-
-type CustomerResponse = {
-  data: Customer;
-};
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function isCustomerResponse(value: unknown): value is CustomerResponse {
-  if (!isRecord(value) || !isRecord(value.data)) {
-    return false;
-  }
-
-  const customer = value.data;
-  return (
-    typeof customer.id === "string" &&
-    typeof customer.name === "string" &&
-    typeof customer.email === "string" &&
-    typeof customer.phone === "string" &&
-    typeof customer.address === "string"
-  );
-}
-
-async function getErrorMessage(
-  response: Response,
-  fallback: string,
-): Promise<string> {
-  try {
-    const payload: unknown = await response.json();
-    if (isRecord(payload)) {
-      if (typeof payload.error === "string") {
-        return payload.error;
-      }
-      if (isRecord(payload.error) && typeof payload.error.message === "string") {
-        return payload.error.message;
-      }
-    }
-  } catch {
-    return fallback;
-  }
-
-  return fallback;
-}
 
 const focusLinkClass =
   "rounded-sm text-sm font-semibold text-[#2667FF] underline-offset-4 hover:text-[#3F8EFC] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2667FF] focus-visible:ring-offset-2";
 
 export default function CustomerDetails({
-  customerId,
+  customer,
+  userId,
 }: {
-  customerId: string;
+  customer: Customer | null;
+  userId: string;
 }) {
-  const router = useRouter();
-  const [customer, setCustomer] = useState<Customer | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-  const [pageError, setPageError] = useState<string | null>(null);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const loadCustomer = useCallback(async (signal: AbortSignal) => {
-    try {
-      const response = await fetch(
-        `/api/customers/${encodeURIComponent(customerId)}`,
-        {
-          method: "GET",
-          cache: "no-store",
-          credentials: "same-origin",
-          signal,
-        },
-      );
-
-      if (response.status === 404) {
-        setNotFound(true);
-        return;
-      }
-      if (!response.ok) {
-        const message = await getErrorMessage(
-          response,
-          `We couldn't load this customer (request failed with status ${response.status}).`,
-        );
-        throw new Error(message);
-      }
-
-      const payload: unknown = await response.json();
-      if (!isCustomerResponse(payload)) {
-        throw new Error("The customer service returned an unexpected response.");
-      }
-
-      setCustomer(payload.data);
-    } catch (error: unknown) {
-      if (!signal.aborted) {
-        setPageError(
-          error instanceof Error
-            ? error.message
-            : "We couldn't load this customer. Please try again.",
-        );
-      }
-    } finally {
-      if (!signal.aborted) {
-        setIsLoading(false);
-      }
-    }
-  }, [customerId]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    queueMicrotask(() => {
-      void loadCustomer(controller.signal);
-    });
-
-    return () => controller.abort();
-  }, [loadCustomer]);
-
-  const deleteCustomer = async () => {
-    if (isDeleting || !window.confirm("Delete this customer? This action cannot be undone.")) {
-      return;
-    }
-
-    setDeleteError(null);
-    setIsDeleting(true);
-    try {
-      const response = await fetch(
-        `/api/customers/${encodeURIComponent(customerId)}`,
-        {
-          method: "DELETE",
-          credentials: "same-origin",
-          headers: { Accept: "application/json" },
-        },
-      );
-
-      if (response.status === 404) {
-        setDeleteError("This customer could not be found. They may have already been deleted.");
-        return;
-      }
-      if (!response.ok) {
-        setDeleteError(
-          await getErrorMessage(
-            response,
-            `We couldn't delete this customer (request failed with status ${response.status}).`,
-          ),
-        );
-        return;
-      }
-
-      router.push("/customers");
-    } catch {
-      setDeleteError(
-        "We couldn't reach the customer service. Check your connection and try again.",
-      );
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">
@@ -178,21 +23,7 @@ export default function CustomerDetails({
           Back to Customers
         </Link>
 
-        {isLoading ? (
-          <section
-            aria-label="Customer details"
-            aria-busy="true"
-            className="mt-6 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm"
-          >
-            <div
-              aria-hidden="true"
-              className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#2667FF]"
-            />
-            <p role="status" className="mt-4 text-sm font-medium text-slate-600">
-              Loading customer…
-            </p>
-          </section>
-        ) : notFound ? (
+        {!customer ? (
           <section className="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <h1 className="text-2xl font-bold text-slate-950">
               Customer not found
@@ -207,16 +38,7 @@ export default function CustomerDetails({
               Back to Customers
             </Link>
           </section>
-        ) : pageError ? (
-          <section className="mt-6 rounded-xl border border-rose-300 bg-white p-6 shadow-sm sm:p-8">
-            <div role="alert">
-              <h1 className="text-2xl font-bold text-slate-950">
-                Customer couldn&apos;t be loaded
-              </h1>
-              <p className="mt-2 text-sm leading-6 text-rose-900">{pageError}</p>
-            </div>
-          </section>
-        ) : customer ? (
+        ) : (
           <>
             <header className="mb-6 mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -232,31 +54,17 @@ export default function CustomerDetails({
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link
-                  href={`/customers/${encodeURIComponent(customerId)}/edit`}
+                  href={`/customers/${encodeURIComponent(customer.id)}/edit`}
                   className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#2667FF] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2667FF] focus-visible:ring-offset-2"
                 >
                   Edit Customer
                 </Link>
-                <button
-                  type="button"
-                  onClick={deleteCustomer}
-                  disabled={isDeleting}
-                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-rose-300 bg-white px-5 py-2.5 text-sm font-semibold text-rose-800 transition-colors hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-700 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {isDeleting ? "Deleting…" : "Delete Customer"}
-                </button>
+                <DeleteCustomerButton
+                  userId={userId}
+                  customerId={customer.id}
+                />
               </div>
             </header>
-
-            {deleteError ? (
-              <div
-                role="alert"
-                className="mb-6 rounded-lg border border-rose-300 bg-rose-50 p-4 text-sm text-rose-950"
-              >
-                <p className="font-semibold">Customer could not be deleted.</p>
-                <p className="mt-1">{deleteError}</p>
-              </div>
-            ) : null}
 
             <section
               aria-labelledby="customer-contact-heading"
@@ -308,7 +116,7 @@ export default function CustomerDetails({
 
             <CustomerJobList customer={customer} />
           </>
-        ) : null}
+        )}
       </div>
     </main>
   );
