@@ -13,7 +13,7 @@ import {
 } from '@/lib/db/dashboard/search-params';
 
 // Use the same placeholder user id as the rest of the app (auth is deferred).
-const USER_ID = '...';
+const USER_ID = 'ce21113f-f450-4006-abb3-e5f1c67ceabb';
 
 // An object whose keys are any strings and whose values are what Next.js gives per param.
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
