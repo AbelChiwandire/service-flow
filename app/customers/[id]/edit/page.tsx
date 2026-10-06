@@ -1,4 +1,6 @@
 import EditCustomerForm from "./_components/EditCustomerForm";
+import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
+import { getCustomerById } from "@/lib/db/customer/repository";
 
 type EditCustomerPageProps = {
   params: Promise<{ id: string }>;
@@ -8,39 +10,22 @@ export default async function EditCustomerPage({
   params,
 }: EditCustomerPageProps) {
   const { id } = await params;
+  const customer = await getCustomerById(PLACEHOLDER_USER_ID, id);
 
-  return <EditCustomerForm customerId={id} />;
-}
-import { notFound } from 'next/navigation';
-import { getCustomerById } from '@/lib/db/customer/repository';
-import UpdateCustomerForm from './update-customer-form';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
-/*
-export default async function EditCustomerPage({
-    params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
-    const { id } = await params;
-    const customer = await getCustomerById(PLACEHOLDER_USER_ID, id);
-
-    if (!customer) {
-        notFound();
-    }
-
-    const initialValues = {
+  const initialValues = customer
+    ? {
         name: customer.name,
         email: customer.email,
         phone: customer.phone,
         address: customer.address,
-    };
+      }
+    : null;
 
-    return (
-        <UpdateCustomerForm
-            userId={PLACEHOLDER_USER_ID}
-            customerId={customer.id}
-            initialValues={initialValues}
-        />
-    );
+  return (
+    <EditCustomerForm
+      customerId={id}
+      userId={PLACEHOLDER_USER_ID}
+      initialValues={initialValues}
+    />
+  );
 }
-*/

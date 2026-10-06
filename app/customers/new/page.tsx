@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CustomerForm from "./_components/CustomerForm";
+import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
 
 export default function NewCustomerPage() {
   return (
@@ -28,16 +29,8 @@ export default function NewCustomerPage() {
           </p>
         </header>
 
-        <CustomerForm />
+        <CustomerForm userId={PLACEHOLDER_USER_ID} />
       </div>
     </main>
   );
 }
-/*
-import CreateCustomerForm from './create-customer-form';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
-
-export default function NewCustomerPage() {
-    return <CreateCustomerForm userId={PLACEHOLDER_USER_ID} />;
-}
-*/

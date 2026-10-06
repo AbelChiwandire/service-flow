@@ -31,6 +31,9 @@ export default function UpdateCustomerForm({
             state={state}
             isPending={isPending}
             initialValues={initialValues}
+            cancelHref={`/customers/${encodeURIComponent(customerId)}`}
+            cancelLabel="Cancel"
+            isEditing
         />
     );
 }

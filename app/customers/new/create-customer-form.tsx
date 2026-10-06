@@ -12,5 +12,13 @@ export default function CreateCustomerForm(
     const boundCreateCustomerAction = createCustomerAction.bind(null, userId);
     const [state, formAction, isPending] = useActionState(boundCreateCustomerAction, initialState);
     
-    return <CustomerForm formAction={formAction} state={state} isPending={isPending} />;
+    return (
+        <CustomerForm
+            formAction={formAction}
+            state={state}
+            isPending={isPending}
+            cancelHref="/customers"
+            cancelLabel="Cancel"
+        />
+    );
 }
