@@ -3,7 +3,6 @@ import { getJobById } from '@/lib/db/jobs/repository';
 import { IdSchema } from '@/lib/db/jobs/schema';
 import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
 import UpdateJobForm from './update-job-form';
-import { toDateInputValue } from '@/lib/db/jobs/date-utils';
 
 export default async function EditJobPage({
     params,
@@ -24,7 +23,7 @@ export default async function EditJobPage({
     const initialValues = {
         title: job.title,
         description: job.description,
-        scheduledDate: toDateInputValue(job.scheduledDate),
+        scheduledDate: job.scheduledDate,
         status: job.status,
     };
 

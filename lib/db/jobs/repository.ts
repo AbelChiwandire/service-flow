@@ -10,7 +10,7 @@ export interface Job {
     customerId: string;
     title: string;
     description: string | null;
-    scheduledDate: Date;
+    scheduledDate: string;
     status: JobStatus;
     createdAt: string;
     updatedAt: string;
@@ -47,7 +47,7 @@ export class ActiveJobDeleteError extends Error {
 
 export async function getJobs(userId: string): Promise<Job[]> {
     const rows = await sql`
-        SELECT *
+        SELECT id, "userId", "customerId", title, description, "scheduledDate"::text AS "scheduledDate", status, "createdAt", "updatedAt", "isDeleted", "deletedAt"
         FROM jobs
         WHERE "userId" = ${userId}
         AND "isDeleted" = false
@@ -57,7 +57,7 @@ export async function getJobs(userId: string): Promise<Job[]> {
 
 export async function getJobsByCustomer(userId: string, customerId: string): Promise<Job[]> {
     const rows = await sql`
-        SELECT *
+        SELECT id, "userId", "customerId", title, description, "scheduledDate"::text AS "scheduledDate", status, "createdAt", "updatedAt", "isDeleted", "deletedAt"
         FROM jobs
         WHERE "userId" = ${userId}
         AND "customerId" = ${customerId}
@@ -68,7 +68,7 @@ export async function getJobsByCustomer(userId: string, customerId: string): Pro
 
 export async function getJobById(userId: string, id: string): Promise<Job | null> {
     const rows = await sql`
-        SELECT *
+        SELECT id, "userId", "customerId", title, description, "scheduledDate"::text AS "scheduledDate", status, "createdAt", "updatedAt", "isDeleted", "deletedAt"
         FROM jobs
         WHERE id = ${id}
         AND "userId" = ${userId}
@@ -91,7 +91,7 @@ export async function createJob(job: NewJob): Promise<Job> {
         WHERE c.id = ${job.customerId}
         AND c."userId" = ${job.userId}
         AND c."isDeleted" = false
-        RETURNING *
+        RETURNING id, "userId", "customerId", title, description, "scheduledDate"::text AS "scheduledDate", status, "createdAt", "updatedAt", "isDeleted", "deletedAt"
     `;
 
     if (rows.length === 0) {
@@ -120,7 +120,7 @@ export async function updateJob(
         WHERE id = ${id}
         AND "userId" = ${userId}
         AND "isDeleted" = false
-        RETURNING *
+        RETURNING id, "userId", "customerId", title, description, "scheduledDate"::text AS "scheduledDate", status, "createdAt", "updatedAt", "isDeleted", "deletedAt"
     `;
     return (rows[0] as unknown as Job) ?? null;
 }
@@ -136,7 +136,7 @@ export async function deleteJob(userId: string, id: string): Promise<Job | null>
         AND "userId" = ${userId}
         AND "isDeleted" = false
         AND status IN ('completed', 'cancelled')
-        RETURNING *
+        RETURNING id, "userId", "customerId", title, description, "scheduledDate"::text AS "scheduledDate", status, "createdAt", "updatedAt", "isDeleted", "deletedAt"
     `;
 
     if (rows.length > 0) {
