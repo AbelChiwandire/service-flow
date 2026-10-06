@@ -1,3 +1,6 @@
+// PLACEHOLDER PAGE
+// This page uses a placeholder user ID until authentication is implemented.
+
 import Link from 'next/link';
 import {
     getCustomers,
@@ -9,9 +12,7 @@ import {
     parsePage,
     parseQuery,
 } from '@/lib/db/dashboard/search-params';
-
-// Use the same placeholder user id as the rest of the app (auth is deferred).
-const USER_ID = 'ce21113f-f450-4006-abb3-e5f1c67ceabb';
+import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -37,8 +38,8 @@ export default async function CustomersPlaceholderPage({
     };
 
     const [customers, totalPages] = await Promise.all([
-        getCustomers(USER_ID, filters),
-        getCustomersTotalPages(USER_ID, filters),
+        getCustomers(PLACEHOLDER_USER_ID, filters),
+        getCustomersTotalPages(PLACEHOLDER_USER_ID, filters),
     ]);
 
     const page = filters.page ?? 1;

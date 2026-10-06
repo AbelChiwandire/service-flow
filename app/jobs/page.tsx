@@ -1,3 +1,6 @@
+// PLACEHOLDER PAGE
+// This page uses a placeholder user ID until authentication is implemented.
+
 import Link from 'next/link';
 import {
     getJobs,
@@ -11,9 +14,7 @@ import {
     parseSort,
     parseStatus,
 } from '@/lib/db/dashboard/search-params';
-
-// Use the same placeholder user id as the rest of the app (auth is deferred).
-const USER_ID = 'ce21113f-f450-4006-abb3-e5f1c67ceabb';
+import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
 
 // An object whose keys are any strings and whose values are what Next.js gives per param.
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -44,8 +45,8 @@ export default async function JobsPlaceholderPage({
     };
 
     const [jobs, totalPages] = await Promise.all([
-        getJobs(USER_ID, filters),
-        getJobsTotalPages(USER_ID, filters),
+        getJobs(PLACEHOLDER_USER_ID, filters),
+        getJobsTotalPages(PLACEHOLDER_USER_ID, filters),
     ]);
 
     const page = filters.page ?? 1;
