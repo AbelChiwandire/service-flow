@@ -1,69 +1,204 @@
-import Image from "next/image";
+import Link from "next/link";
+import { PublicHeader } from "@/components/PublicHeader";
+
+const features = [
+  {
+    title: "Manage customers",
+    description:
+      "Keep customer information organized and accessible from one workspace.",
+  },
+  {
+    title: "Track jobs",
+    description:
+      "Create jobs, schedule work, and keep track of progress from start to completion.",
+  },
+  {
+    title: "Simple invoicing",
+    description:
+      "Create minimal invoices for completed jobs without unnecessary accounting complexity.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="flex min-h-screen flex-col bg-white">
+      <PublicHeader />
+
+      <main className="flex-1">
+        <section className="relative overflow-hidden bg-slate-50">
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-32">
+            <div>
+              <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-[#2667FF]">
+                Simple business management
+              </span>
+
+              <h1 className="mt-6 max-w-3xl text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+                Run your service business with{" "}
+                <span className="text-[#2667FF]">less complexity.</span>
+              </h1>
+
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+                ServiceFlow helps small service businesses manage customers,
+                jobs, job progress, and basic invoices in one simple workspace.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/signup"
+                  className="inline-flex h-12 items-center justify-center rounded-md bg-[#2667FF] px-6 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#3F8EFC]"
+                >
+                  Get started
+                </Link>
+
+                <Link
+                  href="/login"
+                  className="inline-flex h-12 items-center justify-center rounded-md border border-slate-300 bg-white px-6 text-sm font-semibold text-slate-700 transition-colors hover:border-[#2667FF] hover:text-[#2667FF]"
+                >
+                  Sign in
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <div>
+                    <p className="text-sm font-medium text-slate-500">
+                      ServiceFlow
+                    </p>
+
+                    <h2 className="mt-1 text-xl font-bold text-slate-900">
+                      Business overview
+                    </h2>
+                  </div>
+
+                  <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-[#2667FF]">
+                    Active
+                  </span>
+                </div>
+
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-xl bg-slate-50 p-4">
+                    <p className="text-sm text-slate-500">Customers</p>
+                    <p className="mt-2 text-2xl font-bold text-slate-900">
+                      24
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl bg-slate-50 p-4">
+                    <p className="text-sm text-slate-500">Active jobs</p>
+                    <p className="mt-2 text-2xl font-bold text-slate-900">
+                      12
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-slate-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">
+                        Kitchen maintenance
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Scheduled for tomorrow
+                      </p>
+                    </div>
+
+                    <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-[#2667FF]">
+                      Scheduled
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-slate-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">
+                        Office cleaning
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Ready for completion
+                      </p>
+                    </div>
+
+                    <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-[#3B28CC]">
+                      In progress
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white">
+          <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold uppercase tracking-wider text-[#2667FF]">
+                Everything you need
+              </p>
+
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                Keep your day-to-day work organized.
+              </h2>
+
+              <p className="mt-4 text-base leading-7 text-slate-600">
+                ServiceFlow focuses on the workflows small service businesses
+                use most, without adding unnecessary complexity.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {features.map((feature) => (
+                <article
+                  key={feature.title}
+                  className="rounded-xl border border-slate-200 bg-white p-6 transition-shadow hover:shadow-md"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 font-bold text-[#2667FF]">
+                    ✓
+                  </div>
+
+                  <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                    {feature.title}
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {feature.description}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[#2667FF]">
+          <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Spend less time organizing and more time serving customers.
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-blue-100">
+              Start building a clearer workflow for your service business with
+              ServiceFlow.
+            </p>
+
+            <Link
+              href="/signup"
+              className="mt-8 inline-flex h-12 items-center justify-center rounded-md bg-white px-6 text-sm font-semibold text-[#2667FF] transition-colors hover:bg-blue-50"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+              Create your account
+            </Link>
+          </div>
+        </section>
       </main>
+
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-slate-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+          <p>© 2026 ServiceFlow. All rights reserved.</p>
+
+          <p>Simple tools for small service businesses.</p>
+        </div>
+      </footer>
     </div>
   );
 }
