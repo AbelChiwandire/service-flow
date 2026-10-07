@@ -12,11 +12,6 @@ const features = [
     description:
       "Create jobs, schedule work, and keep track of progress from start to completion.",
   },
-  {
-    title: "Simple invoicing",
-    description:
-      "Create minimal invoices for completed jobs without unnecessary accounting complexity.",
-  },
 ];
 
 export default function Home() {
@@ -38,8 +33,7 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-                ServiceFlow helps small service businesses manage customers,
-                jobs, job progress, and basic invoices in one simple workspace.
+                ServiceFlow helps small service businesses manage customers and jobs efficiently.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -63,30 +57,23 @@ export default function Home() {
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                   <div>
-                    <p className="text-sm font-medium text-slate-500">
-                      ServiceFlow
-                    </p>
 
                     <h2 className="mt-1 text-xl font-bold text-slate-900">
                       Business overview
                     </h2>
                   </div>
-
-                  <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-[#2667FF]">
-                    Active
-                  </span>
                 </div>
 
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
                   <div className="rounded-xl bg-slate-50 p-4">
-                    <p className="text-sm text-slate-500">Customers</p>
+                    <p className="text-sm text-slate-500">Total Customers</p>
                     <p className="mt-2 text-2xl font-bold text-slate-900">
                       24
                     </p>
                   </div>
 
                   <div className="rounded-xl bg-slate-50 p-4">
-                    <p className="text-sm text-slate-500">Active jobs</p>
+                    <p className="text-sm text-slate-500">Total jobs</p>
                     <p className="mt-2 text-2xl font-bold text-slate-900">
                       12
                     </p>
@@ -148,7 +135,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
               {features.map((feature) => (
                 <article
                   key={feature.title}
