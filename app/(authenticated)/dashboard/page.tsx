@@ -6,7 +6,7 @@ export default function DashboardPage() {
     <>
       <PageHeader
         title="Dashboard"
-        description="Overview of your active jobs, customers, and invoicing activity."
+        description="Overview of your active jobs and customer activity."
       />
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">

@@ -3,9 +3,10 @@ import Link from "next/link";
 type LogoProps = {
   href: string;
   label: string;
+  titleClassName?: string;
 };
 
-export function Logo({ href, label }: LogoProps) {
+export function Logo({ href, label, titleClassName = "" }: LogoProps) {
   return (
     <Link
       href={href}
@@ -16,7 +17,9 @@ export function Logo({ href, label }: LogoProps) {
         S
       </span>
 
-      <span className="text-xl font-bold tracking-tight text-slate-900">
+      <span
+        className={`text-xl font-bold tracking-tight text-slate-900 ${titleClassName}`}
+      >
         Service<span className="text-[#2667FF]">Flow</span>
       </span>
     </Link>

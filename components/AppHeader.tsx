@@ -18,7 +18,7 @@ export function AppHeader({ isMenuOpen, onMenuClick }: AppHeaderProps) {
             aria-label="Open navigation menu"
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
-            className="rounded-md p-2 text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2667FF] md:hidden"
+            className="rounded-md p-2 text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2667FF] lg:hidden"
           >
             <svg
               aria-hidden="true"
@@ -33,7 +33,9 @@ export function AppHeader({ isMenuOpen, onMenuClick }: AppHeaderProps) {
             </svg>
           </button>
 
-          <Logo href="/dashboard" label="ServiceFlow dashboard" />
+          <div className="lg:hidden">
+            <Logo href="/dashboard" label="ServiceFlow dashboard" />
+          </div>
         </div>
 
         {/* Account controls: placeholder until auth (#18) is merged. */}

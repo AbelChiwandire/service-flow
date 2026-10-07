@@ -10,7 +10,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "ServiceFlow",
   description:
-    "Simple customer, job, and invoice management for small service businesses.",
+    "Simple customer and job management for small service businesses.",
 };
 
 export default function RootLayout({
