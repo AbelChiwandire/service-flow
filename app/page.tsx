@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Header } from "@/components/Header";
+import { PublicHeader } from "@/components/PublicHeader";
 
 const features = [
   {
@@ -22,7 +22,7 @@ const features = [
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Header />
+      <PublicHeader />
 
       <main className="flex-1">
         <section className="relative overflow-hidden bg-slate-50">

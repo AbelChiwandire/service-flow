@@ -1,4 +1,4 @@
-import { Header } from "@/components/Header";
+import { PublicHeader } from "@/components/PublicHeader";
 
 export default function AuthenticatedLayout({
   children,
@@ -7,7 +7,7 @@ export default function AuthenticatedLayout({
 }>) {
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header />
+      <PublicHeader />
 
       <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {children}
