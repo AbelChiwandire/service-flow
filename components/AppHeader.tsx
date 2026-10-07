@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountMenu } from "./AccountMenu";
 import { Logo } from "./Logo";
 
 type AppHeaderProps = {
@@ -38,22 +39,7 @@ export function AppHeader({ isMenuOpen, onMenuClick }: AppHeaderProps) {
           </div>
         </div>
 
-        {/* Account controls: placeholder until auth (#18) is merged. */}
-        <div className="flex items-center gap-3">
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-[#2667FF]"
-          >
-            U
-          </span>
-
-          <button
-            type="button"
-            className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2667FF]"
-          >
-            Sign out
-          </button>
-        </div>
+        <AccountMenu />
       </div>
     </header>
   );
