@@ -6,8 +6,8 @@ import { deleteUserAction, type State } from '@/lib/db/users/actions';
 
 const initialState: State = { message: null, errors: {} };
 
-export default function DeleteAccountButton({ userId }: { userId: string }) {
-    const boundDeleteUserAction = deleteUserAction.bind(null, userId);
+export default function DeleteAccountButton({}: object) {
+    const boundDeleteUserAction = deleteUserAction;
     const [state, formAction, isPending] = useActionState(boundDeleteUserAction, initialState);
 
     function handleSubmit(event: SubmitEvent<HTMLFormElement>) {

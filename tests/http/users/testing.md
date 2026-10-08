@@ -7,8 +7,8 @@ each request. UI flow was verified manually through the browser.
 
 ## Environment
 - `next dev`, local Postgres (Neon)
-- `PLACEHOLDER_USER_ID` in `lib/auth/placeholder-session.ts` (temporary stand-in
-  until auth is implemented)
+- Authenticated user: the signed-in session user (`getSessionUserId()` in `lib/auth/session.ts`).
+  These scenarios were originally verified with a hardcoded placeholder user, since removed.
 - Passwords hashed with bcrypt (`SALT_ROUNDS = 10`) before storage;
   `passwordHash` is never returned by any read (`PublicUser` type
   excludes it at the repository level)
@@ -67,5 +67,4 @@ each request. UI flow was verified manually through the browser.
   `signupAction`'s redirect lands correctly, nothing more.
 - `deleteUserAction`'s browser-native `window.confirm` dialog is a
   placeholder; no styled confirmation modal or type-to-confirm safeguard.
-- Auth is not implemented; `PLACEHOLDER_USER_ID` is used throughout
-  (users' own copy, separate from the customer and job branches').
+- Scenarios were run before auth landed. The user id now comes from the session, not the client.

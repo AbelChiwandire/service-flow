@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "./layout/Logo";
+import { Logo } from "./Logo";
 
 export function PublicHeader() {
   return (

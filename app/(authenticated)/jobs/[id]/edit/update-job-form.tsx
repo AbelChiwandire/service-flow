@@ -8,7 +8,6 @@ import { JobForm } from '@/components/jobs/JobForm';
 const initialState: State = { message: null, errors: {} };
 
 type UpdateJobFormProps = {
-    userId: string;
     jobId: string;
     initialValues: {
         title: string;
@@ -19,11 +18,10 @@ type UpdateJobFormProps = {
 };
 
 export default function UpdateJobForm({
-    userId,
     jobId,
     initialValues,
 }: UpdateJobFormProps) {
-    const boundUpdateJobAction = updateJobAction.bind(null, userId, jobId);
+    const boundUpdateJobAction = updateJobAction.bind(null, jobId);
     const [state, formAction, isPending] = useActionState(boundUpdateJobAction, initialState);
 
     return (

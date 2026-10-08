@@ -7,8 +7,8 @@ each request.
 
 ## Environment
 - `next dev`, local Postgres (Neon)
-- Seeded user: `PLACEHOLDER_USER_ID` in `lib/auth/placeholder-session.ts`
-  (temporary stand-in until auth is implemented)
+- Authenticated user: the signed-in session user (`getSessionUserId()` in `lib/auth/session.ts`).
+  These scenarios were originally verified with a hardcoded placeholder user, since removed.
 - A seeded customer (from the customer branch's seed data) used as
   `@customerId` in `test/http/jobs.http`
 
@@ -40,9 +40,7 @@ each request.
 ## Known gaps
 - No automated tests. API coverage evidenced by `test/http/jobs.http`;
   UI/action coverage still to be done (see above).
-- Auth is not implemented; all scenarios ran against a single seeded
-  placeholder user via `PLACEHOLDER_USER_ID` (jobs' own copy, separate
-  from the customer branch's).
+- Scenarios were run before auth landed, against a single seeded user. Re-verify under a real session.
 - Cross-user ownership (job belonging to another user) not explicitly
   re-tested on this branch; relies on the same `userId`-scoping
   pattern verified on the customer branch.

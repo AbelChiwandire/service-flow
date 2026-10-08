@@ -7,9 +7,9 @@ import { CustomerForm } from '@/components/customers/CustomerForm';
 const initialState: State = { message: null, errors: {} };
 
 export default function CreateCustomerForm(
-    { userId }: { userId: string }
+    {}: object
 ) {
-    const boundCreateCustomerAction = createCustomerAction.bind(null, userId);
+    const boundCreateCustomerAction = createCustomerAction;
     const [state, formAction, isPending] = useActionState(boundCreateCustomerAction, initialState);
     
     return <CustomerForm formAction={formAction} state={state} isPending={isPending} />;

@@ -7,7 +7,6 @@ import { UserProfileForm } from '@/components/profile/UserProfileForm';
 const initialState: State = { message: null, errors: {} };
 
 type UpdateProfileFormProps = {
-    userId: string;
     initialValues: {
         name: string;
         businessName: string;
@@ -15,8 +14,8 @@ type UpdateProfileFormProps = {
     };
 };
 
-export default function UpdateProfileForm({ userId, initialValues }: UpdateProfileFormProps) {
-    const boundUpdateUserProfileAction = updateUserProfileAction.bind(null, userId);
+export default function UpdateProfileForm({ initialValues }: UpdateProfileFormProps) {
+    const boundUpdateUserProfileAction = updateUserProfileAction;
     const [state, formAction, isPending] = useActionState(
         boundUpdateUserProfileAction,
         initialState

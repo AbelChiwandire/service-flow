@@ -3,6 +3,8 @@
 import bcrypt from 'bcrypt';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { requireUserId } from '@/lib/auth/session';
+import { signOut } from '@/auth';
 import {
     createUser,
     updateUser,
@@ -14,7 +16,6 @@ import {
 import {
     SignupFormSchema,
     UserProfileFormSchema,
-    IdSchema,
     formatValidationErrors,
     type UserFormErrors,
     type PasswordChangeErrors,
@@ -87,13 +88,10 @@ export async function signupAction(prevState: State, formData: FormData): Promis
 }
 
 export async function updateUserProfileAction(
-    id: string,
     prevState: State,
     formData: FormData
 ): Promise<State> {
-    if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid user id.' };
-    }
+    const id = await requireUserId();
 
     const validatedData = UserProfileFormSchema.safeParse({
         name: formData.get('name'),
@@ -126,16 +124,15 @@ export async function updateUserProfileAction(
         throw error;
     }
 
-    // PLACEHOLDER: redirect to actual user profile page after update
     revalidatePath('/account');
     redirect('/account');
 }
 
 export async function changePasswordAction(
-    userId: string,
     prevState: PasswordChangeState,
     formData: FormData
 ): Promise<PasswordChangeState> {
+    const userId = await requireUserId();
     const validatedData = PasswordChangeFormSchema.safeParse({
         currentPassword: formData.get('currentPassword'),
         newPassword: formData.get('newPassword'),
@@ -178,13 +175,10 @@ export async function changePasswordAction(
 }
 
 export async function deleteUserAction(
-    id: string,
     _prevState: State,
     _formData: FormData
 ): Promise<State> {
-    if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid user id.' };
-    }
+    const id = await requireUserId();
 
     try {
         const user = await deleteUser(id);
@@ -196,12 +190,7 @@ export async function deleteUserAction(
         throw error;
     }
 
-    // TODO: once auth exists, clear the session here before redirecting
-    redirect('/');
+    await signOut({ redirectTo: '/' });
+    return {};
 }
 
-// SECURITY GAP — NOT PRODUCTION SAFE:
-// updateUserProfileAction and deleteUserAction take `id` as a plain argument
-// bound from PLACEHOLDER_USER_ID. Once auth exists, `id` must come from the
-// verified session, not be passed in from the caller/page at all — otherwise
-// a forged bind() call could act on another user's account.

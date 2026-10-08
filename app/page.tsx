@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PublicHeader } from "@/components/PublicHeader";
+import { PublicHeader } from "@/components/layout/PublicHeader";
 
 const features = [
   {

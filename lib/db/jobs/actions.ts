@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { requireUserId } from '@/lib/auth/session';
 import {
     createJob,
     updateJob,
@@ -69,11 +70,11 @@ async function runMutation(
 }
 
 export async function createJobAction(
-    userId: string,
     customerId: string,
     prevState: State,
     formData: FormData
 ): Promise<State> {
+    const userId = await requireUserId();
     if (!IdSchema.safeParse(customerId).success) {
         return { message: 'Invalid customer id.' };
     }
@@ -95,11 +96,11 @@ export async function createJobAction(
 }
 
 export async function updateJobAction(
-    userId: string,
     id: string,
     prevState: State,
     formData: FormData
 ): Promise<State> {
+    const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
         return { message: 'Invalid job id.' };
     }
@@ -121,11 +122,11 @@ export async function updateJobAction(
 }
 
 export async function deleteJobAction(
-    userId: string,
     id: string,
     _prevState: State,
     _formData: FormData
 ): Promise<State> {
+    const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
         return { message: 'Invalid job id.' };
     }

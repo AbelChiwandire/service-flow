@@ -6,13 +6,11 @@ import { deleteCustomerAction, type State } from '@/lib/db/customer/actions';
 const initialState: State = { message: null, errors: {} };
 
 export default function DeleteCustomerButton({
-    userId,
     customerId,
 }: {
-    userId: string;
     customerId: string;
 }) {
-    const boundDeleteCustomerAction = deleteCustomerAction.bind(null, userId, customerId);
+    const boundDeleteCustomerAction = deleteCustomerAction.bind(null, customerId);
     const [state, formAction, isPending] = useActionState(
         boundDeleteCustomerAction,
         initialState

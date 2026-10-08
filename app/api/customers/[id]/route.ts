@@ -5,7 +5,7 @@ import {
     updateCustomer,
     deleteCustomer
 } from '@/lib/db/customer/repository';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
+import { getSessionUserId, unauthorizedResponse } from '@/lib/auth/session';
 import {
     validateId,
     parseJsonBody,
@@ -15,12 +15,14 @@ import {
 type RouteParams = { params: Promise<{ id: string }> };
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
+    const userId = await getSessionUserId();
+    if (!userId) return unauthorizedResponse();
     const { id } = await params;
     const idError = validateId(id);
     if (idError) return idError;
 
     return withApiErrorHandling('GET /api/customers/[id] failed:', async () => {
-        const customer = await getCustomerById(PLACEHOLDER_USER_ID, id);
+        const customer = await getCustomerById(userId, id);
         if (!customer) {
             return NextResponse.json({ error: 'Customer not found.' }, { status: 404 });
         }
@@ -29,6 +31,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
+    const userId = await getSessionUserId();
+    if (!userId) return unauthorizedResponse();
     const { id } = await params;
     const idError = validateId(id);
     if (idError) return idError;
@@ -48,7 +52,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
 
     return withApiErrorHandling('PATCH /api/customers/[id] failed:', async () => {
-        const customer = await updateCustomer(PLACEHOLDER_USER_ID, id, validatedData.data);
+        const customer = await updateCustomer(userId, id, validatedData.data);
         if (!customer) {
             return NextResponse.json({ error: 'Customer not found.' }, { status: 404 });
         }
@@ -57,12 +61,14 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
+    const userId = await getSessionUserId();
+    if (!userId) return unauthorizedResponse();
     const { id } = await params;
     const idError = validateId(id);
     if (idError) return idError;
 
     return withApiErrorHandling('DELETE /api/customers/[id] failed:', async () => {
-        const customer = await deleteCustomer(PLACEHOLDER_USER_ID, id);
+        const customer = await deleteCustomer(userId, id);
         if (!customer) {
             return NextResponse.json({ error: 'Customer not found.' }, { status: 404 });
         }

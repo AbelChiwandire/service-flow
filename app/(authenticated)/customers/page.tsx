@@ -12,7 +12,7 @@ import {
     parsePage,
     parseQuery,
 } from '@/lib/db/dashboard/search-params';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
+import { requireUserId } from '@/lib/auth/session';
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -29,6 +29,7 @@ export default async function CustomersPlaceholderPage({
 }: {
     searchParams: SearchParams;
 }) {
+    const userId = await requireUserId();
     const params = await searchParams;
 
     const filters: CustomerListParams = {
@@ -38,8 +39,8 @@ export default async function CustomersPlaceholderPage({
     };
 
     const [customers, totalPages] = await Promise.all([
-        getCustomers(PLACEHOLDER_USER_ID, filters),
-        getCustomersTotalPages(PLACEHOLDER_USER_ID, filters),
+        getCustomers(userId, filters),
+        getCustomersTotalPages(userId, filters),
     ]);
 
     const page = filters.page ?? 1;

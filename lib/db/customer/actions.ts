@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { requireUserId } from '@/lib/auth/session';
 import {
     createCustomer,
     updateCustomer,
@@ -63,10 +64,10 @@ async function runMutation(
 }
 
 export async function createCustomerAction(
-    userId: string,
     _prevState: State,
     formData: FormData
 ): Promise<State> {
+    const userId = await requireUserId();
     const validatedData = validateCustomerForm(formData);
     if (!validatedData.success) {
         return {
@@ -84,11 +85,11 @@ export async function createCustomerAction(
 }
 
 export async function updateCustomerAction(
-    userId: string,
     id: string,
     _prevState: State,
     formData: FormData
 ): Promise<State> {
+    const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
         return { message: 'Invalid customer id.' };
     }
@@ -110,11 +111,11 @@ export async function updateCustomerAction(
 }
 
 export async function deleteCustomerAction(
-    userId: string,
     id: string,
     _prevState: State,
     _formData: FormData
 ): Promise<State> {
+    const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
         return { message: 'Invalid customer id.' };
     }

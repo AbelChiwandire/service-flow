@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getJobById } from '@/lib/db/jobs/repository';
 import { IdSchema } from '@/lib/db/jobs/schema';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
+import { requireUserId } from '@/lib/auth/session';
 import UpdateJobForm from './update-job-form';
 
 export default async function EditJobPage({
@@ -9,13 +9,14 @@ export default async function EditJobPage({
 }: {
     params: Promise<{ id: string }>;
 }) {
+    const userId = await requireUserId();
     const { id } = await params;
 
     if (!IdSchema.safeParse(id).success) {
         notFound();
     }
 
-    const job = await getJobById(PLACEHOLDER_USER_ID, id);
+    const job = await getJobById(userId, id);
     if (!job) {
         notFound();
     }
@@ -31,7 +32,6 @@ export default async function EditJobPage({
         <div className="max-w-xl space-y-4">
             <h1 className="text-xl font-semibold">Edit job</h1>
             <UpdateJobForm
-                userId={PLACEHOLDER_USER_ID}
                 jobId={job.id}
                 initialValues={initialValues}
             />

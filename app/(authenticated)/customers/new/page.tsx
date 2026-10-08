@@ -1,6 +1,7 @@
 import CreateCustomerForm from './create-customer-form';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
+import { requireUserId } from '@/lib/auth/session';
 
-export default function NewCustomerPage() {
-    return <CreateCustomerForm userId={PLACEHOLDER_USER_ID} />;
+export default async function NewCustomerPage() {
+    await requireUserId();
+    return <CreateCustomerForm />;
 }

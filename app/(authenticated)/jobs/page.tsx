@@ -14,7 +14,7 @@ import {
     parseSort,
     parseStatus,
 } from '@/lib/db/dashboard/search-params';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
+import { requireUserId } from '@/lib/auth/session';
 
 // An object whose keys are any strings and whose values are what Next.js gives per param.
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -34,6 +34,7 @@ export default async function JobsPlaceholderPage({
 }: {
     searchParams: SearchParams;
 }) {
+    const userId = await requireUserId();
     const params = await searchParams;
 
     const filters: JobListParams = {
@@ -45,8 +46,8 @@ export default async function JobsPlaceholderPage({
     };
 
     const [jobs, totalPages] = await Promise.all([
-        getJobs(PLACEHOLDER_USER_ID, filters),
-        getJobsTotalPages(PLACEHOLDER_USER_ID, filters),
+        getJobs(userId, filters),
+        getJobsTotalPages(userId, filters),
     ]);
 
     const page = filters.page ?? 1;
