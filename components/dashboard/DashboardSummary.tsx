@@ -1,8 +1,10 @@
 import { getDashboardData } from '@/lib/db/dashboard/repository';
 import { ErrorMessage } from '@/components/shared/ErrorMessage';
+import { EmptyState } from '@/components/shared/EmptyState';
 import SummaryCard from './SummaryCard';
 import UpcomingJobs from './UpcomingJobs';
 import OverdueJobs from './OverdueJobs';
+import Link from 'next/link';
 
 export default async function DashboardSummary({ userId }: { userId: string }) {
     let data: Awaited<ReturnType<typeof getDashboardData>>;
@@ -20,6 +22,23 @@ export default async function DashboardSummary({ userId }: { userId: string }) {
     }
 
     const { counts, upcomingJobs, overdueJobs } = data;
+
+    if (counts.customers === 0) {
+        return (
+            <EmptyState
+                title="Get started with ServiceFlow"
+                message="Add your first customer to start managing your customers and service jobs."
+                action={
+                    <Link
+                        href="/customers/new"
+                        className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    >
+                        Add your first customer
+                    </Link>
+                }
+            />
+        );
+    }
 
     return (
         <div className="space-y-8">
