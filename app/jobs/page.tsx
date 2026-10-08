@@ -76,7 +76,7 @@ export default async function JobsPlaceholderPage({
                             <tr key={job.id}>
                                 <td>{job.title}</td>
                                 <td>{job.customerName}</td>
-                                <td>{String(job.scheduledDate)}</td>
+                                <td>{job.scheduledDate}</td>
                                 <td>{job.status}</td>
                             </tr>
                         ))}

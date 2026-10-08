@@ -6,7 +6,7 @@ import {
     getCustomers,
     getCustomersTotalPages,
     type CustomerListParams,
-} from '@/lib/db/dashboard/temp-customers';
+} from '@/lib/db/customer/repository';
 import {
     parseCustomerFilter,
     parsePage,

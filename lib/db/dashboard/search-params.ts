@@ -1,5 +1,5 @@
 import type { DueFilter, JobStatus } from './temp-jobs';
-import type { CustomerListParams } from './temp-customers';
+import type { CustomerListParams } from '../customer/repository';
 
 // What Next.js gives us for a single query param.
 type RawParam = string | string[] | undefined;

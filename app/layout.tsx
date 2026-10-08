@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { TimeZoneSync } from "@/components/TimeZoneSync";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <TimeZoneSync />
+        {children}
+      </body>
     </html>
   );
 }

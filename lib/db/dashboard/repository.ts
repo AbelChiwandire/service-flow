@@ -1,5 +1,5 @@
 import { countJobs, getJobs, type JobWithCustomer } from './temp-jobs';
-import { countCustomers } from './temp-customers';
+import { countCustomers } from '../customer/repository';
 
 // How many rows the upcoming and overdue previews show.
 const PREVIEW_SIZE = 5;

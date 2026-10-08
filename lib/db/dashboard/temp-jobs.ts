@@ -1,5 +1,5 @@
-import { neon } from '@neondatabase/serverless';
-import { getToday } from './date-utils';
+﻿import { neon } from '@neondatabase/serverless';
+import { getTodayForRequest } from './date-utils';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -14,7 +14,7 @@ export interface Job {
     customerId: string;
     title: string;
     description: string | null;
-    scheduledDate: Date;
+    scheduledDate: string;
     status: JobStatus;
     createdAt: string;
     updatedAt: string;
@@ -84,9 +84,12 @@ export async function getJobs(
     const offset = (Math.max(1, page) - 1) * pageSize;
 
     const rows = await sql`
-        SELECT jobs.*, customers.name AS "customerName"
+        SELECT jobs.id, jobs."userId", jobs."customerId", jobs.title, jobs.description,
+            jobs."scheduledDate"::text AS "scheduledDate", jobs.status,
+            jobs."createdAt", jobs."updatedAt", jobs."isDeleted", jobs."deletedAt",
+            customers.name AS "customerName"
         ${jobsFrom()}
-        WHERE ${jobFilters(userId, params, getToday())}
+        WHERE ${jobFilters(userId, params, await getTodayForRequest())}
         ${orderBy(sort)}
         LIMIT ${pageSize} OFFSET ${offset}
     `;
@@ -100,7 +103,7 @@ export async function countJobs(
     const rows = await sql`
         SELECT COUNT(*)
         ${jobsFrom()}
-        WHERE ${jobFilters(userId, params, getToday())}
+        WHERE ${jobFilters(userId, params, await getTodayForRequest())}
     `;
     return Number(rows[0].count);
 }

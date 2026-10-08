@@ -1,18 +1,39 @@
 import { getDashboardData } from '@/lib/db/dashboard/repository';
+import { ErrorMessage } from '@/components/ErrorMessage';
 import SummaryCard from './SummaryCard';
 import UpcomingJobs from './UpcomingJobs';
 import OverdueJobs from './OverdueJobs';
 
 export default async function DashboardSummary({ userId }: { userId: string }) {
-    const { counts, upcomingJobs, overdueJobs } = await getDashboardData(userId);
+    let data: Awaited<ReturnType<typeof getDashboardData>>;
+
+    try {
+        data = await getDashboardData(userId);
+    } catch (error) {
+        console.error('Failed to load dashboard data', error);
+        return (
+            <ErrorMessage
+                title="Could not load the dashboard"
+                message="We could not load your dashboard data. Please refresh the page to try again."
+            />
+        );
+    }
+
+    const { counts, upcomingJobs, overdueJobs } = data;
 
     return (
         <div className="space-y-8">
             <section>
-                <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">
-                    Jobs
-                </h2>
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+                <div className="mb-4">
+                    <h2 className="text-lg font-semibold text-slate-900">
+                        Jobs
+                    </h2>
+                    <p className="mt-1 text-sm text-slate-500">
+                        Overview of your current and upcoming jobs.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">
                     <SummaryCard
                         label="Upcoming"
                         value={counts.upcoming}
@@ -34,17 +55,27 @@ export default async function DashboardSummary({ userId }: { userId: string }) {
                         value={counts.completed}
                         href="/jobs?status=completed"
                     />
-                    <SummaryCard label="Total jobs" value={counts.jobs} href="/jobs" />
+                    <SummaryCard
+                        label="Total jobs"
+                        value={counts.jobs}
+                        href="/jobs"
+                    />
                 </div>
             </section>
 
             <section>
-                <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">
-                    Customers
-                </h2>
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+                <div className="mb-4">
+                    <h2 className="text-lg font-semibold text-slate-900">
+                        Customers
+                    </h2>
+                    <p className="mt-1 text-sm text-slate-500">
+                        Overview of your customer base.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">
                     <SummaryCard
-                        label="Customers"
+                        label="Total Customers"
                         value={counts.customers}
                         href="/customers"
                     />
@@ -57,8 +88,14 @@ export default async function DashboardSummary({ userId }: { userId: string }) {
             </section>
 
             <div className="grid gap-6 lg:grid-cols-2">
-                <OverdueJobs jobs={overdueJobs} total={counts.overdue} />
-                <UpcomingJobs jobs={upcomingJobs} total={counts.upcoming} />
+                <OverdueJobs
+                    jobs={overdueJobs}
+                    total={counts.overdue}
+                />
+                <UpcomingJobs
+                    jobs={upcomingJobs}
+                    total={counts.upcoming}
+                />
             </div>
         </div>
     );
