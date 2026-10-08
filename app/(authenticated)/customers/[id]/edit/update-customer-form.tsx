@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { updateCustomerAction, type State } from '@/lib/db/customer/actions';
-import { CustomerForm } from '@/components/CustomerForm';
+import { CustomerForm } from '@/components/customers/CustomerForm';
 
 const initialState: State = { message: null, errors: {} };
 

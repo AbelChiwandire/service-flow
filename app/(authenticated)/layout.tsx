@@ -1,4 +1,4 @@
-import { AuthenticatedShell } from "@/components/AuthenticatedShell";
+import { AuthenticatedShell } from "@/components/layout/AuthenticatedShell";
 
 export default function AuthenticatedLayout({
   children,

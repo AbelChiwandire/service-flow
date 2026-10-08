@@ -1,7 +1,7 @@
 // PLACEHOLDER: Login page for user authentication
 // This is for testing purposes only
 
-import { LoginForm } from '@/components/LoginForm';
+import { LoginForm } from '@/components/auth/LoginForm';
 import { Suspense } from 'react';
 
 export default function LoginPage() {

@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { updateUserProfileAction, type State } from '@/lib/db/users/actions';
-import { UserProfileForm } from '@/components/UserProfileForm';
+import { UserProfileForm } from '@/components/profile/UserProfileForm';
 
 const initialState: State = { message: null, errors: {} };
 

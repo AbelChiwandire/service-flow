@@ -1,5 +1,5 @@
 import { getDashboardData } from '@/lib/db/dashboard/repository';
-import { ErrorMessage } from '@/components/ErrorMessage';
+import { ErrorMessage } from '@/components/shared/ErrorMessage';
 import SummaryCard from './SummaryCard';
 import UpcomingJobs from './UpcomingJobs';
 import OverdueJobs from './OverdueJobs';

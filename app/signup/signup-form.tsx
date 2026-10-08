@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { signupAction, type State } from '@/lib/db/users/actions';
-import { SignupForm } from '@/components/SignupForm';
+import { SignupForm } from '@/components/auth/SignupForm';
 
 const initialState: State = { message: null, errors: {} };
 

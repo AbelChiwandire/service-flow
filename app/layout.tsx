@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { TimeZoneSync } from "@/components/TimeZoneSync";
+import { TimeZoneSync } from "@/components/shared/TimeZoneSync";
 
 const inter = Inter({
   variable: "--font-inter",

@@ -1,6 +1,6 @@
 import DashboardSummary from '@/components/dashboard/DashboardSummary';
 import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
-import { PageHeader } from '@/components/PageHeader';
+import { PageHeader } from '@/components/shared/PageHeader';
 import { Suspense } from 'react';
 import DashboardSummarySkeleton from '@/components/dashboard/DashboardSummarySkeleton';
 
