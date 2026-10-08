@@ -1,16 +1,18 @@
-import { signOut } from '@/auth';
+import { signOutAction } from '@/lib/auth/actions';
 
-export function SignOutButton() {
+export function SignOutButton(
+    { onClick, className, role }
+        : { onClick?: () => void; className?: string; role?: string })
+{
     return (
         <form 
-            action={async () => {
-                'use server'
-                await signOut({ redirectTo: '/' });
-            }}
+            action={signOutAction}
         >
             <button
                 type="submit"
-                className="rounded cursor-pointer border border-slate-300 px-3 py-1 text-sm text-white bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+                onClick={onClick}
+                className={className}
+                role={role}
             >
                 Sign out
             </button>

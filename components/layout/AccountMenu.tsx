@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { SignOutButton } from "../auth/SignoutButton";
 
 // Placeholder destination until the account page exists.
 const MY_ACCOUNT_HREF = "/account";
@@ -9,12 +10,9 @@ const MY_ACCOUNT_HREF = "/account";
 const itemClassName =
   "block w-full rounded-md px-3 py-2 text-left text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:bg-slate-100 focus-visible:outline-none";
 
-// Replace this with the Auth.js <SignOutButton /> when it is merged.
 function SignOutPlaceholder({ onSelect }: { onSelect: () => void }) {
   return (
-    <button type="button" role="menuitem" onClick={onSelect} className={itemClassName}>
-      Sign Out
-    </button>
+    <SignOutButton onClick={onSelect} className={itemClassName} role="menuitem" />
   );
 }
 
