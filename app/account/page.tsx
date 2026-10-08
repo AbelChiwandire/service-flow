@@ -5,6 +5,8 @@ import UpdateProfileForm from './update-profile-form';
 import DeleteAccountButton from './delete-account-button';
 import ChangePasswordFormWrapper from './change-password-form';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AccountPage() {
     const user = await getUserById(PLACEHOLDER_USER_ID);
     if (!user) {
