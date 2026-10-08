@@ -171,3 +171,73 @@ export async function getJobCustomer(
     `;
     return (rows[0] as unknown as JobCustomer) ?? null;
 }
+
+export const JOBS_PER_PAGE = 10;
+ 
+export interface JobListItem {
+    id: string;
+    customerId: string;
+    customerName: string;
+    title: string;
+    scheduledDate: string;
+    status: JobStatus;
+}
+ 
+export interface JobListFilters {
+    query?: string;
+    status?: JobStatus;
+    page: number;
+}
+ 
+export interface JobListResult {
+    jobs: JobListItem[];
+    totalCount: number;
+}
+ 
+// Escape LIKE wildcards so a search for "50%" matches literally.
+function escapeLike(value: string): string {
+    return value.replace(/[\\%_]/g, '\\$&');
+}
+ 
+export async function getFilteredJobs(
+    userId: string,
+    { query, status, page }: JobListFilters
+): Promise<JobListResult> {
+    const search = query ? `%${escapeLike(query)}%` : null;
+    const statusFilter = status ?? null;
+    const offset = (page - 1) * JOBS_PER_PAGE;
+ 
+    const [rows, countRows] = await Promise.all([
+        sql`
+            SELECT
+                j.id,
+                j."customerId",
+                c.name AS "customerName",
+                j.title,
+                j."scheduledDate"::text AS "scheduledDate",
+                j.status
+            FROM jobs j
+            JOIN customers c ON c.id = j."customerId"
+            WHERE j."userId" = ${userId}
+            AND j."isDeleted" = false
+            AND (${search}::text IS NULL OR j.title ILIKE ${search} OR c.name ILIKE ${search})
+            AND (${statusFilter}::job_status IS NULL OR j.status = ${statusFilter}::job_status)
+            ORDER BY j."scheduledDate" DESC, j."createdAt" DESC
+            LIMIT ${JOBS_PER_PAGE} OFFSET ${offset}
+        `,
+        sql`
+            SELECT COUNT(*)::int AS count
+            FROM jobs j
+            JOIN customers c ON c.id = j."customerId"
+            WHERE j."userId" = ${userId}
+            AND j."isDeleted" = false
+            AND (${search}::text IS NULL OR j.title ILIKE ${search} OR c.name ILIKE ${search})
+            AND (${statusFilter}::job_status IS NULL OR j.status = ${statusFilter}::job_status)
+        `,
+    ]);
+ 
+    return {
+        jobs: rows as unknown as JobListItem[],
+        totalCount: (countRows[0] as { count: number }).count,
+    };
+}
