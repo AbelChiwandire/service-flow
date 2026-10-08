@@ -46,7 +46,7 @@ CREATE TABLE jobs (
     "customerId" UUID NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    "scheduledDate" DATE,
+    "scheduledDate" DATE NOT NULL,
     status job_status NOT NULL DEFAULT 'scheduled',
     "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
