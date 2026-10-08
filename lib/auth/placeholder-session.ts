@@ -1,2 +1,3 @@
 // TEMPORARY: stand-in for real session lookup until auth is implemented.
-export const PLACEHOLDER_USER_ID = '7a283a65-844f-4034-ab6d-7807cd807bf9';
+// Delete this file and replace all imports with a real session call.
+export const PLACEHOLDER_USER_ID = 'ce21113f-f450-4006-abb3-e5f1c67ceabb';
