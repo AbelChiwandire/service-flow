@@ -3,13 +3,26 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
-import { createJobRecord, deleteJobRecord, updateJobRecord } from './queries';
+import {
+    createJobRecord,
+    deleteJobRecord,
+    getJob,
+    updateJobRecord,
+} from './queries';
 import {
     JobFormSchema,
+    JobStatusSchema,
     IdSchema,
     formatValidationErrors,
     type JobFormErrors,
 } from './schema';
+import {
+    CompleteJobSchema,
+    formatCompletionErrors,
+    type CompletionErrors,
+} from './completion-schema';
+import { JOB_STATUS_LABELS, canTransition } from './status';
+import type { JobStatus } from './repository';
 
 const JOBS_PATH = '/jobs';
 
@@ -22,6 +35,12 @@ export type State = {
         description?: string;
         scheduledDate?: string;
     };
+};
+
+export type StatusState = {
+    message?: string | null;
+    errors?: CompletionErrors;
+    values?: { amount?: string; dueDate?: string };
 };
 
 // The user is always resolved on the server, never taken from the client.
@@ -106,6 +125,7 @@ export async function updateJobAction(
     }
 
     revalidatePath(JOBS_PATH);
+    revalidatePath(`${JOBS_PATH}/${id}`);
     redirect(JOBS_PATH);
 }
 
@@ -126,4 +146,86 @@ export async function deleteJobAction(
 
     revalidatePath(JOBS_PATH);
     redirect(JOBS_PATH);
+}
+
+// Moves a job to a new status after checking the transition on the server.
+// Returns an error message, or null when the change was saved.
+async function applyStatusChange(id: string, target: JobStatus): Promise<string | null> {
+    const userId = await getCurrentUserId();
+
+    const job = await getJob(userId, id);
+    if (!job) return 'Job not found.';
+
+    if (!canTransition(job.status, target)) {
+        return `A ${JOB_STATUS_LABELS[job.status].toLowerCase()} job can't be changed to ${JOB_STATUS_LABELS[target].toLowerCase()}.`;
+    }
+
+    const result = await updateJobRecord(userId, id, { status: target });
+    if (!result.ok) return result.message;
+
+    revalidatePath(JOBS_PATH);
+    revalidatePath(`${JOBS_PATH}/${id}`);
+    return null;
+}
+
+// Handles "Start job" and "Cancel job". Completing goes through completeJobAction.
+export async function changeJobStatusAction(
+    id: string,
+    target: JobStatus,
+    _prevState: StatusState,
+    _formData: FormData
+): Promise<StatusState> {
+    const parsedTarget = JobStatusSchema.safeParse(target);
+
+    if (
+        !IdSchema.safeParse(id).success ||
+        !parsedTarget.success ||
+        parsedTarget.data === 'completed'
+    ) {
+        return { message: 'Invalid request.' };
+    }
+
+    const error = await applyStatusChange(id, parsedTarget.data);
+    return error ? { message: error } : {};
+}
+
+// Completing a job collects the invoice details first. If anything fails,
+// the job keeps its previous status.
+export async function completeJobAction(
+    id: string,
+    _prevState: StatusState,
+    formData: FormData
+): Promise<StatusState> {
+    if (!IdSchema.safeParse(id).success) {
+        return { message: 'Invalid job id.' };
+    }
+
+    const parsed = CompleteJobSchema.safeParse({
+        amount: formData.get('amount'),
+        dueDate: formData.get('dueDate'),
+    });
+
+    if (!parsed.success) {
+        return {
+            errors: formatCompletionErrors(parsed.error),
+            values: {
+                amount: formData.get('amount')?.toString(),
+                dueDate: formData.get('dueDate')?.toString(),
+            },
+        };
+    }
+
+    // TODO(invoices): create the invoice for this job here, before changing the
+    // status, once the invoice backend exists. The amount and due date are validated
+    // above but are not saved anywhere yet.
+    const error = await applyStatusChange(id, 'completed');
+    return error
+        ? {
+              message: error,
+              values: {
+                  amount: formData.get('amount')?.toString(),
+                  dueDate: formData.get('dueDate')?.toString(),
+              },
+          }
+        : {};
 }

@@ -32,6 +32,8 @@ export interface CustomerOption {
   name: string;
 }
 
+export type JobDetail = Job & { customerName: string };
+
 const JOB_NOT_FOUND = "Job not found.";
 
 // The repository is imported lazily so the database client is never loaded in mock mode.
@@ -51,6 +53,20 @@ export async function getJob(userId: string, id: string): Promise<Job | null> {
 
   const { getJobById } = await import("./repository");
   return getJobById(userId, id);
+}
+
+export async function getJobDetail(
+  userId: string,
+  id: string
+): Promise<JobDetail | null> {
+  if (useMockData) return getMockJob(id);
+
+  const { getJobById, getJobCustomer } = await import("./repository");
+  const job = await getJobById(userId, id);
+  if (!job) return null;
+
+  const customer = await getJobCustomer(userId, job.customerId);
+  return { ...job, customerName: customer?.name ?? "Unknown customer" };
 }
 
 export async function getCustomerOptions(userId: string): Promise<CustomerOption[]> {

@@ -6,8 +6,8 @@ import { EmptyState } from "@/components/EmptyState";
 import { JobList } from "@/components/JobList";
 import { JobFilters } from "@/components/JobFilters";
 import { Pagination } from "@/components/Pagination";
-   import { getJobsPage } from "@/lib/db/jobs/queries";
-   import { JOBS_PER_PAGE } from "@/lib/db/jobs/constants";
+import { getJobsPage } from "@/lib/db/jobs/queries";
+import { JOBS_PER_PAGE } from "@/lib/db/jobs/constants";
 import { JobStatusSchema } from "@/lib/db/jobs/schema";
 import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
 
