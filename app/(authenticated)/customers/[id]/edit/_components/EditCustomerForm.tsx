@@ -10,13 +10,11 @@ type CustomerValues = {
 
 type EditCustomerFormProps = {
     customerId: string;
-    userId: string;
     initialValues: CustomerValues | null;
 };
 
 export default function EditCustomerForm({
     customerId,
-    userId,
     initialValues,
 }: EditCustomerFormProps) {
     return (
@@ -43,7 +41,6 @@ export default function EditCustomerForm({
 
                 {initialValues ? (
                     <UpdateCustomerForm
-                        userId={userId}
                         customerId={customerId}
                         initialValues={initialValues}
                     />
