@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getCustomerById } from "@/lib/db/customer/repository";
-import EditCustomerForm from "./_components/EditCustomerForm";
+import EditCustomerForm from "../../../../../components/customers/EditCustomerForm";
 import { requireUserId } from "@/lib/auth/session";
 
 export default async function EditCustomerPage({ params }: { params: Promise<{ id: string }> }) {

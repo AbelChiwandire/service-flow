@@ -1,4 +1,4 @@
-import CustomerDetails from "./_components/CustomerDetails";
+import CustomerDetails from "../../../../components/customers/CustomerDetails";
 import { getCustomerById } from "@/lib/db/customer/repository";
 import { requireUserId } from "@/lib/auth/session";
 

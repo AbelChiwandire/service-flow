@@ -6,7 +6,7 @@ import {
 } from "@/lib/db/customer/repository";
 import { parseCustomerFilter, parsePage, parseQuery } from "@/lib/db/dashboard/search-params";
 import { requireUserId } from "@/lib/auth/session";
-import CustomerList from "./_components/CustomerList";
+import CustomerList from "@/components/customers/CustomerList";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
 

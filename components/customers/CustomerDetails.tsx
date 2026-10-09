@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Customer } from "@/lib/db/customer/repository";
-import DeleteCustomerButton from "../../delete-customer-button";
-import CustomerJobList from "./CustomerJobList";
+import DeleteCustomerButton from "@/app/(authenticated)/customers/delete-customer-button";
+import CustomerJobList from "@/components/customers/CustomerJobList";
 
 const focusLinkClass =
   "rounded-sm text-sm font-semibold text-[#2667FF] underline-offset-4 hover:text-[#3F8EFC] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2667FF] focus-visible:ring-offset-2";
@@ -57,7 +57,6 @@ export default function CustomerDetails({
                   Edit Customer
                 </Link>
                 <DeleteCustomerButton
-                  userId={userId}
                   customerId={customer.id}
                 />
               </div>

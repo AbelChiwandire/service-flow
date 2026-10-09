@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import UpdateCustomerForm from '../update-customer-form';
+import UpdateCustomerForm from '../../app/(authenticated)/customers/[id]/edit/update-customer-form';
 
 type CustomerValues = {
     name: string;
