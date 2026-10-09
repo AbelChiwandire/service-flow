@@ -10,7 +10,6 @@ export function SignOutButton(
         >
             <button
                 type="submit"
-                onClick={onClick}
                 className={className}
                 role={role}
             >

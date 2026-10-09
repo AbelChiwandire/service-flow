@@ -10,12 +10,6 @@ const MY_ACCOUNT_HREF = "/account";
 const itemClassName =
   "block w-full rounded-md px-3 py-2 text-left text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:bg-slate-100 focus-visible:outline-none";
 
-function SignOutPlaceholder({ onSelect }: { onSelect: () => void }) {
-  return (
-    <SignOutButton onClick={onSelect} className={itemClassName} role="menuitem" />
-  );
-}
-
 export function AccountMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -109,7 +103,7 @@ export function AccountMenu() {
 
           <div role="separator" className="my-1 border-t border-slate-200" />
 
-          <SignOutPlaceholder onSelect={close} />
+          <SignOutButton className={itemClassName} role="menuitem" />
         </div>
       )}
     </div>
