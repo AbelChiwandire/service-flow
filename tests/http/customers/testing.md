@@ -8,13 +8,13 @@ that file as comments beneath each request.
 ## Environment
 
 - `next dev`, local Postgres (Neon)
-- Seeded user: `PLACEHOLDER_USER_ID` in `lib/db/auth/placeholder-seesion.ts`
-  (temporary stand-in until auth is implemented)
+- Authenticated user: the signed-in session user (`getSessionUserId()` in `lib/auth/session.ts`).
+  These scenarios were originally verified with a hardcoded placeholder user, since removed.
 
 ## Scenarios verified
 
 | Scenario | Endpoint | Expected | Result |
-    |---|---|---|---|
+|---|---|---|---|
 | Create with valid data | `POST /api/customers` | 201, customer returned | ✅ |
 | Create with invalid email | `POST /api/customers` | 400, field-level errors | ✅ |
 | Create with missing fields | `POST /api/customers` | 400, field-level errors | ✅ |
@@ -41,6 +41,4 @@ that file as comments beneath each request.
 
 - No automated tests. Manual coverage only, evidenced by
   `tests/http/customers/customers.http` (API) and this document (UI/action paths).
-- Auth is not implemented; all scenarios above ran against a single
-  seeded placeholder user via `PLACEHOLDER_USER_ID`.
-  
+- Scenarios above were run before auth landed, against a single seeded user. Re-verify under a real session.

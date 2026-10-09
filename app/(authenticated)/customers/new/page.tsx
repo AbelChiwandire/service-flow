@@ -1,8 +1,9 @@
 import Link from "next/link";
-import CustomerForm from "./_components/CustomerForm";
-import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
+import CustomerForm from "./create-customer-form";
+import { requireUserId } from "@/lib/auth/session";
 
-export default function NewCustomerPage() {
+export default async function NewCustomerPage() {
+  await requireUserId();
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
@@ -26,7 +27,7 @@ export default function NewCustomerPage() {
           </p>
         </header>
 
-        <CustomerForm userId={PLACEHOLDER_USER_ID} />
+        <CustomerForm />
       </div>
     </main>
   );

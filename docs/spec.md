@@ -25,11 +25,11 @@ The purpose of ServiceFlow is to provide small service businesses with a simple 
 
 ServiceFlow is intended for small service businesses such as:
 
-* Cleaning businesses
-* Repair businesses
-* Maintenance businesses
-* Landscaping businesses
-* Other businesses that manage customer service jobs
+- Cleaning businesses
+- Repair businesses
+- Maintenance businesses
+- Landscaping businesses
+- Other businesses that manage customer service jobs
 
 The MVP focuses on the core workflows required to manage these businesses without introducing unnecessary complexity.
 
@@ -47,11 +47,11 @@ The MVP focuses on the core workflows required to manage these businesses withou
 
 **Acceptance Scenarios**:
 
-* The user can provide the required registration information.
-* A new account is created when the information is valid.
-* The user is authenticated after successful registration.
-* An account cannot be created using an email address that is already registered.
-* Invalid registration information is rejected with an appropriate error.
+- The user can provide the required registration information.
+- A new account is created when the information is valid.
+- The user is authenticated after successful registration.
+- An account cannot be created using an email address that is already registered.
+- Invalid registration information is rejected with an appropriate error.
 
 ---
 
@@ -65,11 +65,11 @@ The MVP focuses on the core workflows required to manage these businesses withou
 
 **Acceptance Scenarios**:
 
-* A registered user can sign in with valid credentials.
-* Invalid credentials are rejected.
-* An authenticated user can sign out.
-* Protected functionality cannot be accessed by unauthenticated users.
-* Users can only access data they are authorized to access.
+- A registered user can sign in with valid credentials.
+- Invalid credentials are rejected.
+- An authenticated user can sign out.
+- Protected functionality cannot be accessed by unauthenticated users.
+- Users can only access data they are authorized to access.
 
 ---
 
@@ -83,14 +83,14 @@ The MVP focuses on the core workflows required to manage these businesses withou
 
 **Acceptance Scenarios**:
 
-* A user can create a customer.
-* A user can view their customers.
-* A user can view an individual customer's information.
-* A user can update a customer.
-* A user can delete a customer when it is safe to do so.
-* A customer cannot be deleted in a way that leaves associated jobs invalid.
-* Users cannot access another user's unauthorized customer records.
-* Invalid customer information is rejected.
+- A user can create a customer.
+- A user can view their customers.
+- A user can view an individual customer's information.
+- A user can update a customer.
+- A user can delete a customer when it is safe to do so.
+- A customer cannot be deleted in a way that leaves associated jobs invalid.
+- Users cannot access another user's unauthorized customer records.
+- Invalid customer information is rejected.
 
 ---
 
@@ -104,14 +104,14 @@ The MVP focuses on the core workflows required to manage these businesses withou
 
 **Acceptance Scenarios**:
 
-* A user can create a job for an existing customer.
-* A job contains relevant information such as a title, description, scheduled date, customer, and status.
-* A user can view their jobs.
-* A user can view an individual job.
-* A user can update a job.
-* A user can delete a job.
-* A job must reference a valid customer.
-* Users cannot create or modify jobs belonging to another user's unauthorized data.
+- A user can create a job for an existing customer.
+- A job contains relevant information such as a title, description, scheduled date, customer, and status.
+- A user can view their jobs.
+- A user can view an individual job.
+- A user can update a job.
+- A user can delete a job.
+- A job must reference a valid customer.
+- Users cannot create or modify jobs belonging to another user's unauthorized data.
 
 ---
 
@@ -127,19 +127,19 @@ The MVP focuses on the core workflows required to manage these businesses withou
 
 The MVP supports:
 
-* `scheduled`
-* `in_progress`
-* `completed`
-* `cancelled`
+- `scheduled`
+- `in_progress`
+- `completed`
+- `cancelled`
 
 **Acceptance Scenarios**:
 
-* A newly created job has an appropriate initial status.
-* A user can update a job's status.
-* Only the defined job statuses can be used.
-* Invalid status changes are rejected.
-* A completed job is eligible for a minimal invoice.
-* A cancelled job is not treated as an active job.
+- A newly created job has an appropriate initial status.
+- A user can update a job's status.
+- Only the defined job statuses can be used.
+- Invalid status changes are rejected.
+- A completed job is eligible for a minimal invoice.
+- A cancelled job is not treated as an active job.
 
 The exact rules governing every possible status transition may be refined during implementation planning.
 
@@ -157,22 +157,22 @@ The exact rules governing every possible status transition may be refined during
 
 A minimal invoice contains:
 
-* Amount
-* Due date
-* Paid date, when applicable
+- Amount
+- Due date
+- Paid date, when applicable
 
 **Acceptance Scenarios**:
 
-* An invoice can be created for a completed job.
-* A completed job can have no more than one invoice.
-* A user can view their invoices.
-* A user can view an individual invoice.
-* A user can update an invoice.
-* A user can delete an invoice.
-* An invoice must contain a valid amount.
-* An invoice must contain a due date.
-* A paid date is optional.
-* Users cannot access another user's unauthorized invoices.
+- An invoice can be created for a completed job.
+- A completed job can have no more than one invoice.
+- A user can view their invoices.
+- A user can view an individual invoice.
+- A user can update an invoice.
+- A user can delete an invoice.
+- An invoice must contain a valid amount.
+- An invoice must contain a due date.
+- A paid date is optional.
+- Users cannot access another user's unauthorized invoices.
 
 ServiceFlow does not provide payment processing, accounting, tax calculations, or advanced billing functionality in the MVP.
 
@@ -188,11 +188,11 @@ ServiceFlow does not provide payment processing, accounting, tax calculations, o
 
 **Acceptance Scenarios**:
 
-* Authenticated users can access the dashboard.
-* The dashboard provides an overview of relevant customer, job, and invoice information.
-* The dashboard can show active or upcoming jobs.
-* The dashboard can show relevant outstanding invoice information.
-* Dashboard requirements may be refined as the team determines which information is most useful.
+- Authenticated users can access the dashboard.
+- The dashboard provides an overview of relevant customer, job, and invoice information.
+- The dashboard can show active or upcoming jobs.
+- The dashboard can show relevant outstanding invoice information.
+- Dashboard requirements may be refined as the team determines which information is most useful.
 
 ---
 
@@ -252,38 +252,38 @@ The following endpoints represent the proposed API structure for the MVP and may
 
 ### Authentication Endpoints
 
-* `POST /api/auth/sign-up` — Create an account
-* `POST /api/auth/sign-in` — Authenticate a user
-* `POST /api/auth/sign-out` — Sign out a user
+- `POST /api/auth/sign-up` — Create an account
+- `POST /api/auth/sign-in` — Authenticate a user
+- `POST /api/auth/sign-out` — Sign out a user
 
 ### Customer Endpoints
 
-* `GET /api/customers` — Retrieve customers
-* `POST /api/customers` — Create a customer
-* `GET /api/customers/{customerId}` — Retrieve a customer
-* `PATCH /api/customers/{customerId}` — Update a customer
-* `DELETE /api/customers/{customerId}` — Delete a customer
+- `GET /api/customers` — Retrieve customers
+- `POST /api/customers` — Create a customer
+- `GET /api/customers/{customerId}` — Retrieve a customer
+- `PATCH /api/customers/{customerId}` — Update a customer
+- `DELETE /api/customers/{customerId}` — Delete a customer
 
 ### Job Endpoints
 
-* `GET /api/jobs` — Retrieve jobs
-* `POST /api/jobs` — Create a job
-* `GET /api/jobs/{jobId}` — Retrieve a job
-* `PATCH /api/jobs/{jobId}` — Update a job
-* `DELETE /api/jobs/{jobId}` — Delete a job
-* `PATCH /api/jobs/{jobId}/status` — Update job status
+- `GET /api/jobs` — Retrieve jobs
+- `POST /api/jobs` — Create a job
+- `GET /api/jobs/{jobId}` — Retrieve a job
+- `PATCH /api/jobs/{jobId}` — Update a job
+- `DELETE /api/jobs/{jobId}` — Delete a job
+- `PATCH /api/jobs/{jobId}/status` — Update job status
 
 ### Invoice Endpoints
 
-* `GET /api/invoices` — Retrieve invoices
-* `POST /api/invoices` — Create an invoice
-* `GET /api/invoices/{invoiceId}` — Retrieve an invoice
-* `PATCH /api/invoices/{invoiceId}` — Update an invoice
-* `DELETE /api/invoices/{invoiceId}` — Delete an invoice
+- `GET /api/invoices` — Retrieve invoices
+- `POST /api/invoices` — Create an invoice
+- `GET /api/invoices/{invoiceId}` — Retrieve an invoice
+- `PATCH /api/invoices/{invoiceId}` — Update an invoice
+- `DELETE /api/invoices/{invoiceId}` — Delete an invoice
 
 ### Dashboard Endpoints
 
-* `GET /api/overview` — Retrieve information required by the dashboard
+- `GET /api/overview` — Retrieve information required by the dashboard
 
 ---
 
@@ -336,17 +336,17 @@ The P1 features should establish the application's core functionality before the
 
 The following functionality is outside the MVP:
 
-* Payment processing
-* Full accounting
-* Tax calculations
-* Recurring billing
-* Advanced CRM functionality
-* Payroll
-* Complex business administration
-* Enterprise features
-* Advanced reporting
-* Complex role-based access control unless later required by the team
-* Other functionality not directly related to the agreed ServiceFlow MVP
+- Payment processing
+- Full accounting
+- Tax calculations
+- Recurring billing
+- Advanced CRM functionality
+- Payroll
+- Complex business administration
+- Enterprise features
+- Advanced reporting
+- Complex role-based access control unless later required by the team
+- Other functionality not directly related to the agreed ServiceFlow MVP
 
 ---
 
@@ -374,11 +374,11 @@ Some implementation details may be refined during the planning stage.
 
 In particular:
 
-* Exact dashboard contents may be refined by the team.
-* Exact job status transition rules may be refined.
-* Customer deletion behavior may be refined based on the final data model.
-* The relationship between users and businesses may be refined during database design.
-* API routes may be adjusted if the final architecture requires it.
-* Additional validation rules may be established during implementation planning.
+- Exact dashboard contents may be refined by the team.
+- Exact job status transition rules may be refined.
+- Customer deletion behavior may be refined based on the final data model.
+- The relationship between users and businesses may be refined during database design.
+- API routes may be adjusted if the final architecture requires it.
+- Additional validation rules may be established during implementation planning.
 
 These refinements should remain consistent with the core purpose and MVP scope of ServiceFlow.

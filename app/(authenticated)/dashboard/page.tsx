@@ -1,25 +1,20 @@
-// mock dashboard page for testing the AppHeader and AppSidebar
-import { PageHeader } from "@/components/PageHeader";
+import DashboardSummary from "@/components/dashboard/DashboardSummary";
+import { requireUserId } from "@/lib/auth/session";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { Suspense } from "react";
+import DashboardSummarySkeleton from "@/components/dashboard/DashboardSummarySkeleton";
 
-export default function DashboardPage() {
-  return (
-    <>
-      <PageHeader
-        title="Dashboard"
-        description="Overview of your active jobs and customer activity."
-      />
+export const dynamic = "force-dynamic";
 
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Customers</p>
-          <p className="mt-2 text-3xl font-bold text-slate-900">24</p>
-        </div>
+export default async function DashboardPage() {
+    const userId = await requireUserId();
+    return (
+        <main className="mx-auto w-full max-w-6xl px-4 py-6 pt-0 sm:px-6 sm:py-8 sm:pt-0">
+            <PageHeader title="Dashboard" description="Overview of your service business." />
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Open jobs</p>
-          <p className="mt-2 text-3xl font-bold text-slate-900">12</p>
-        </div>
-      </div>
-    </>
-  );
+            <Suspense fallback={<DashboardSummarySkeleton />}>
+                <DashboardSummary userId={userId} />
+            </Suspense>
+        </main>
+    );
 }
