@@ -1,6 +1,6 @@
 import CustomerDetails from "./_components/CustomerDetails";
-import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
 import { getCustomerById } from "@/lib/db/customer/repository";
+import { requireUserId } from "@/lib/auth/session";
 
 type CustomerPageProps = {
   params: Promise<{ id: string }>;
@@ -8,7 +8,8 @@ type CustomerPageProps = {
 
 export default async function CustomerPage({ params }: CustomerPageProps) {
   const { id } = await params;
-  const customer = await getCustomerById(PLACEHOLDER_USER_ID, id);
+  const userId = await requireUserId();
+  const customer = await getCustomerById(userId, id);
 
-  return <CustomerDetails customer={customer} userId={PLACEHOLDER_USER_ID} />;
+  return <CustomerDetails customer={customer} userId={userId} />;
 }

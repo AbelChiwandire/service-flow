@@ -81,39 +81,3 @@ export default async function CustomersPlaceholderPage({
         </main>
     );
 }
-/*
-import Link from "next/link";
-import CustomerList from "./_components/CustomerList";
-import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
-import { getCustomers } from "@/lib/db/customer/repository";
-
-export default async function CustomersPage() {
-  const customers = await getCustomers(PLACEHOLDER_USER_ID);
-
-  return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <header className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-              Customers
-            </h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600 sm:text-base">
-              Manage your customer information and keep every relationship in
-              one place.
-            </p>
-          </div>
-          <Link
-            href="/customers/new"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#2667FF] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2667FF] focus-visible:ring-offset-2"
-          >
-            Add Customer
-          </Link>
-        </header>
-
-        <CustomerList customers={customers} />
-      </div>
-    </main>
-  );
-}
-*/
