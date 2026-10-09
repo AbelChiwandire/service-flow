@@ -1,12 +1,10 @@
 // PLACEHOLDER PAGE
-// This page uses a placeholder user ID until authentication is implemented.
-
 import Link from 'next/link';
 import {
     getJobs,
     getJobsTotalPages,
     type JobListParams,
-} from '@/lib/db/dashboard/temp-jobs';
+} from '@/lib/db/jobs/repository';
 import {
     parseDue,
     parsePage,

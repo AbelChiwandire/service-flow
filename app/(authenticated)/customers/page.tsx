@@ -1,6 +1,4 @@
 // PLACEHOLDER PAGE
-// This page uses a placeholder user ID until authentication is implemented.
-
 import Link from 'next/link';
 import {
     getCustomers,

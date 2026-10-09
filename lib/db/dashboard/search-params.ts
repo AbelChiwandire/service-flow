@@ -1,4 +1,4 @@
-import type { DueFilter, JobStatus } from './temp-jobs';
+import type { DueFilter, JobStatus } from '../jobs/repository';
 import type { CustomerListParams } from '../customer/repository';
 
 // What Next.js gives us for a single query param.

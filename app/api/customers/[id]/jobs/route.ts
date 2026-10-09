@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { JobFormSchema, formatValidationErrors } from '@/lib/db/jobs/schema';
-import { getJobsByCustomer, getJobCustomer, createJob } from '@/lib/db/jobs/repository';
+import { getJobsByCustomer, createJob } from '@/lib/db/jobs/repository';
+import { getCustomerById } from '@/lib/db/customer/repository';
 import { getSessionUserId, unauthorizedResponse } from '@/lib/auth/session';
 import { validateId, parseJsonBody, withApiErrorHandling } from '@/lib/db/jobs/api-helpers';
 
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (idError) return idError;
 
     return withApiErrorHandling('GET /api/customers/[id]/jobs failed:', async () => {
-        const customer = await getJobCustomer(userId, customerId);
+        const customer = await getCustomerById(userId, customerId);
         if (!customer) {
             return NextResponse.json({ error: 'Customer not found.' }, { status: 404 });
         }

@@ -1,4 +1,4 @@
-import { countJobs, getJobs, type JobWithCustomer } from './temp-jobs';
+import { countJobs, getJobs, type JobWithCustomer } from '../jobs/repository';
 import { countCustomers } from '../customer/repository';
 
 // How many rows the upcoming and overdue previews show.
