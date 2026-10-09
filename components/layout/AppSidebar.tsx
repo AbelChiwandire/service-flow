@@ -21,7 +21,7 @@ type SidebarNavProps = {
 function SidebarNav({ label, onNavigate, collapsible }: SidebarNavProps) {
     const pathname = usePathname();
     const labelClass = collapsible
-        ? "opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+        ? "opacity-0 transition-opacity group-hover:opacity-100 group-has-[:focus-visible]:opacity-100"
         : "";
 
     return (
@@ -80,12 +80,12 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
         <>
             {/* Desktop: reserves the collapsed width; the inner panel expands over content on hover */}
             <div className="hidden w-16 shrink-0 lg:block">
-                <aside className="group fixed inset-y-0 left-0 z-40 w-16 overflow-hidden border-r border-slate-200 bg-white transition-[width] duration-200 hover:w-64 focus-within:w-64">
+                <aside className="group fixed inset-y-0 left-0 z-40 w-16 overflow-hidden border-r border-slate-200 bg-white transition-[width] duration-200 hover:w-64 has-[:focus-visible]:w-64">
                     <div className="flex h-16 items-center border-b border-slate-200 px-3.5">
                         <Logo
                             href="/dashboard"
                             label="ServiceFlow dashboard"
-                            titleClassName="opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+                            titleClassName="opacity-0 transition-opacity group-hover:opacity-100 group-has-[:focus-visible]:opacity-100"
                         />
                     </div>
 
