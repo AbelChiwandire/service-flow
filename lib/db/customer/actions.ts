@@ -45,12 +45,14 @@ function getRawCustomerValues(formData: FormData): State["values"] {
     };
 }
 
-async function runMutation(
-    mutation: () => Promise<unknown>,
+async function runMutation<TResult>(
+    mutation: () => Promise<TResult>,
     logLabel: string,
+    getRedirectPath: (result: TResult) => string
 ): Promise<State | undefined> {
+    let result: TResult;
     try {
-        await mutation();
+        result = await mutation();
     } catch (error) {
         if (error instanceof CustomerHasActiveJobsError) {
             return { message: error.message };
@@ -59,8 +61,12 @@ async function runMutation(
         throw error;
     }
 
-    revalidatePath("/customers");
-    redirect("/customers");
+    revalidatePath('/customers');
+    const redirectPath = getRedirectPath(result);
+    if (redirectPath !== '/customers') {
+        revalidatePath(redirectPath);
+    }
+    redirect(redirectPath);
 }
 
 export async function createCustomerAction(_prevState: State, formData: FormData): Promise<State> {
@@ -76,7 +82,8 @@ export async function createCustomerAction(_prevState: State, formData: FormData
 
     const result = await runMutation(
         () => createCustomer({ userId, ...validatedData.data }),
-        "createCustomerAction failed:",
+        'createCustomerAction failed:',
+        (customer) => `/customers/${encodeURIComponent(customer.id)}`
     );
     return result ?? {};
 }
@@ -102,7 +109,8 @@ export async function updateCustomerAction(
 
     const result = await runMutation(
         () => updateCustomer(userId, id, validatedData.data),
-        "updateCustomerAction failed:",
+        'updateCustomerAction failed:',
+        () => `/customers/${encodeURIComponent(id)}`
     );
     return result ?? {};
 }
@@ -119,7 +127,8 @@ export async function deleteCustomerAction(
 
     const result = await runMutation(
         () => deleteCustomer(userId, id),
-        "deleteCustomerAction failed:",
+        'deleteCustomerAction failed:',
+        () => '/customers'
     );
     return result ?? {};
 }
