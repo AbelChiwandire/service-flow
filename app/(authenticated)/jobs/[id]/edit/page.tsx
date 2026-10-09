@@ -1,21 +1,18 @@
-import { notFound } from 'next/navigation';
-import { getJobById } from '@/lib/db/jobs/repository';
-import { IdSchema } from '@/lib/db/jobs/schema';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
-import UpdateJobForm from './update-job-form';
+import { notFound } from "next/navigation";
+import { getJobById } from "@/lib/db/jobs/repository";
+import { IdSchema } from "@/lib/db/jobs/schema";
+import { requireUserId } from "@/lib/auth/session";
+import UpdateJobForm from "./update-job-form";
 
-export default async function EditJobPage({
-    params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
+export default async function EditJobPage({ params }: { params: Promise<{ id: string }> }) {
+    const userId = await requireUserId();
     const { id } = await params;
 
     if (!IdSchema.safeParse(id).success) {
         notFound();
     }
 
-    const job = await getJobById(PLACEHOLDER_USER_ID, id);
+    const job = await getJobById(userId, id);
     if (!job) {
         notFound();
     }
@@ -30,11 +27,7 @@ export default async function EditJobPage({
     return (
         <div className="max-w-xl space-y-4">
             <h1 className="text-xl font-semibold">Edit job</h1>
-            <UpdateJobForm
-                userId={PLACEHOLDER_USER_ID}
-                jobId={job.id}
-                initialValues={initialValues}
-            />
+            <UpdateJobForm jobId={job.id} initialValues={initialValues} />
         </div>
     );
 }

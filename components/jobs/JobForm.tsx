@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import type { State } from '@/lib/db/jobs/actions';
-import type { JobStatus } from '@/lib/db/jobs/repository';
-import { JobStatusSchema } from '@/lib/db/jobs/schema';
+import type { State } from "@/lib/db/jobs/actions";
+import type { JobStatus } from "@/lib/db/jobs/repository";
+import { JobStatusSchema } from "@/lib/db/jobs/schema";
 
 const STATUS_LABELS: Record<JobStatus, string> = {
-    scheduled: 'Scheduled',
-    in_progress: 'In progress',
-    completed: 'Completed',
-    cancelled: 'Cancelled',
+    scheduled: "Scheduled",
+    in_progress: "In progress",
+    completed: "Completed",
+    cancelled: "Cancelled",
 };
 
 type JobFormProps = {
@@ -23,24 +23,16 @@ type JobFormProps = {
     };
 };
 
-export function JobForm({
-    formAction,
-    state,
-    isPending,
-    initialValues,
-}: JobFormProps) {
-    const title = state.values?.title ?? initialValues?.title ?? '';
-    const description = state.values?.description ?? initialValues?.description ?? '';
-    const scheduledDate = state.values?.scheduledDate ?? initialValues?.scheduledDate ?? '';
-    const status = state.values?.status ?? initialValues?.status ?? 'scheduled';
+export function JobForm({ formAction, state, isPending, initialValues }: JobFormProps) {
+    const title = state.values?.title ?? initialValues?.title ?? "";
+    const description = state.values?.description ?? initialValues?.description ?? "";
+    const scheduledDate = state.values?.scheduledDate ?? initialValues?.scheduledDate ?? "";
+    const status = state.values?.status ?? initialValues?.status ?? "scheduled";
 
     return (
         <form action={formAction} className="max-w-xl space-y-4">
             <div>
-                <label
-                    htmlFor="title"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-1">
                     Title
                 </label>
                 <input
@@ -112,10 +104,7 @@ export function JobForm({
             </div>
 
             <div>
-                <label
-                    htmlFor="status"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="status" className="block text-sm font-medium text-slate-700 mb-1">
                     Status
                 </label>
                 <select
@@ -141,16 +130,14 @@ export function JobForm({
                 </div>
             </div>
 
-            {state.message ? (
-                <p className="text-sm text-red-600">{state.message}</p>
-            ) : null}
+            {state.message ? <p className="text-sm text-red-600">{state.message}</p> : null}
 
             <button
                 type="submit"
                 disabled={isPending}
                 className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
-                {isPending ? 'Saving...' : 'Save Job'}
+                {isPending ? "Saving..." : "Save Job"}
             </button>
         </form>
     );

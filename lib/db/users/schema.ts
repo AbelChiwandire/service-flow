@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const IdSchema = z.uuid();
 
@@ -11,8 +11,8 @@ export const SignupFormSchema = z
         confirmPassword: z.string().min(8),
     })
     .refine((data) => data.password === data.confirmPassword, {
-        message: 'Passwords do not match.',
-        path: ['confirmPassword'],
+        message: "Passwords do not match.",
+        path: ["confirmPassword"],
     });
 
 export const PasswordChangeFormSchema = z
@@ -22,8 +22,8 @@ export const PasswordChangeFormSchema = z
         confirmNewPassword: z.string().min(8),
     })
     .refine((data) => data.newPassword === data.confirmNewPassword, {
-        message: 'Passwords do not match.',
-        path: ['confirmNewPassword'],
+        message: "Passwords do not match.",
+        path: ["confirmNewPassword"],
     });
 
 export const UserProfileFormSchema = z.object({
@@ -47,7 +47,7 @@ export type UserFormErrors = {
 };
 
 export function formatValidationErrors(
-    error: z.ZodError<Partial<z.infer<typeof SignupFormSchema>>>
+    error: z.ZodError<Partial<z.infer<typeof SignupFormSchema>>>,
 ): UserFormErrors {
     const tree = z.treeifyError(error);
     return {
@@ -60,7 +60,7 @@ export function formatValidationErrors(
 }
 
 export function formatPasswordChangeErrors(
-    error: z.ZodError<z.infer<typeof PasswordChangeFormSchema>>
+    error: z.ZodError<z.infer<typeof PasswordChangeFormSchema>>,
 ): PasswordChangeErrors {
     const tree = z.treeifyError(error);
     return {

@@ -1,26 +1,27 @@
-'use server';
+"use server";
 
-import bcrypt from 'bcrypt';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import bcrypt from "bcrypt";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { requireUserId } from "@/lib/auth/session";
+import { signOut } from "@/auth";
 import {
     createUser,
     updateUser,
     deleteUser,
     EmailAlreadyExistsError,
     getUserAuthById,
-    updatePassword
-} from './repository';
+    updatePassword,
+} from "./repository";
 import {
     SignupFormSchema,
     UserProfileFormSchema,
-    IdSchema,
     formatValidationErrors,
     type UserFormErrors,
     type PasswordChangeErrors,
     formatPasswordChangeErrors,
     PasswordChangeFormSchema,
-} from './schema';
+} from "./schema";
 
 const SALT_ROUNDS = 10;
 
@@ -39,28 +40,28 @@ export type PasswordChangeState = {
     message?: string | null;
 };
 
-function getRawSignupValues(formData: FormData): State['values'] {
+function getRawSignupValues(formData: FormData): State["values"] {
     return {
-        name: formData.get('name')?.toString(),
-        businessName: formData.get('businessName')?.toString(),
-        email: formData.get('email')?.toString(),
+        name: formData.get("name")?.toString(),
+        businessName: formData.get("businessName")?.toString(),
+        email: formData.get("email")?.toString(),
         // password/confirmPassword deliberately excluded
     };
 }
 
 export async function signupAction(prevState: State, formData: FormData): Promise<State> {
     const validatedData = SignupFormSchema.safeParse({
-        name: formData.get('name'),
-        businessName: formData.get('businessName'),
-        email: formData.get('email'),
-        password: formData.get('password'),
-        confirmPassword: formData.get('confirmPassword'),
+        name: formData.get("name"),
+        businessName: formData.get("businessName"),
+        email: formData.get("email"),
+        password: formData.get("password"),
+        confirmPassword: formData.get("confirmPassword"),
     });
 
     if (!validatedData.success) {
         return {
             errors: formatValidationErrors(validatedData.error),
-            message: 'Missing or invalid fields. Failed to sign up.',
+            message: "Missing or invalid fields. Failed to sign up.",
             values: getRawSignupValues(formData),
         };
     }
@@ -78,33 +79,30 @@ export async function signupAction(prevState: State, formData: FormData): Promis
                 values: getRawSignupValues(formData),
             };
         }
-        console.error('signupAction failed:', error);
+        console.error("signupAction failed:", error);
         throw error;
     }
 
     // TODO: once auth exists, log the new user in here instead of redirecting to a login page
-    redirect('/login');
+    redirect("/login");
 }
 
 export async function updateUserProfileAction(
-    id: string,
     prevState: State,
-    formData: FormData
+    formData: FormData,
 ): Promise<State> {
-    if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid user id.' };
-    }
+    const id = await requireUserId();
 
     const validatedData = UserProfileFormSchema.safeParse({
-        name: formData.get('name'),
-        businessName: formData.get('businessName'),
-        email: formData.get('email'),
+        name: formData.get("name"),
+        businessName: formData.get("businessName"),
+        email: formData.get("email"),
     });
 
     if (!validatedData.success) {
         return {
             errors: formatValidationErrors(validatedData.error),
-            message: 'Missing or invalid fields. Failed to update profile.',
+            message: "Missing or invalid fields. Failed to update profile.",
             values: getRawSignupValues(formData),
         };
     }
@@ -112,7 +110,7 @@ export async function updateUserProfileAction(
     try {
         const user = await updateUser(id, validatedData.data);
         if (!user) {
-            return { message: 'User not found.' };
+            return { message: "User not found." };
         }
     } catch (error) {
         if (error instanceof EmailAlreadyExistsError) {
@@ -122,30 +120,29 @@ export async function updateUserProfileAction(
                 values: getRawSignupValues(formData),
             };
         }
-        console.error('updateUserProfileAction failed:', error);
+        console.error("updateUserProfileAction failed:", error);
         throw error;
     }
 
-    // PLACEHOLDER: redirect to actual user profile page after update
-    revalidatePath('/account');
-    redirect('/account');
+    revalidatePath("/account");
+    redirect("/account");
 }
 
 export async function changePasswordAction(
-    userId: string,
     prevState: PasswordChangeState,
-    formData: FormData
+    formData: FormData,
 ): Promise<PasswordChangeState> {
+    const userId = await requireUserId();
     const validatedData = PasswordChangeFormSchema.safeParse({
-        currentPassword: formData.get('currentPassword'),
-        newPassword: formData.get('newPassword'),
-        confirmNewPassword: formData.get('confirmNewPassword'),
+        currentPassword: formData.get("currentPassword"),
+        newPassword: formData.get("newPassword"),
+        confirmNewPassword: formData.get("confirmNewPassword"),
     });
 
     if (!validatedData.success) {
         return {
             errors: formatPasswordChangeErrors(validatedData.error),
-            message: 'Missing or invalid fields. Failed to change password.',
+            message: "Missing or invalid fields. Failed to change password.",
         };
     }
 
@@ -153,14 +150,14 @@ export async function changePasswordAction(
 
     const user = await getUserAuthById(userId);
     if (!user) {
-        return { message: 'User not found.' };
+        return { message: "User not found." };
     }
 
     const currentPasswordMatches = await bcrypt.compare(currentPassword, user.passwordHash);
     if (!currentPasswordMatches) {
         return {
-            errors: { currentPassword: ['Current password is incorrect.'] },
-            message: 'Current password is incorrect.',
+            errors: { currentPassword: ["Current password is incorrect."] },
+            message: "Current password is incorrect.",
         };
     }
 
@@ -169,39 +166,27 @@ export async function changePasswordAction(
     try {
         await updatePassword(userId, newPasswordHash);
     } catch (error) {
-        console.error('changePasswordAction failed:', error);
+        console.error("changePasswordAction failed:", error);
         throw error;
     }
 
-    revalidatePath('/account');
-    redirect('/account');
+    revalidatePath("/account");
+    redirect("/account");
 }
 
-export async function deleteUserAction(
-    id: string,
-    _prevState: State,
-    _formData: FormData
-): Promise<State> {
-    if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid user id.' };
-    }
+export async function deleteUserAction(_prevState: State, _formData: FormData): Promise<State> {
+    const id = await requireUserId();
 
     try {
         const user = await deleteUser(id);
         if (!user) {
-            return { message: 'User not found.' };
+            return { message: "User not found." };
         }
     } catch (error) {
-        console.error('deleteUserAction failed:', error);
+        console.error("deleteUserAction failed:", error);
         throw error;
     }
 
-    // TODO: once auth exists, clear the session here before redirecting
-    redirect('/');
+    await signOut({ redirectTo: "/" });
+    return {};
 }
-
-// SECURITY GAP — NOT PRODUCTION SAFE:
-// updateUserProfileAction and deleteUserAction take `id` as a plain argument
-// bound from PLACEHOLDER_USER_ID. Once auth exists, `id` must come from the
-// verified session, not be passed in from the caller/page at all — otherwise
-// a forged bind() call could act on another user's account.

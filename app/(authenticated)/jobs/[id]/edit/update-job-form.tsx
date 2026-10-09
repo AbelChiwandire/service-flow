@@ -1,14 +1,13 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import { updateJobAction, type State } from '@/lib/db/jobs/actions';
-import type { JobStatus } from '@/lib/db/jobs/repository';
-import { JobForm } from '@/components/JobForm';
+import { useActionState } from "react";
+import { updateJobAction, type State } from "@/lib/db/jobs/actions";
+import type { JobStatus } from "@/lib/db/jobs/repository";
+import { JobForm } from "@/components/jobs/JobForm";
 
 const initialState: State = { message: null, errors: {} };
 
 type UpdateJobFormProps = {
-    userId: string;
     jobId: string;
     initialValues: {
         title: string;
@@ -18,12 +17,8 @@ type UpdateJobFormProps = {
     };
 };
 
-export default function UpdateJobForm({
-    userId,
-    jobId,
-    initialValues,
-}: UpdateJobFormProps) {
-    const boundUpdateJobAction = updateJobAction.bind(null, userId, jobId);
+export default function UpdateJobForm({ jobId, initialValues }: UpdateJobFormProps) {
+    const boundUpdateJobAction = updateJobAction.bind(null, jobId);
     const [state, formAction, isPending] = useActionState(boundUpdateJobAction, initialState);
 
     return (

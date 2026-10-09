@@ -1,15 +1,12 @@
-import { notFound } from 'next/navigation';
-import { getCustomerById } from '@/lib/db/customer/repository';
-import UpdateCustomerForm from './update-customer-form';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
+import { notFound } from "next/navigation";
+import { getCustomerById } from "@/lib/db/customer/repository";
+import UpdateCustomerForm from "./update-customer-form";
+import { requireUserId } from "@/lib/auth/session";
 
-export default async function EditCustomerPage({
-    params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
+export default async function EditCustomerPage({ params }: { params: Promise<{ id: string }> }) {
+    const userId = await requireUserId();
     const { id } = await params;
-    const customer = await getCustomerById(PLACEHOLDER_USER_ID, id);
+    const customer = await getCustomerById(userId, id);
 
     if (!customer) {
         notFound();
@@ -22,11 +19,5 @@ export default async function EditCustomerPage({
         address: customer.address,
     };
 
-    return (
-        <UpdateCustomerForm
-            userId={PLACEHOLDER_USER_ID}
-            customerId={customer.id}
-            initialValues={initialValues}
-        />
-    );
+    return <UpdateCustomerForm customerId={customer.id} initialValues={initialValues} />;
 }

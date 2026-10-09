@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const CustomerFormSchema = z.object({
     name: z.string().min(2),
@@ -17,7 +17,7 @@ export type CustomerFormErrors = {
 };
 
 export function formatValidationErrors(
-    error: z.ZodError<Partial<z.infer<typeof CustomerFormSchema>>>
+    error: z.ZodError<Partial<z.infer<typeof CustomerFormSchema>>>,
 ): CustomerFormErrors {
     const tree = z.treeifyError(error);
     return {

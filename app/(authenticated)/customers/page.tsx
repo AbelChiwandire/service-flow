@@ -1,54 +1,79 @@
-// PLACEHOLDER TEST PAGE — just testing the customer CRUD flow
-// (create/update/delete + PLACEHOLDER_USER_ID) end to end before auth exists.
-// Not final UI. 
-// Replace with actual customers page and components
+// PLACEHOLDER PAGE
+import Link from "next/link";
+import {
+    getCustomers,
+    getCustomersTotalPages,
+    type CustomerListParams,
+} from "@/lib/db/customer/repository";
+import { parseCustomerFilter, parsePage, parseQuery } from "@/lib/db/dashboard/search-params";
+import { requireUserId } from "@/lib/auth/session";
 
-import Link from 'next/link';
-import { getCustomers } from '@/lib/db/customer/repository';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
-import DeleteCustomerButton from './delete-customer-button';
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-export default async function CustomersPage() {
-    const customers = await getCustomers(PLACEHOLDER_USER_ID);
+function pageHref(filters: CustomerListParams, page: number): string {
+    const qs = new URLSearchParams();
+    if (filters.query) qs.set("query", filters.query);
+    if (filters.filter) qs.set("filter", filters.filter);
+    qs.set("page", String(page));
+    return `/customers?${qs}`;
+}
+
+export default async function CustomersPlaceholderPage({
+    searchParams,
+}: {
+    searchParams: SearchParams;
+}) {
+    const userId = await requireUserId();
+    const params = await searchParams;
+
+    const filters: CustomerListParams = {
+        query: parseQuery(params.query),
+        page: parsePage(params.page),
+        filter: parseCustomerFilter(params.filter),
+    };
+
+    const [customers, totalPages] = await Promise.all([
+        getCustomers(userId, filters),
+        getCustomersTotalPages(userId, filters),
+    ]);
+
+    const page = filters.page ?? 1;
 
     return (
-        <div className="max-w-xl space-y-4">
-            <div className="flex items-center justify-between">
-                <h1 className="text-xl font-semibold">Customers</h1>
-                <Link href="/customers/new" className="text-sm text-teal-700 hover:underline">
-                    + New Customer
-                </Link>
-            </div>
-
-            <ul className="space-y-2">
-                {customers.map((customer) => (
-                    <li
-                        key={customer.id}
-                        className="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2"
-                    >
-                        <div>
-                            <p className="font-medium">{customer.name}</p>
-                            <p className="text-sm text-slate-600">{customer.email}</p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Link
-                                href={`/customers/${customer.id}/edit`}
-                                className="text-sm text-teal-700 hover:underline"
-                            >
-                                Edit
-                            </Link>
-                            <DeleteCustomerButton
-                                userId={PLACEHOLDER_USER_ID}
-                                customerId={customer.id}
-                            />
-                        </div>
-                    </li>
-                ))}
-            </ul>
+        <main>
+            <h1>Customers (placeholder)</h1>
+            <p>
+                Filters: filter={filters.filter ?? "none"}, query=&quot;{filters.query}&quot;
+            </p>
 
             {customers.length === 0 ? (
-                <p className="text-sm text-slate-600">No customers yet.</p>
-            ) : null}
-        </div>
+                <p>No customers match.</p>
+            ) : (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {customers.map((customer) => (
+                            <tr key={customer.id}>
+                                <td>{customer.name}</td>
+                                <td>{customer.email}</td>
+                                <td>{customer.phone}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+
+            <p>
+                Page {page} of {Math.max(totalPages, 1)}{" "}
+                {page > 1 && <Link href={pageHref(filters, page - 1)}>Previous</Link>}{" "}
+                {page < totalPages && <Link href={pageHref(filters, page + 1)}>Next</Link>}
+            </p>
+        </main>
     );
 }

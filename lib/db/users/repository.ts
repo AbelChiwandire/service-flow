@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import { neon } from "@neondatabase/serverless";
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -12,7 +12,7 @@ export interface User {
     updatedAt: string;
 }
 
-export type PublicUser = Omit<User, 'passwordHash'>;
+export type PublicUser = Omit<User, "passwordHash">;
 
 export interface NewUser {
     name: string;
@@ -21,12 +21,12 @@ export interface NewUser {
     passwordHash: string;
 }
 
-export type UserUpdate = Partial<Pick<User, 'name' | 'businessName' | 'email'>>;
+export type UserUpdate = Partial<Pick<User, "name" | "businessName" | "email">>;
 
 export class EmailAlreadyExistsError extends Error {
     constructor() {
-        super('An account with this email already exists.');
-        this.name = 'EmailAlreadyExistsError';
+        super("An account with this email already exists.");
+        this.name = "EmailAlreadyExistsError";
     }
 }
 
@@ -71,7 +71,7 @@ export async function createUser(user: NewUser): Promise<PublicUser> {
         `;
         return rows[0] as unknown as PublicUser;
     } catch (error) {
-        if (isUniqueViolation(error, 'users_email_key')) {
+        if (isUniqueViolation(error, "users_email_key")) {
             throw new EmailAlreadyExistsError();
         }
         throw error;
@@ -92,7 +92,7 @@ export async function updateUser(id: string, user: UserUpdate): Promise<PublicUs
         `;
         return (rows[0] as unknown as PublicUser) ?? null;
     } catch (error) {
-        if (isUniqueViolation(error, 'users_email_key')) {
+        if (isUniqueViolation(error, "users_email_key")) {
             throw new EmailAlreadyExistsError();
         }
         throw error;
@@ -122,12 +122,12 @@ export async function deleteUser(id: string): Promise<PublicUser | null> {
 
 function isUniqueViolation(error: unknown, constraintHint: string): boolean {
     return (
-        typeof error === 'object' &&
+        typeof error === "object" &&
         error !== null &&
-        'code' in error &&
-        (error as { code?: string }).code === '23505' &&
-        'constraint' in error &&
-        typeof (error as { constraint?: string }).constraint === 'string' &&
+        "code" in error &&
+        (error as { code?: string }).code === "23505" &&
+        "constraint" in error &&
+        typeof (error as { constraint?: string }).constraint === "string" &&
         (error as { constraint: string }).constraint.includes(constraintHint)
     );
 }
