@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { JOBS_PER_PAGE } from "./constants";
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -171,8 +172,6 @@ export async function getJobCustomer(
     `;
     return (rows[0] as unknown as JobCustomer) ?? null;
 }
-
-export const JOBS_PER_PAGE = 10;
  
 export interface JobListItem {
     id: string;

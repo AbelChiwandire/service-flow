@@ -6,7 +6,8 @@ import { EmptyState } from "@/components/EmptyState";
 import { JobList } from "@/components/JobList";
 import { JobFilters } from "@/components/JobFilters";
 import { Pagination } from "@/components/Pagination";
-import { getFilteredJobs, JOBS_PER_PAGE } from "@/lib/db/jobs/repository";
+   import { getJobsPage } from "@/lib/db/jobs/queries";
+   import { JOBS_PER_PAGE } from "@/lib/db/jobs/constants";
 import { JobStatusSchema } from "@/lib/db/jobs/schema";
 import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
 
@@ -53,7 +54,7 @@ export default async function JobsPage({
     return queryString ? `/jobs?${queryString}` : "/jobs";
   }
 
-  const { jobs, totalCount } = await getFilteredJobs(PLACEHOLDER_USER_ID, {
+  const { jobs, totalCount } = await getJobsPage(PLACEHOLDER_USER_ID, {
     query,
     status,
     page,

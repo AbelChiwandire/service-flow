@@ -2,13 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import {
-    createJob,
-    updateJob,
-    deleteJob,
-    JobCustomerNotFoundError,
-    ActiveJobDeleteError,
-} from './repository';
+import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
+import { createJobRecord, deleteJobRecord, updateJobRecord } from './queries';
 import {
     JobFormSchema,
     IdSchema,
@@ -19,85 +14,76 @@ import {
 const JOBS_PATH = '/jobs';
 
 export type State = {
-    errors?: JobFormErrors;
+    errors?: JobFormErrors & { customerId?: string[] };
     message?: string | null;
     values?: {
+        customerId?: string;
         title?: string;
         description?: string;
         scheduledDate?: string;
-        status?: string;
     };
 };
+
+// The user is always resolved on the server, never taken from the client.
+// TODO(auth #18): replace with the signed-in user from the session.
+async function getCurrentUserId(): Promise<string> {
+    return PLACEHOLDER_USER_ID;
+}
 
 function validateJobForm(formData: FormData) {
     return JobFormSchema.safeParse({
         title: formData.get('title'),
         description: formData.get('description'),
         scheduledDate: formData.get('scheduledDate'),
+        // Status is changed from the job details page, not from these forms.
         status: formData.get('status') ?? undefined,
     });
 }
 
 function getRawJobValues(formData: FormData): State['values'] {
     return {
+        customerId: formData.get('customerId')?.toString(),
         title: formData.get('title')?.toString(),
         description: formData.get('description')?.toString(),
         scheduledDate: formData.get('scheduledDate')?.toString(),
-        status: formData.get('status')?.toString(),
     };
 }
 
-async function runMutation(
-    mutation: () => Promise<unknown>,
-    logLabel: string
-): Promise<State | undefined> {
-    try {
-        const result = await mutation();
-        if (result === null) {
-            return { message: 'Job not found.' };
-        }
-    } catch (error) {
-        if (error instanceof JobCustomerNotFoundError || error instanceof ActiveJobDeleteError) {
-            return { message: error.message };
-        }
-        console.error(logLabel, error);
-        throw error;
+export async function createJobAction(
+    _prevState: State,
+    formData: FormData
+): Promise<State> {
+    const customerId = formData.get('customerId')?.toString() ?? '';
+    const isCustomerValid = IdSchema.safeParse(customerId).success;
+    const validatedData = validateJobForm(formData);
+
+    if (!validatedData.success || !isCustomerValid) {
+        return {
+            errors: {
+                ...(validatedData.success ? {} : formatValidationErrors(validatedData.error)),
+                ...(isCustomerValid ? {} : { customerId: ['Select a customer.'] }),
+            },
+            message: 'Missing or invalid fields. Failed to create job.',
+            values: getRawJobValues(formData),
+        };
+    }
+
+    const result = await createJobRecord(await getCurrentUserId(), {
+        customerId,
+        ...validatedData.data,
+    });
+
+    if (!result.ok) {
+        return { message: result.message, values: getRawJobValues(formData) };
     }
 
     revalidatePath(JOBS_PATH);
     redirect(JOBS_PATH);
 }
 
-export async function createJobAction(
-    userId: string,
-    customerId: string,
-    prevState: State,
-    formData: FormData
-): Promise<State> {
-    if (!IdSchema.safeParse(customerId).success) {
-        return { message: 'Invalid customer id.' };
-    }
-
-    const validatedData = validateJobForm(formData);
-    if (!validatedData.success) {
-        return {
-            errors: formatValidationErrors(validatedData.error),
-            message: 'Missing or invalid fields. Failed to create Job.',
-            values: getRawJobValues(formData),
-        };
-    }
-
-    const result = await runMutation(
-        () => createJob({ userId, customerId, ...validatedData.data }),
-        'createJobAction failed:'
-    );
-    return result ?? {};
-}
-
 export async function updateJobAction(
-    userId: string,
     id: string,
-    prevState: State,
+    _prevState: State,
     formData: FormData
 ): Promise<State> {
     if (!IdSchema.safeParse(id).success) {
@@ -108,20 +94,22 @@ export async function updateJobAction(
     if (!validatedData.success) {
         return {
             errors: formatValidationErrors(validatedData.error),
-            message: 'Missing or invalid fields. Failed to update Job.',
+            message: 'Missing or invalid fields. Failed to update job.',
             values: getRawJobValues(formData),
         };
     }
 
-    const result = await runMutation(
-        () => updateJob(userId, id, validatedData.data),
-        'updateJobAction failed:'
-    );
-    return result ?? {};
+    const result = await updateJobRecord(await getCurrentUserId(), id, validatedData.data);
+
+    if (!result.ok) {
+        return { message: result.message, values: getRawJobValues(formData) };
+    }
+
+    revalidatePath(JOBS_PATH);
+    redirect(JOBS_PATH);
 }
 
 export async function deleteJobAction(
-    userId: string,
     id: string,
     _prevState: State,
     _formData: FormData
@@ -130,9 +118,12 @@ export async function deleteJobAction(
         return { message: 'Invalid job id.' };
     }
 
-    const result = await runMutation(
-        () => deleteJob(userId, id),
-        'deleteJobAction failed:'
-    );
-    return result ?? {};
+    const result = await deleteJobRecord(await getCurrentUserId(), id);
+
+    if (!result.ok) {
+        return { message: result.message };
+    }
+
+    revalidatePath(JOBS_PATH);
+    redirect(JOBS_PATH);
 }
