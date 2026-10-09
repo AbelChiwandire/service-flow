@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import type { DashboardJob } from '@/lib/db/dashboard/repository';
+import Link from "next/link";
+import type { DashboardJob } from "@/lib/db/dashboard/repository";
 
 interface JobPreviewListProps {
     title: string;
@@ -15,10 +15,10 @@ interface JobPreviewListProps {
 function formatJobDate(value: string): string {
     const date = new Date(`${value.slice(0, 10)}T00:00:00`);
 
-    return date.toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
+    return date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
     });
 }
 
@@ -32,9 +32,7 @@ export default function JobPreviewList({
     return (
         <section className="rounded-lg border border-slate-200 bg-white">
             <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-4 py-4 sm:px-5">
-                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">
-                    {title}
-                </h2>
+                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">{title}</h2>
 
                 {total > 0 && (
                     <Link
@@ -47,9 +45,7 @@ export default function JobPreviewList({
             </div>
 
             {jobs.length === 0 ? (
-                <p className="px-4 py-6 text-sm text-slate-500 sm:px-5">
-                    {emptyText}
-                </p>
+                <p className="px-4 py-6 text-sm text-slate-500 sm:px-5">{emptyText}</p>
             ) : (
                 <ul className="divide-y divide-slate-100">
                     {jobs.map((job) => (

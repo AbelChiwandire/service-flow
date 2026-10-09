@@ -1,11 +1,11 @@
-import { notFound } from 'next/navigation';
-import { getUserById } from '@/lib/db/users/repository';
-import { requireUserId } from '@/lib/auth/session';
-import UpdateProfileForm from './update-profile-form';
-import DeleteAccountButton from './delete-account-button';
-import ChangePasswordFormWrapper from './change-password-form';
+import { notFound } from "next/navigation";
+import { getUserById } from "@/lib/db/users/repository";
+import { requireUserId } from "@/lib/auth/session";
+import UpdateProfileForm from "./update-profile-form";
+import DeleteAccountButton from "./delete-account-button";
+import ChangePasswordFormWrapper from "./change-password-form";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function AccountPage() {
     const userId = await requireUserId();

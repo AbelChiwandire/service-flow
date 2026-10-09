@@ -14,7 +14,7 @@ that file as comments beneath each request.
 ## Scenarios verified
 
 | Scenario | Endpoint | Expected | Result |
-    |---|---|---|---|
+|---|---|---|---|
 | Create with valid data | `POST /api/customers` | 201, customer returned | ✅ |
 | Create with invalid email | `POST /api/customers` | 400, field-level errors | ✅ |
 | Create with missing fields | `POST /api/customers` | 400, field-level errors | ✅ |
@@ -42,4 +42,3 @@ that file as comments beneath each request.
 - No automated tests. Manual coverage only, evidenced by
   `tests/http/customers/customers.http` (API) and this document (UI/action paths).
 - Scenarios above were run before auth landed, against a single seeded user. Re-verify under a real session.
-  

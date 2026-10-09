@@ -2,14 +2,14 @@
 // The login form will be implemented in the auth UI branch
 // This is for testing purposes only
 
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import { authenticate } from '@/lib/auth/actions';
-import { useSearchParams } from 'next/navigation';
+import { useActionState } from "react";
+import { authenticate } from "@/lib/auth/actions";
+import { useSearchParams } from "next/navigation";
 export function LoginForm() {
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard';
+    const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
     const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
 
     return (
@@ -47,13 +47,16 @@ export function LoginForm() {
                 type="submit"
                 className="w-full rounded-md bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:ring-offset-2 aria-disabled:cursor-not-allowed aria-disabled:opacity-70"
             >
-                {isPending ? 'Signing in...' : 'Sign In'}
+                {isPending ? "Signing in..." : "Sign In"}
             </button>
             {errorMessage && (
-                <p role="alert" className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                <p
+                    role="alert"
+                    className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+                >
                     {errorMessage}
                 </p>
             )}
         </form>
-    )
+    );
 }

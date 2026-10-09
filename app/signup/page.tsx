@@ -1,4 +1,4 @@
-import SignupFormWrapper from './signup-form';
+import SignupFormWrapper from "./signup-form";
 
 export default function SignupPage() {
     return (

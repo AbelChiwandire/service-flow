@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import { changePasswordAction, type PasswordChangeState } from '@/lib/db/users/actions';
-import { ChangePasswordForm } from '@/components/auth/ChangePasswordForm';
+import { useActionState } from "react";
+import { changePasswordAction, type PasswordChangeState } from "@/lib/db/users/actions";
+import { ChangePasswordForm } from "@/components/auth/ChangePasswordForm";
 
 const initialState: PasswordChangeState = { message: null, errors: {} };
 

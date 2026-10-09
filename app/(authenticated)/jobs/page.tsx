@@ -1,29 +1,25 @@
 // PLACEHOLDER PAGE
-import Link from 'next/link';
-import {
-    getJobs,
-    getJobsTotalPages,
-    type JobListParams,
-} from '@/lib/db/jobs/repository';
+import Link from "next/link";
+import { getJobs, getJobsTotalPages, type JobListParams } from "@/lib/db/jobs/repository";
 import {
     parseDue,
     parsePage,
     parseQuery,
     parseSort,
     parseStatus,
-} from '@/lib/db/dashboard/search-params';
-import { requireUserId } from '@/lib/auth/session';
+} from "@/lib/db/dashboard/search-params";
+import { requireUserId } from "@/lib/auth/session";
 
 // An object whose keys are any strings and whose values are what Next.js gives per param.
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 function pageHref(filters: JobListParams, page: number): string {
     const qs = new URLSearchParams();
-    if (filters.query) qs.set('query', filters.query);
-    if (filters.status) qs.set('status', filters.status);
-    if (filters.due) qs.set('due', filters.due);
-    if (filters.sort === 'desc') qs.set('sort', 'desc');
-    qs.set('page', String(page));
+    if (filters.query) qs.set("query", filters.query);
+    if (filters.status) qs.set("status", filters.status);
+    if (filters.due) qs.set("due", filters.due);
+    if (filters.sort === "desc") qs.set("sort", "desc");
+    qs.set("page", String(page));
     return `/jobs?${qs}`;
 }
 
@@ -54,8 +50,8 @@ export default async function JobsPlaceholderPage({
         <main>
             <h1>Jobs (placeholder)</h1>
             <p>
-                Filters: status={filters.status ?? 'any'}, due={filters.due ?? 'any'},
-                query=&quot;{filters.query}&quot;, sort={filters.sort}
+                Filters: status={filters.status ?? "any"}, due={filters.due ?? "any"}, query=&quot;
+                {filters.query}&quot;, sort={filters.sort}
             </p>
 
             {jobs.length === 0 ? (
@@ -84,11 +80,9 @@ export default async function JobsPlaceholderPage({
             )}
 
             <p>
-                Page {page} of {Math.max(totalPages, 1)}{' '}
-                {page > 1 && <Link href={pageHref(filters, page - 1)}>Previous</Link>}{' '}
-                {page < totalPages && (
-                    <Link href={pageHref(filters, page + 1)}>Next</Link>
-                )}
+                Page {page} of {Math.max(totalPages, 1)}{" "}
+                {page > 1 && <Link href={pageHref(filters, page - 1)}>Previous</Link>}{" "}
+                {page < totalPages && <Link href={pageHref(filters, page + 1)}>Next</Link>}
             </p>
         </main>
     );

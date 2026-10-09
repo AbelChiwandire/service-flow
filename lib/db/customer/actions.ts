@@ -1,20 +1,20 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { requireUserId } from '@/lib/auth/session';
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { requireUserId } from "@/lib/auth/session";
 import {
     createCustomer,
     updateCustomer,
     deleteCustomer,
     CustomerHasActiveJobsError,
-} from './repository';
+} from "./repository";
 import {
     CustomerFormSchema,
     IdSchema,
     formatValidationErrors,
     type CustomerFormErrors,
-} from './schema';
+} from "./schema";
 
 export type State = {
     errors?: CustomerFormErrors;
@@ -29,25 +29,25 @@ export type State = {
 
 function validateCustomerForm(formData: FormData) {
     return CustomerFormSchema.safeParse({
-        name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        address: formData.get('address'),
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        address: formData.get("address"),
     });
 }
 
-function getRawCustomerValues(formData: FormData): State['values'] {
+function getRawCustomerValues(formData: FormData): State["values"] {
     return {
-        name: formData.get('name')?.toString(),
-        email: formData.get('email')?.toString(),
-        phone: formData.get('phone')?.toString(),
-        address: formData.get('address')?.toString(),
+        name: formData.get("name")?.toString(),
+        email: formData.get("email")?.toString(),
+        phone: formData.get("phone")?.toString(),
+        address: formData.get("address")?.toString(),
     };
 }
 
 async function runMutation(
     mutation: () => Promise<unknown>,
-    logLabel: string
+    logLabel: string,
 ): Promise<State | undefined> {
     try {
         await mutation();
@@ -59,27 +59,24 @@ async function runMutation(
         throw error;
     }
 
-    revalidatePath('/customers');
-    redirect('/customers');
+    revalidatePath("/customers");
+    redirect("/customers");
 }
 
-export async function createCustomerAction(
-    _prevState: State,
-    formData: FormData
-): Promise<State> {
+export async function createCustomerAction(_prevState: State, formData: FormData): Promise<State> {
     const userId = await requireUserId();
     const validatedData = validateCustomerForm(formData);
     if (!validatedData.success) {
         return {
             errors: formatValidationErrors(validatedData.error),
-            message: 'Missing or invalid fields. Failed to create Customer.',
+            message: "Missing or invalid fields. Failed to create Customer.",
             values: getRawCustomerValues(formData),
         };
     }
 
     const result = await runMutation(
         () => createCustomer({ userId, ...validatedData.data }),
-        'createCustomerAction failed:'
+        "createCustomerAction failed:",
     );
     return result ?? {};
 }
@@ -87,25 +84,25 @@ export async function createCustomerAction(
 export async function updateCustomerAction(
     id: string,
     _prevState: State,
-    formData: FormData
+    formData: FormData,
 ): Promise<State> {
     const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid customer id.' };
+        return { message: "Invalid customer id." };
     }
 
     const validatedData = validateCustomerForm(formData);
     if (!validatedData.success) {
         return {
             errors: formatValidationErrors(validatedData.error),
-            message: 'Missing or invalid fields. Failed to update Customer.',
+            message: "Missing or invalid fields. Failed to update Customer.",
             values: getRawCustomerValues(formData),
         };
     }
 
     const result = await runMutation(
         () => updateCustomer(userId, id, validatedData.data),
-        'updateCustomerAction failed:'
+        "updateCustomerAction failed:",
     );
     return result ?? {};
 }
@@ -113,16 +110,16 @@ export async function updateCustomerAction(
 export async function deleteCustomerAction(
     id: string,
     _prevState: State,
-    _formData: FormData
+    _formData: FormData,
 ): Promise<State> {
     const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid customer id.' };
+        return { message: "Invalid customer id." };
     }
 
     const result = await runMutation(
         () => deleteCustomer(userId, id),
-        'deleteCustomerAction failed:'
+        "deleteCustomerAction failed:",
     );
     return result ?? {};
 }

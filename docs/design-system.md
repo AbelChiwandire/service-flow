@@ -20,11 +20,11 @@ ServiceFlow uses a blue and indigo palette as its primary brand identity.
 
 ### Semantic Usage
 
-* **Primary (`#2667FF`)** — primary actions, important links, and key interactive elements.
-* **Primary Hover/Active (`#3F8EFC`)** — hover and active variations of primary interactions.
-* **Accent (`#3B28CC`)** — stronger emphasis and selected states where additional contrast is appropriate.
-* **Light Accent (`#87BFFF`)** — subtle highlights and secondary branded elements.
-* **Light Brand Background (`#ADD7F6`)** — branded background sections and supporting visual areas.
+- **Primary (`#2667FF`)** — primary actions, important links, and key interactive elements.
+- **Primary Hover/Active (`#3F8EFC`)** — hover and active variations of primary interactions.
+- **Accent (`#3B28CC`)** — stronger emphasis and selected states where additional contrast is appropriate.
+- **Light Accent (`#87BFFF`)** — subtle highlights and secondary branded elements.
+- **Light Brand Background (`#ADD7F6`)** — branded background sections and supporting visual areas.
 
 Neutral colors such as white, gray, and slate may be used for the main application background, surfaces, borders, and supporting text. The branded colors should not be used for every UI element.
 
@@ -38,11 +38,11 @@ Typography should use Tailwind's standard type scale rather than introducing unn
 
 ### Hierarchy
 
-* **Page titles** — large and bold.
-* **Section headings** — medium to large and semibold.
-* **Body text** — regular weight and readable size.
-* **Labels** — medium weight.
-* **Supporting text** — smaller and visually muted.
+- **Page titles** — large and bold.
+- **Section headings** — medium to large and semibold.
+- **Body text** — regular weight and readable size.
+- **Labels** — medium weight.
+- **Supporting text** — smaller and visually muted.
 
 Typography should establish a clear hierarchy while remaining consistent across pages.
 
@@ -64,11 +64,11 @@ Lists / Forms / Cards / Other Content
 
 Authenticated pages should generally:
 
-* Use a centered content container.
-* Maintain consistent horizontal padding.
-* Use a page header containing the page title and, when appropriate, a primary action.
-* Organize related content into clear sections.
-* Use cards when they help group or distinguish information rather than wrapping every element in a card.
+- Use a centered content container.
+- Maintain consistent horizontal padding.
+- Use a page header containing the page title and, when appropriate, a primary action.
+- Organize related content into clear sections.
+- Use cards when they help group or distinguish information rather than wrapping every element in a card.
 
 ### Lists and Data
 
@@ -84,10 +84,10 @@ The project should prefer standard Tailwind spacing utilities rather than arbitr
 
 General conventions include:
 
-* Small internal spacing — approximately `2` to `3`.
-* Normal component spacing — approximately `4`.
-* Larger component or section spacing — approximately `6`.
-* Major page sections — approximately `8` or greater.
+- Small internal spacing — approximately `2` to `3`.
+- Normal component spacing — approximately `4`.
+- Larger component or section spacing — approximately `6`.
+- Major page sections — approximately `8` or greater.
 
 The exact spacing may vary according to the component, but related components should use consistent spacing patterns.
 
@@ -99,12 +99,12 @@ Responsive behavior should be implemented using Tailwind's responsive utilities.
 
 The interface should:
 
-* Begin with a usable mobile layout.
-* Expand and reorganize content for larger screens.
-* Adapt navigation to available screen space.
-* Allow lists and tables to change presentation on smaller screens.
-* Keep forms usable without horizontal scrolling.
-* Maintain usable interactive controls on touch devices.
+- Begin with a usable mobile layout.
+- Expand and reorganize content for larger screens.
+- Adapt navigation to available screen space.
+- Allow lists and tables to change presentation on smaller screens.
+- Keep forms usable without horizontal scrolling.
+- Maintain usable interactive controls on touch devices.
 
 ## Shared UI Library
 
@@ -112,16 +112,16 @@ ServiceFlow will use **shadcn/ui** for common interface primitives.
 
 Common primitives may include:
 
-* `Button`
-* `Input`
-* `Label`
-* `Select`
-* `Dialog`
-* `AlertDialog`
-* `Badge`
-* `Card`
-* `Table`
-* Form-related primitives
+- `Button`
+- `Input`
+- `Label`
+- `Select`
+- `Dialog`
+- `AlertDialog`
+- `Badge`
+- `Card`
+- `Table`
+- Form-related primitives
 
 These primitives provide the foundation for ServiceFlow's domain-specific components.
 
@@ -143,10 +143,10 @@ shadcn/ui components may be customized when necessary to meet ServiceFlow's desi
 
 ### Buttons
 
-* **Primary** — important or primary actions.
-* **Secondary** — supporting actions.
-* **Outline/Ghost** — lower-emphasis actions where appropriate.
-* **Destructive** — actions that remove or permanently change data.
+- **Primary** — important or primary actions.
+- **Secondary** — supporting actions.
+- **Outline/Ghost** — lower-emphasis actions where appropriate.
+- **Destructive** — actions that remove or permanently change data.
 
 ### Status Indicators
 
@@ -154,10 +154,10 @@ Statuses should use badges or similarly compact visual indicators that include t
 
 Examples include:
 
-* `Scheduled`
-* `In Progress`
-* `Completed`
-* `Cancelled`
+- `Scheduled`
+- `In Progress`
+- `Completed`
+- `Cancelled`
 
 ### Dialogs
 
@@ -169,20 +169,20 @@ The job-completion invoice workflow is an example of a domain-specific interacti
 
 Forms should maintain consistent:
 
-* Label placement
-* Field spacing
-* Input styling
-* Validation messages
-* Error presentation
-* Action placement
+- Label placement
+- Field spacing
+- Input styling
+- Validation messages
+- Error presentation
+- Action placement
 
 ### Application States
 
 Shared components should be used for common application states:
 
-* `LoadingState` — loading operations and page content.
-* `EmptyState` — pages or sections with no data.
-* `ErrorMessage` — errors that need to be presented to the user.
+- `LoadingState` — loading operations and page content.
+- `EmptyState` — pages or sections with no data.
+- `ErrorMessage` — errors that need to be presented to the user.
 
 ## Tailwind Conventions
 
@@ -190,11 +190,11 @@ Tailwind utility classes should be used directly for component styling.
 
 The project should:
 
-* Prefer existing Tailwind utilities over custom CSS when practical.
-* Use the established design tokens and semantic colors rather than repeatedly introducing raw values.
-* Use responsive variants for layout changes.
-* Use state variants such as `hover:`, `focus:`, and `disabled:` for interaction states.
-* Avoid arbitrary values unless the design genuinely requires them.
+- Prefer existing Tailwind utilities over custom CSS when practical.
+- Use the established design tokens and semantic colors rather than repeatedly introducing raw values.
+- Use responsive variants for layout changes.
+- Use state variants such as `hover:`, `focus:`, and `disabled:` for interaction states.
+- Avoid arbitrary values unless the design genuinely requires them.
 
 The design system is intended to provide consistent defaults while allowing components to evolve as implementation and usability requirements become clearer.
 

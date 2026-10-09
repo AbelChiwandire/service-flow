@@ -6,10 +6,10 @@ ServiceFlow uses **Neon PostgreSQL** for persistent application data.
 
 The MVP contains four core entities:
 
-* User
-* Customer
-* Job
-* Invoice
+- User
+- Customer
+- Job
+- Invoice
 
 A separate `Business` entity is intentionally excluded from the MVP. Each ServiceFlow account represents one business, so the minimal business identity is stored as `businessName` on the `User` record. A dedicated `Business` entity can be introduced later if multi-user or multi-business functionality is added.
 

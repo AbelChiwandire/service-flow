@@ -5,14 +5,9 @@ interface SummaryCardSkeletonProps {
 function SummaryCardSkeleton({ label }: SummaryCardSkeletonProps) {
     return (
         <div className="block rounded-lg border border-slate-200 bg-white p-4">
-            <p className="text-sm font-medium text-slate-600">
-                {label}
-            </p>
+            <p className="text-sm font-medium text-slate-600">{label}</p>
 
-            <div
-                aria-hidden="true"
-                className="mt-2 h-9 w-12 animate-pulse rounded bg-slate-200"
-            />
+            <div aria-hidden="true" className="mt-2 h-9 w-12 animate-pulse rounded bg-slate-200" />
         </div>
     );
 }
@@ -26,10 +21,7 @@ function JobsPanelSkeleton() {
                     className="h-5 w-32 animate-pulse rounded bg-slate-200 sm:h-6"
                 />
 
-                <div
-                    aria-hidden="true"
-                    className="h-4 w-20 animate-pulse rounded bg-slate-200"
-                />
+                <div aria-hidden="true" className="h-4 w-20 animate-pulse rounded bg-slate-200" />
             </div>
 
             <ul className="divide-y divide-slate-100">
@@ -64,9 +56,7 @@ export default function DashboardSummarySkeleton() {
         <div className="space-y-8">
             <section>
                 <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-slate-900">
-                        Jobs
-                    </h2>
+                    <h2 className="text-lg font-semibold text-slate-900">Jobs</h2>
                     <p className="mt-1 text-sm text-slate-500">
                         Overview of your current and upcoming jobs.
                     </p>
@@ -83,12 +73,8 @@ export default function DashboardSummarySkeleton() {
 
             <section>
                 <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-slate-900">
-                        Customers
-                    </h2>
-                    <p className="mt-1 text-sm text-slate-500">
-                        Overview of your customer base.
-                    </p>
+                    <h2 className="text-lg font-semibold text-slate-900">Customers</h2>
+                    <p className="mt-1 text-sm text-slate-500">Overview of your customer base.</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">

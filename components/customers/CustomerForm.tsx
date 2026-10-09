@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { State } from '@/lib/db/customer/actions';
+import type { State } from "@/lib/db/customer/actions";
 
 type CustomerFormProps = {
     formAction: (formData: FormData) => void;
@@ -14,12 +14,7 @@ type CustomerFormProps = {
     };
 };
 
-export function CustomerForm({
-    formAction,
-    state,
-    isPending,
-    initialValues,
-}: CustomerFormProps) {
+export function CustomerForm({ formAction, state, isPending, initialValues }: CustomerFormProps) {
     const name = state.values?.name ?? initialValues?.name;
     const email = state.values?.email ?? initialValues?.email;
     const phone = state.values?.phone ?? initialValues?.phone;
@@ -28,10 +23,7 @@ export function CustomerForm({
     return (
         <form action={formAction} className="max-w-xl space-y-4">
             <div>
-                <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
                     Name
                 </label>
                 <input
@@ -53,10 +45,7 @@ export function CustomerForm({
             </div>
 
             <div>
-                <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
                     Email
                 </label>
                 <input
@@ -78,10 +67,7 @@ export function CustomerForm({
             </div>
 
             <div>
-                <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">
                     Phone
                 </label>
                 <input
@@ -103,10 +89,7 @@ export function CustomerForm({
             </div>
 
             <div>
-                <label
-                    htmlFor="address"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="address" className="block text-sm font-medium text-slate-700 mb-1">
                     Address
                 </label>
                 <textarea
@@ -127,16 +110,14 @@ export function CustomerForm({
                 </div>
             </div>
 
-            {state.message ? (
-                <p className="text-sm text-red-600">{state.message}</p>
-            ) : null}
+            {state.message ? <p className="text-sm text-red-600">{state.message}</p> : null}
 
             <button
                 type="submit"
                 disabled={isPending}
                 className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
-                {isPending ? 'Saving...' : 'Save Customer'}
+                {isPending ? "Saving..." : "Save Customer"}
             </button>
         </form>
     );

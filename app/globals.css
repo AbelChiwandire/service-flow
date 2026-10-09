@@ -1,37 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --primary: #2667ff;
-  --primary-hover: #3f8efc;
-  --accent: #3b28cc;
-  --light-accent: #87bfff;
-  --brand-background: #add7f6;
+    --background: #ffffff;
+    --foreground: #0f172a;
+    --primary: #2667ff;
+    --primary-hover: #3f8efc;
+    --accent: #3b28cc;
+    --light-accent: #87bfff;
+    --brand-background: #add7f6;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-accent: var(--accent);
-  --color-light-accent: var(--light-accent);
-  --color-brand-background: var(--brand-background);
-  --font-sans: var(--font-inter);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
+    --color-accent: var(--accent);
+    --color-light-accent: var(--light-accent);
+    --color-brand-background: var(--brand-background);
+    --font-sans: var(--font-inter);
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), sans-serif;
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-inter), sans-serif;
 }

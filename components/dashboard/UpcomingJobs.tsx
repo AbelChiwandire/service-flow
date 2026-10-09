@@ -1,5 +1,5 @@
-import type { DashboardJob } from '@/lib/db/dashboard/repository';
-import JobPreviewList from './JobPreviewList';
+import type { DashboardJob } from "@/lib/db/dashboard/repository";
+import JobPreviewList from "./JobPreviewList";
 
 interface UpcomingJobsProps {
     jobs: DashboardJob[];

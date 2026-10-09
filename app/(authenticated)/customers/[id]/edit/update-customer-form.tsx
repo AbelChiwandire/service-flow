@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import { updateCustomerAction, type State } from '@/lib/db/customer/actions';
-import { CustomerForm } from '@/components/customers/CustomerForm';
+import { useActionState } from "react";
+import { updateCustomerAction, type State } from "@/lib/db/customer/actions";
+import { CustomerForm } from "@/components/customers/CustomerForm";
 
 const initialState: State = { message: null, errors: {} };
 
@@ -16,10 +16,7 @@ type UpdateCustomerFormProps = {
     };
 };
 
-export default function UpdateCustomerForm({
-    customerId,
-    initialValues,
-}: UpdateCustomerFormProps) {
+export default function UpdateCustomerForm({ customerId, initialValues }: UpdateCustomerFormProps) {
     const boundUpdateCustomerAction = updateCustomerAction.bind(null, customerId);
     const [state, formAction, isPending] = useActionState(boundUpdateCustomerAction, initialState);
 

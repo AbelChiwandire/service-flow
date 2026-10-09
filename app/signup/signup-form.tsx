@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import { signupAction, type State } from '@/lib/db/users/actions';
-import { SignupForm } from '@/components/auth/SignupForm';
+import { useActionState } from "react";
+import { signupAction, type State } from "@/lib/db/users/actions";
+import { SignupForm } from "@/components/auth/SignupForm";
 
 const initialState: State = { message: null, errors: {} };
 

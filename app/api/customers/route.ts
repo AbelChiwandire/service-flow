@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { CustomerFormSchema, formatValidationErrors } from '@/lib/db/customer/schema';
-import { getCustomers, createCustomer } from '@/lib/db/customer/repository';
-import { getSessionUserId, unauthorizedResponse } from '@/lib/auth/session';
-import { parseJsonBody, withApiErrorHandling } from '@/lib/db/customer/api-helpers';
+import { NextRequest, NextResponse } from "next/server";
+import { CustomerFormSchema, formatValidationErrors } from "@/lib/db/customer/schema";
+import { getCustomers, createCustomer } from "@/lib/db/customer/repository";
+import { getSessionUserId, unauthorizedResponse } from "@/lib/auth/session";
+import { parseJsonBody, withApiErrorHandling } from "@/lib/db/customer/api-helpers";
 
 export async function GET() {
     const userId = await getSessionUserId();
     if (!userId) return unauthorizedResponse();
-    return withApiErrorHandling('GET /api/customers failed:', async () => {
+    return withApiErrorHandling("GET /api/customers failed:", async () => {
         const customers = await getCustomers(userId);
         return NextResponse.json({ data: customers });
     });
@@ -23,14 +23,14 @@ export async function POST(request: NextRequest) {
     if (!validatedData.success) {
         return NextResponse.json(
             {
-                error: 'Missing or invalid fields.',
+                error: "Missing or invalid fields.",
                 details: formatValidationErrors(validatedData.error),
             },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
-    return withApiErrorHandling('POST /api/customers failed:', async () => {
+    return withApiErrorHandling("POST /api/customers failed:", async () => {
         const customer = await createCustomer({
             userId,
             ...validatedData.data,

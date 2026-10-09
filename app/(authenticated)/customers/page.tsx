@@ -1,24 +1,20 @@
 // PLACEHOLDER PAGE
-import Link from 'next/link';
+import Link from "next/link";
 import {
     getCustomers,
     getCustomersTotalPages,
     type CustomerListParams,
-} from '@/lib/db/customer/repository';
-import {
-    parseCustomerFilter,
-    parsePage,
-    parseQuery,
-} from '@/lib/db/dashboard/search-params';
-import { requireUserId } from '@/lib/auth/session';
+} from "@/lib/db/customer/repository";
+import { parseCustomerFilter, parsePage, parseQuery } from "@/lib/db/dashboard/search-params";
+import { requireUserId } from "@/lib/auth/session";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 function pageHref(filters: CustomerListParams, page: number): string {
     const qs = new URLSearchParams();
-    if (filters.query) qs.set('query', filters.query);
-    if (filters.filter) qs.set('filter', filters.filter);
-    qs.set('page', String(page));
+    if (filters.query) qs.set("query", filters.query);
+    if (filters.filter) qs.set("filter", filters.filter);
+    qs.set("page", String(page));
     return `/customers?${qs}`;
 }
 
@@ -47,7 +43,7 @@ export default async function CustomersPlaceholderPage({
         <main>
             <h1>Customers (placeholder)</h1>
             <p>
-                Filters: filter={filters.filter ?? 'none'}, query=&quot;{filters.query}&quot;
+                Filters: filter={filters.filter ?? "none"}, query=&quot;{filters.query}&quot;
             </p>
 
             {customers.length === 0 ? (
@@ -74,11 +70,9 @@ export default async function CustomersPlaceholderPage({
             )}
 
             <p>
-                Page {page} of {Math.max(totalPages, 1)}{' '}
-                {page > 1 && <Link href={pageHref(filters, page - 1)}>Previous</Link>}{' '}
-                {page < totalPages && (
-                    <Link href={pageHref(filters, page + 1)}>Next</Link>
-                )}
+                Page {page} of {Math.max(totalPages, 1)}{" "}
+                {page > 1 && <Link href={pageHref(filters, page - 1)}>Previous</Link>}{" "}
+                {page < totalPages && <Link href={pageHref(filters, page + 1)}>Next</Link>}
             </p>
         </main>
     );
