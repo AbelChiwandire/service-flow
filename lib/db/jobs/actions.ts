@@ -16,11 +16,6 @@ import {
     formatValidationErrors,
     type JobFormErrors,
 } from './schema';
-import {
-    CompleteJobSchema,
-    formatCompletionErrors,
-    type CompletionErrors,
-} from './completion-schema';
 import { JOB_STATUS_LABELS, canTransition } from './status';
 import type { JobStatus } from './repository';
 
@@ -39,15 +34,7 @@ export type State = {
 
 export type StatusState = {
     message?: string | null;
-    errors?: CompletionErrors;
-    values?: { amount?: string; dueDate?: string };
 };
-
-// The user is always resolved on the server, never taken from the client.
-// TODO(auth #18): replace with the signed-in user from the session.
-async function getCurrentUserId(): Promise<string> {
-    return PLACEHOLDER_USER_ID;
-}
 
 function validateJobForm(formData: FormData) {
     return JobFormSchema.safeParse({
@@ -87,7 +74,7 @@ export async function createJobAction(
         };
     }
 
-    const result = await createJobRecord(await getCurrentUserId(), {
+    const result = await createJobRecord(PLACEHOLDER_USER_ID, {
         customerId,
         ...validatedData.data,
     });
@@ -118,7 +105,7 @@ export async function updateJobAction(
         };
     }
 
-    const result = await updateJobRecord(await getCurrentUserId(), id, validatedData.data);
+    const result = await updateJobRecord(PLACEHOLDER_USER_ID, id, validatedData.data);
 
     if (!result.ok) {
         return { message: result.message, values: getRawJobValues(formData) };
@@ -138,7 +125,7 @@ export async function deleteJobAction(
         return { message: 'Invalid job id.' };
     }
 
-    const result = await deleteJobRecord(await getCurrentUserId(), id);
+    const result = await deleteJobRecord(PLACEHOLDER_USER_ID, id);
 
     if (!result.ok) {
         return { message: result.message };
@@ -149,26 +136,6 @@ export async function deleteJobAction(
 }
 
 // Moves a job to a new status after checking the transition on the server.
-// Returns an error message, or null when the change was saved.
-async function applyStatusChange(id: string, target: JobStatus): Promise<string | null> {
-    const userId = await getCurrentUserId();
-
-    const job = await getJob(userId, id);
-    if (!job) return 'Job not found.';
-
-    if (!canTransition(job.status, target)) {
-        return `A ${JOB_STATUS_LABELS[job.status].toLowerCase()} job can't be changed to ${JOB_STATUS_LABELS[target].toLowerCase()}.`;
-    }
-
-    const result = await updateJobRecord(userId, id, { status: target });
-    if (!result.ok) return result.message;
-
-    revalidatePath(JOBS_PATH);
-    revalidatePath(`${JOBS_PATH}/${id}`);
-    return null;
-}
-
-// Handles "Start job" and "Cancel job". Completing goes through completeJobAction.
 export async function changeJobStatusAction(
     id: string,
     target: JobStatus,
@@ -177,55 +144,29 @@ export async function changeJobStatusAction(
 ): Promise<StatusState> {
     const parsedTarget = JobStatusSchema.safeParse(target);
 
-    if (
-        !IdSchema.safeParse(id).success ||
-        !parsedTarget.success ||
-        parsedTarget.data === 'completed'
-    ) {
+    if (!IdSchema.safeParse(id).success || !parsedTarget.success) {
         return { message: 'Invalid request.' };
     }
 
-    const error = await applyStatusChange(id, parsedTarget.data);
-    return error ? { message: error } : {};
-}
-
-// Completing a job collects the invoice details first. If anything fails,
-// the job keeps its previous status.
-export async function completeJobAction(
-    id: string,
-    _prevState: StatusState,
-    formData: FormData
-): Promise<StatusState> {
-    if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid job id.' };
+    const job = await getJob(PLACEHOLDER_USER_ID, id);
+    if (!job) {
+        return { message: 'Job not found.' };
     }
 
-    const parsed = CompleteJobSchema.safeParse({
-        amount: formData.get('amount'),
-        dueDate: formData.get('dueDate'),
-    });
-
-    if (!parsed.success) {
+    if (!canTransition(job.status, parsedTarget.data)) {
         return {
-            errors: formatCompletionErrors(parsed.error),
-            values: {
-                amount: formData.get('amount')?.toString(),
-                dueDate: formData.get('dueDate')?.toString(),
-            },
+            message: `A ${JOB_STATUS_LABELS[job.status].toLowerCase()} job can't be changed to ${JOB_STATUS_LABELS[parsedTarget.data].toLowerCase()}.`,
         };
     }
 
-    // TODO(invoices): create the invoice for this job here, before changing the
-    // status, once the invoice backend exists. The amount and due date are validated
-    // above but are not saved anywhere yet.
-    const error = await applyStatusChange(id, 'completed');
-    return error
-        ? {
-              message: error,
-              values: {
-                  amount: formData.get('amount')?.toString(),
-                  dueDate: formData.get('dueDate')?.toString(),
-              },
-          }
-        : {};
+    const result = await updateJobRecord(PLACEHOLDER_USER_ID, id, {
+        status: parsedTarget.data,
+    });
+    if (!result.ok) {
+        return { message: result.message };
+    }
+
+    revalidatePath(JOBS_PATH);
+    revalidatePath(`${JOBS_PATH}/${id}`);
+    return {};
 }
