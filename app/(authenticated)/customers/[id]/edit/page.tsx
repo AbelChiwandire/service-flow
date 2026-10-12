@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getCustomerById } from "@/lib/db/customer/repository";
-import UpdateCustomerForm from "./update-customer-form";
+import EditCustomerForm from "../../../../../components/customers/EditCustomerForm";
 import { requireUserId } from "@/lib/auth/session";
 
 export default async function EditCustomerPage({ params }: { params: Promise<{ id: string }> }) {
@@ -17,7 +17,12 @@ export default async function EditCustomerPage({ params }: { params: Promise<{ i
         email: customer.email,
         phone: customer.phone,
         address: customer.address,
-    };
+      };
 
-    return <UpdateCustomerForm customerId={customer.id} initialValues={initialValues} />;
+  return (
+    <EditCustomerForm
+      customerId={customer.id}
+      initialValues={initialValues}
+    />
+  );
 }

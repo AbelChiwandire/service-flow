@@ -1,4 +1,3 @@
-// PLACEHOLDER PAGE
 import Link from "next/link";
 import {
     getCustomers,
@@ -7,6 +6,9 @@ import {
 } from "@/lib/db/customer/repository";
 import { parseCustomerFilter, parsePage, parseQuery } from "@/lib/db/dashboard/search-params";
 import { requireUserId } from "@/lib/auth/session";
+import CustomerList from "@/components/customers/CustomerList";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -41,32 +43,34 @@ export default async function CustomersPlaceholderPage({
 
     return (
         <main>
-            <h1>Customers (placeholder)</h1>
-            <p>
-                Filters: filter={filters.filter ?? "none"}, query=&quot;{filters.query}&quot;
-            </p>
+            <PageHeader
+                title="Customers"
+                description="Manage your customer information and keep every relationship in one place."
+                action={
+                    <Link
+                        href="/customers/new"
+                        className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#2667FF] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2667FF] focus-visible:ring-offset-2"
+                    >
+                        Add Customer
+                    </Link>
+                }
+            />
 
-            {customers.length === 0 ? (
-                <p>No customers match.</p>
+            {customers.length === 0 && filters ? (
+                <EmptyState
+                    title="No Customers"
+                    message="No customers match the current filters."
+                />
+            ) : customers.length === 0 && !filters ? (
+                <EmptyState
+                    title="No Customers"
+                    message="There are no customers to display."
+                    action={
+                        <Link href="/customers/new">Add Customer</Link>
+                    }
+                />
             ) : (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {customers.map((customer) => (
-                            <tr key={customer.id}>
-                                <td>{customer.name}</td>
-                                <td>{customer.email}</td>
-                                <td>{customer.phone}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <CustomerList customers={customers} />
             )}
 
             <p>
