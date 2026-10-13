@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { changeJobStatusAction, type StatusState } from "@/lib/db/jobs/actions";
 import { JOB_STATUS_LABELS, JOB_STATUS_TRANSITIONS } from "@/lib/db/jobs/status";
 import type { JobStatus } from "@/lib/db/jobs/repository";
-import { ConfirmActionButton } from "./ConfirmActionButton";
+import { ConfirmActionButton } from "@/components/shared/ConfirmActionButton";
 
 const initialState: StatusState = { message: null };
 

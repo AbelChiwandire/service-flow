@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { deleteJobAction, type State } from "@/lib/db/jobs/actions";
-import { ConfirmActionButton } from "./ConfirmActionButton";
+import { ConfirmActionButton } from "@/components/shared/ConfirmActionButton";
 
 const initialState: State = { message: null, errors: {} };
 

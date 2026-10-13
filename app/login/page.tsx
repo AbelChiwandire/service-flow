@@ -1,22 +1,26 @@
-// PLACEHOLDER: Login page for user authentication
-// This is for testing purposes only
-
-import { LoginForm } from "@/components/auth/LoginForm";
-import { Suspense } from "react";
+import { Header } from "@/components/Header";
+import LoginForm from "./login-form";
 
 export default function LoginPage() {
     return (
-        <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
-            <section className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-lg sm:p-8">
-                <div className="mb-7">
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-                        Sign in to continue.
-                    </h1>
-                </div>
-                <Suspense>
+        <div className="flex min-h-screen flex-col bg-slate-50">
+            <Header />
+
+            <main className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+                <section className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                    <div className="mb-6 text-center">
+                        <h1 className="text-2xl font-bold text-slate-900">
+                            Sign in to ServiceFlow
+                        </h1>
+
+                        <p className="mt-2 text-sm text-slate-600">
+                            Access your service business workspace.
+                        </p>
+                    </div>
+
                     <LoginForm />
-                </Suspense>
-            </section>
-        </main>
+                </section>
+            </main>
+        </div>
     );
 }
