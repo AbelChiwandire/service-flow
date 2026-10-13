@@ -6,10 +6,10 @@ import Link from "next/link";
 
 import {
     signupAction,
-    type SignupState,
+    type State,
 } from "@/lib/db/users/actions";
 
-const initialState: SignupState = {};
+const initialState: State = {};
 
 function SubmitButton() {
     const { pending } = useFormStatus();

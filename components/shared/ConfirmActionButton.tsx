@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Modal } from "./Modal";
+import { Modal } from "@/components/layout/Modal";
 
 type ConfirmActionButtonProps = {
   triggerLabel: string;
