@@ -2,13 +2,12 @@
 
 import { useActionState } from "react";
 import { createJobAction, type State } from "@/lib/db/jobs/actions";
-import type { CustomerOption } from "@/lib/db/jobs/queries";
-import { JobForm } from "@/components/JobForm";
+import { JobForm } from "@/components/jobs/JobForm";
 
 const initialState: State = { message: null, errors: {} };
 
 type CreateJobFormProps = {
-  customers: CustomerOption[];
+  customers: { id: string; name: string }[];
   defaultCustomerId?: string;
 };
 

@@ -1,5 +1,5 @@
-import Link from "next/link";
-import type { JobListItem } from "@/lib/db/jobs/repository";
+﻿import Link from "next/link";
+import type { JobWithCustomer } from "@/lib/db/jobs/repository";
 import { JobStatusBadge } from "./JobStatusBadge";
 
 // scheduledDate arrives as "YYYY-MM-DD"; format it in UTC so it never shifts a day.
@@ -10,7 +10,7 @@ function formatScheduledDate(isoDate: string): string {
   }).format(new Date(`${isoDate}T00:00:00Z`));
 }
 
-export function JobItem({ job }: { job: JobListItem }) {
+export function JobItem({ job }: { job: JobWithCustomer }) {
   return (
     <li className="flex flex-col gap-2 border-b border-slate-200 p-4 last:border-b-0 md:grid md:grid-cols-12 md:items-center md:gap-4">
       <div className="md:col-span-4">

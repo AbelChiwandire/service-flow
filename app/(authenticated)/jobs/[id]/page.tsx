@@ -2,20 +2,26 @@ import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/PageHeader";
+import { PageHeader } from "@/components/shared/PageHeader";
 import { JobDetails } from "@/components/JobDetails";
 import { JobStatusControl } from "@/components/JobStatusControl";
 import { DeleteJobButton } from "@/components/DeleteJobButton";
-import { getJobDetail } from "@/lib/db/jobs/queries";
+import { getJobById } from "@/lib/db/jobs/repository";
+import { getCustomerById } from "@/lib/db/customer/repository";
 import { IdSchema } from "@/lib/db/jobs/schema";
-import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
+import { requireUserId } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
 // Shared by generateMetadata and the page so the job is only loaded once per request.
 const loadJob = cache(async (id: string) => {
   if (!IdSchema.safeParse(id).success) return null;
-  return getJobDetail(PLACEHOLDER_USER_ID, id);
+  const userId = await requireUserId();
+  const job = await getJobById(userId, id);
+  if (!job) return null;
+
+  const customer = await getCustomerById(userId, job.customerId);
+  return { ...job, customerName: customer?.name ?? "Unknown customer" };
 });
 
 export async function generateMetadata({

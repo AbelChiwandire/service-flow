@@ -1,11 +1,11 @@
 import Link from "next/link";
-import type { JobDetail } from "@/lib/db/jobs/queries";
+import type { JobWithCustomer } from "@/lib/db/jobs/repository";
 import { formatDate } from "@/lib/format-date";
 import { JobStatusBadge } from "./JobStatusBadge";
 
 const termClassName = "text-sm font-medium text-slate-500";
 
-export function JobDetails({ job }: { job: JobDetail }) {
+export function JobDetails({ job }: { job: JobWithCustomer }) {
   return (
     <dl className="grid gap-6 rounded-lg border border-slate-200 bg-white p-6 sm:grid-cols-2">
       <div>

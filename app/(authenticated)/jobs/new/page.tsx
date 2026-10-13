@@ -1,9 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/PageHeader";
-import { EmptyState } from "@/components/EmptyState";
-import { getCustomerOptions } from "@/lib/db/jobs/queries";
-import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { getCustomers } from "@/lib/db/customer/repository";
+import { requireUserId } from "@/lib/auth/session";
 import CreateJobForm from "./create-job-form";
 
 export const metadata: Metadata = {
@@ -21,7 +21,11 @@ export default async function NewJobPage({
   const { customerId } = await searchParams;
   const requestedCustomerId = Array.isArray(customerId) ? customerId[0] : customerId;
 
-  const customers = await getCustomerOptions(PLACEHOLDER_USER_ID);
+  const userId = await requireUserId();
+  // The picker needs every customer, not one page, so ask for a large page.
+  const customers = (await getCustomers(userId, { pageSize: 1000 })).map(
+    ({ id, name }) => ({ id, name }),
+  );
 
   // Only preselect a customer that actually exists (e.g. from /jobs/new?customerId=...).
   const defaultCustomerId = customers.some((c) => c.id === requestedCustomerId)

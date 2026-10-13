@@ -1,7 +1,7 @@
-import type { JobListItem } from "@/lib/db/jobs/repository";
+﻿import type { JobWithCustomer } from "@/lib/db/jobs/repository";
 import { JobItem } from "./JobItem";
 
-export function JobList({ jobs }: { jobs: JobListItem[] }) {
+export function JobList({ jobs }: { jobs: JobWithCustomer[] }) {
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
       <div
