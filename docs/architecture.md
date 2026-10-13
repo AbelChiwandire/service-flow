@@ -86,54 +86,54 @@ Pages are responsible for composing the interface for a route. Reusable componen
 
 ### Shared Application Components
 
-* `Header`
-* `Navigation`
-* `PageHeader`
-* `LoadingState`
-* `EmptyState`
-* `ErrorMessage`
+- `Header`
+- `Navigation`
+- `PageHeader`
+- `LoadingState`
+- `EmptyState`
+- `ErrorMessage`
 
 Shared UI primitives from shadcn/ui may also be used as needed, including:
 
-* `Button`
-* `Input`
-* `Dialog`
-* `AlertDialog`
-* `Badge`
-* `Select`
-* Other primitives as required
+- `Button`
+- `Input`
+- `Dialog`
+- `AlertDialog`
+- `Badge`
+- `Select`
+- Other primitives as required
 
 ### Customer Components
 
-* `CustomerList`
-* `CustomerItem`
-* `CustomerForm`
-* `CustomerDetails`
-* `CustomerJobList`
+- `CustomerList`
+- `CustomerItem`
+- `CustomerForm`
+- `CustomerDetails`
+- `CustomerJobList`
 
 ### Job Components
 
-* `JobList`
-* `JobItem`
-* `JobForm`
-* `JobDetails`
-* `JobStatusBadge`
+- `JobList`
+- `JobItem`
+- `JobForm`
+- `JobDetails`
+- `JobStatusBadge`
 
 The job domain also includes the job-completion and invoice-creation workflow.
 
 ### Invoice Components
 
-* `InvoiceList`
-* `InvoiceItem`
-* `InvoiceDetails`
-* `InvoiceForm`
+- `InvoiceList`
+- `InvoiceItem`
+- `InvoiceDetails`
+- `InvoiceForm`
 
 ### Dashboard Components
 
-* `DashboardSummary`
-* `SummaryCard`
-* `UpcomingJobs`
-* `OutstandingInvoices`
+- `DashboardSummary`
+- `SummaryCard`
+- `UpcomingJobs`
+- `OutstandingInvoices`
 
 Components such as `CustomerActions`, `JobActions`, `JobStatusControl`, `InvoiceStatus`, and `RecentActivity` are not planned as separate components initially. They may be introduced later if implementation complexity justifies them.
 
@@ -147,11 +147,11 @@ React components use **PascalCase**.
 
 Examples:
 
-* `CustomerList`
-* `CustomerForm`
-* `JobDetails`
-* `JobStatusBadge`
-* `SummaryCard`
+- `CustomerList`
+- `CustomerForm`
+- `JobDetails`
+- `JobStatusBadge`
+- `SummaryCard`
 
 Component names should describe their responsibility rather than their location or implementation details.
 

@@ -85,8 +85,8 @@ Amendments MUST state the motivation and affected principles and require review 
 
 Versioning follows semantic versioning:
 
-* MAJOR for incompatible governance or principle changes.
-* MINOR for new principles or materially expanded obligations.
-* PATCH for clarifications that do not change required behavior.
+- MAJOR for incompatible governance or principle changes.
+- MINOR for new principles or materially expanded obligations.
+- PATCH for clarifications that do not change required behavior.
 
 **Version**: 1.0.0 | **Ratified**: 2026-09-11 | **Last Amended**: 2026-09-11
