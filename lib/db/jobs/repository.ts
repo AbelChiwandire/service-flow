@@ -1,9 +1,9 @@
-import { neon } from "@neondatabase/serverless";
+﻿import { neon } from '@neondatabase/serverless';
 import { getTodayForRequest } from "../dashboard/date-utils";
 
 const sql = neon(process.env.DATABASE_URL!);
 
-const ITEMS_PER_PAGE = 10;
+export const ITEMS_PER_PAGE = 10;
 
 export type JobStatus = "scheduled" | "in_progress" | "completed" | "cancelled";
 export type DueFilter = "upcoming" | "overdue";
@@ -61,6 +61,11 @@ export class ActiveJobDeleteError extends Error {
     }
 }
 
+// Escape LIKE wildcards so a search for "50%" matches literally.
+function escapeLike(value: string): string {
+    return value.replace(/[\\%_]/g, '\\$&');
+}
+
 // "upcoming" and "overdue" both mean: still scheduled, split by today's date.
 function dueFilter(due: DueFilter | undefined, today: string) {
     if (due === "upcoming") {
@@ -79,7 +84,7 @@ function jobsFrom() {
 // The single definition of "which jobs match". Used by the list, the count and the page count.
 function jobFilters(userId: string, params: JobListParams, today: string) {
     const { query = "", status, due } = params;
-    const searchTerm = `%${query}%`;
+    const searchTerm = `%${escapeLike(query)}%`;
 
     return sql`
         jobs."userId" = ${userId}

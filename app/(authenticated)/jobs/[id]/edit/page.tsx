@@ -1,33 +1,49 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/shared/PageHeader";
 import { getJobById } from "@/lib/db/jobs/repository";
 import { IdSchema } from "@/lib/db/jobs/schema";
 import { requireUserId } from "@/lib/auth/session";
 import UpdateJobForm from "./update-job-form";
 
-export default async function EditJobPage({ params }: { params: Promise<{ id: string }> }) {
-    const userId = await requireUserId();
-    const { id } = await params;
+export const metadata: Metadata = {
+  title: "Edit job",
+  description: "Update the details of this job.",
+};
 
-    if (!IdSchema.safeParse(id).success) {
-        notFound();
-    }
+export const dynamic = "force-dynamic";
 
-    const job = await getJobById(userId, id);
-    if (!job) {
-        notFound();
-    }
+export default async function EditJobPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
 
-    const initialValues = {
-        title: job.title,
-        description: job.description,
-        scheduledDate: job.scheduledDate,
-        status: job.status,
-    };
+  if (!IdSchema.safeParse(id).success) {
+    notFound();
+  }
 
-    return (
-        <div className="max-w-xl space-y-4">
-            <h1 className="text-xl font-semibold">Edit job</h1>
-            <UpdateJobForm jobId={job.id} initialValues={initialValues} />
-        </div>
-    );
+  const userId = await requireUserId();
+  const job = await getJobById(userId, id);
+  if (!job) {
+    notFound();
+  }
+
+  return (
+    <div className="space-y-6">
+      <PageHeader title="Edit job" description="Update the details of this job." />
+
+      <div className="max-w-xl">
+        <UpdateJobForm
+          jobId={job.id}
+          initialValues={{
+            title: job.title,
+            description: job.description,
+            scheduledDate: job.scheduledDate,
+          }}
+        />
+      </div>
+    </div>
+  );
 }

@@ -1,119 +1,148 @@
-"use server";
+﻿"use server";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { requireUserId } from "@/lib/auth/session";
 import {
+    JobFormSchema,
+    JobStatusSchema,
+    IdSchema,
+    formatValidationErrors,
+    type JobFormErrors,
+} from './schema';
+import { JOB_STATUS_LABELS, canTransition } from './status';
+import type { JobStatus } from './repository';
+import {
     createJob,
+    getJobById,
     updateJob,
     deleteJob,
     JobCustomerNotFoundError,
     ActiveJobDeleteError,
 } from "./repository";
-import { JobFormSchema, IdSchema, formatValidationErrors, type JobFormErrors } from "./schema";
 
 const JOBS_PATH = "/jobs";
 
 export type State = {
-    errors?: JobFormErrors;
+    errors?: JobFormErrors & { customerId?: string[] };
     message?: string | null;
     values?: {
+        customerId?: string;
         title?: string;
         description?: string;
         scheduledDate?: string;
-        status?: string;
     };
+};
+
+export type StatusState = {
+    message?: string | null;
 };
 
 function validateJobForm(formData: FormData) {
     return JobFormSchema.safeParse({
-        title: formData.get("title"),
-        description: formData.get("description"),
-        scheduledDate: formData.get("scheduledDate"),
-        status: formData.get("status") ?? undefined,
+        title: formData.get('title'),
+        description: formData.get('description'),
+        scheduledDate: formData.get('scheduledDate'),
+        // Status is changed from the job details page, not from these forms.
+        status: formData.get('status') ?? undefined,
     });
 }
 
 function getRawJobValues(formData: FormData): State["values"] {
     return {
-        title: formData.get("title")?.toString(),
-        description: formData.get("description")?.toString(),
-        scheduledDate: formData.get("scheduledDate")?.toString(),
-        status: formData.get("status")?.toString(),
+        customerId: formData.get('customerId')?.toString(),
+        title: formData.get('title')?.toString(),
+        description: formData.get('description')?.toString(),
+        scheduledDate: formData.get('scheduledDate')?.toString(),
     };
 }
 
-async function runMutation(
-    mutation: () => Promise<unknown>,
+type MutationResult<T> = { ok: true; data: T } | { ok: false; message: string };
+
+// Runs a repository call, mapping expected domain errors and null (not found) to a message.
+async function runMutation<T>(
+    mutation: () => Promise<T | null>,
     logLabel: string,
-): Promise<State | undefined> {
+): Promise<MutationResult<T>> {
     try {
-        const result = await mutation();
-        if (result === null) {
-            return { message: "Job not found." };
+        const data = await mutation();
+        if (data === null) {
+            return { ok: false, message: 'Job not found.' };
         }
+        return { ok: true, data };
     } catch (error) {
         if (error instanceof JobCustomerNotFoundError || error instanceof ActiveJobDeleteError) {
-            return { message: error.message };
+            return { ok: false, message: error.message };
         }
         console.error(logLabel, error);
         throw error;
     }
-
-    revalidatePath(JOBS_PATH);
-    redirect(JOBS_PATH);
 }
 
 export async function createJobAction(
-    customerId: string,
-    prevState: State,
-    formData: FormData,
+    _prevState: State,
+    formData: FormData
 ): Promise<State> {
     const userId = await requireUserId();
-    if (!IdSchema.safeParse(customerId).success) {
-        return { message: "Invalid customer id." };
-    }
-
+    const customerId = formData.get('customerId')?.toString() ?? '';
+    const isCustomerValid = IdSchema.safeParse(customerId).success;
     const validatedData = validateJobForm(formData);
-    if (!validatedData.success) {
+
+    if (!validatedData.success || !isCustomerValid) {
         return {
-            errors: formatValidationErrors(validatedData.error),
-            message: "Missing or invalid fields. Failed to create Job.",
+            errors: {
+                ...(validatedData.success ? {} : formatValidationErrors(validatedData.error)),
+                ...(isCustomerValid ? {} : { customerId: ['Select a customer.'] }),
+            },
+            message: 'Missing or invalid fields. Failed to create job.',
             values: getRawJobValues(formData),
         };
     }
 
     const result = await runMutation(
         () => createJob({ userId, customerId, ...validatedData.data }),
-        "createJobAction failed:",
+        'createJobAction failed:',
     );
-    return result ?? {};
+
+    if (!result.ok) {
+        return { message: result.message, values: getRawJobValues(formData) };
+    }
+
+    revalidatePath(JOBS_PATH);
+    redirect(JOBS_PATH);
 }
 
 export async function updateJobAction(
     id: string,
-    prevState: State,
-    formData: FormData,
+    _prevState: State,
+    formData: FormData
 ): Promise<State> {
     const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
-        return { message: "Invalid job id." };
+        return { message: 'Invalid job id.' };
     }
 
     const validatedData = validateJobForm(formData);
     if (!validatedData.success) {
         return {
             errors: formatValidationErrors(validatedData.error),
-            message: "Missing or invalid fields. Failed to update Job.",
+            message: 'Missing or invalid fields. Failed to update job.',
             values: getRawJobValues(formData),
         };
     }
 
     const result = await runMutation(
         () => updateJob(userId, id, validatedData.data),
-        "updateJobAction failed:",
+        'updateJobAction failed:',
     );
-    return result ?? {};
+
+    if (!result.ok) {
+        return { message: result.message, values: getRawJobValues(formData) };
+    }
+
+    revalidatePath(JOBS_PATH);
+    revalidatePath(`${JOBS_PATH}/${id}`);
+    redirect(JOBS_PATH);
 }
 
 export async function deleteJobAction(
@@ -123,9 +152,54 @@ export async function deleteJobAction(
 ): Promise<State> {
     const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
-        return { message: "Invalid job id." };
+        return { message: 'Invalid job id.' };
     }
 
-    const result = await runMutation(() => deleteJob(userId, id), "deleteJobAction failed:");
-    return result ?? {};
+    const result = await runMutation(() => deleteJob(userId, id), 'deleteJobAction failed:');
+
+    if (!result.ok) {
+        return { message: result.message };
+    }
+
+    revalidatePath(JOBS_PATH);
+    redirect(JOBS_PATH);
+}
+
+// Moves a job to a new status after checking the transition on the server.
+export async function changeJobStatusAction(
+    id: string,
+    target: JobStatus,
+    _prevState: StatusState,
+    _formData: FormData
+): Promise<StatusState> {
+    const userId = await requireUserId();
+    const parsedTarget = JobStatusSchema.safeParse(target);
+
+    if (!IdSchema.safeParse(id).success || !parsedTarget.success) {
+        return { message: 'Invalid request.' };
+    }
+
+    const job = await getJobById(userId, id);
+    if (!job) {
+        return { message: 'Job not found.' };
+    }
+
+    if (!canTransition(job.status, parsedTarget.data)) {
+        return {
+            message: `A ${JOB_STATUS_LABELS[job.status].toLowerCase()} job can't be changed to ${JOB_STATUS_LABELS[parsedTarget.data].toLowerCase()}.`,
+        };
+    }
+
+    const result = await runMutation(
+        () => updateJob(userId, id, { status: parsedTarget.data }),
+        'changeJobStatusAction failed:',
+    );
+
+    if (!result.ok) {
+        return { message: result.message };
+    }
+
+    revalidatePath(JOBS_PATH);
+    revalidatePath(`${JOBS_PATH}/${id}`);
+    return {};
 }
