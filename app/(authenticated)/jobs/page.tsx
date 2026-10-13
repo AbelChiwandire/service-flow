@@ -3,9 +3,9 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { JobList } from "@/components/JobList";
-import { JobFilters } from "@/components/JobFilters";
-import { Pagination } from "@/components/Pagination";
+import { JobList } from "@/components/jobs/JobList";
+import { JobFilters } from "@/components/jobs/JobFilters";
+import { Pagination } from "@/components/shared/Pagination";
 import {
   ITEMS_PER_PAGE,
   countJobs,
