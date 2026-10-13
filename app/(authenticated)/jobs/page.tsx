@@ -1,15 +1,25 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/PageHeader";
-import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { JobList } from "@/components/JobList";
 import { JobFilters } from "@/components/JobFilters";
 import { Pagination } from "@/components/Pagination";
-import { getJobsPage } from "@/lib/db/jobs/queries";
-import { JOBS_PER_PAGE } from "@/lib/db/jobs/constants";
-import { JobStatusSchema } from "@/lib/db/jobs/schema";
-import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
+import {
+  ITEMS_PER_PAGE,
+  countJobs,
+  getJobs,
+  type JobListParams,
+} from "@/lib/db/jobs/repository";
+import {
+  parseDue,
+  parsePage,
+  parseQuery,
+  parseSort,
+  parseStatus,
+} from "@/lib/db/dashboard/search-params";
+import { requireUserId } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
   title: "Jobs",
@@ -21,10 +31,6 @@ export const dynamic = "force-dynamic";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
-function firstValue(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
-
 const primaryLinkClassName =
   "inline-flex h-10 items-center justify-center rounded-md bg-[#2667FF] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC]";
 
@@ -35,39 +41,40 @@ export default async function JobsPage({
 }) {
   const params = await searchParams;
 
-  const query = firstValue(params.query)?.trim().slice(0, 100) || undefined;
-
-  const statusResult = JobStatusSchema.safeParse(firstValue(params.status));
-  const status = statusResult.success ? statusResult.data : undefined;
-
-  const requestedPage = Number.parseInt(firstValue(params.page) ?? "1", 10);
-  const page =
-    Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+  const filters: JobListParams = {
+    query: parseQuery(params.query).slice(0, 100) || undefined,
+    page: parsePage(params.page),
+    status: parseStatus(params.status),
+    due: parseDue(params.due),
+    sort: parseSort(params.sort),
+  };
+  const page = filters.page ?? 1;
 
   function getPageHref(targetPage: number): string {
     const search = new URLSearchParams();
-    if (query) search.set("query", query);
-    if (status) search.set("status", status);
+    if (filters.query) search.set("query", filters.query);
+    if (filters.status) search.set("status", filters.status);
+    if (filters.due) search.set("due", filters.due);
+    if (filters.sort === "desc") search.set("sort", "desc");
     if (targetPage > 1) search.set("page", String(targetPage));
 
     const queryString = search.toString();
     return queryString ? `/jobs?${queryString}` : "/jobs";
   }
 
-  const { jobs, totalCount } = await getJobsPage(PLACEHOLDER_USER_ID, {
-    query,
-    status,
-    page,
-  });
-
-  const totalPages = Math.max(1, Math.ceil(totalCount / JOBS_PER_PAGE));
+  const userId = await requireUserId();
+  const [jobs, totalCount] = await Promise.all([
+    getJobs(userId, filters),
+    countJobs(userId, filters),
+  ]);
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   // A stale link (for example page 9 after filtering) goes to the last real page.
-  if (page > totalPages) {
-    redirect(getPageHref(totalPages));
+  const lastPage = Math.max(1, totalPages);
+  if (page > lastPage) {
+    redirect(getPageHref(lastPage));
   }
-
-  const hasFilters = Boolean(query || status);
+  const hasFilters = Boolean(filters.query || filters.status || filters.due);
 
   return (
     <div className="space-y-6">

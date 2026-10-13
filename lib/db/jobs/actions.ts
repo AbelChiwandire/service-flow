@@ -1,14 +1,8 @@
-'use server';
+﻿"use server";
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { PLACEHOLDER_USER_ID } from '@/lib/auth/placeholder-session';
-import {
-    createJobRecord,
-    deleteJobRecord,
-    getJob,
-    updateJobRecord,
-} from './queries';
+import { requireUserId } from "@/lib/auth/session";
 import {
     JobFormSchema,
     JobStatusSchema,
@@ -18,8 +12,16 @@ import {
 } from './schema';
 import { JOB_STATUS_LABELS, canTransition } from './status';
 import type { JobStatus } from './repository';
+import {
+    createJob,
+    getJobById,
+    updateJob,
+    deleteJob,
+    JobCustomerNotFoundError,
+    ActiveJobDeleteError,
+} from "./repository";
 
-const JOBS_PATH = '/jobs';
+const JOBS_PATH = "/jobs";
 
 export type State = {
     errors?: JobFormErrors & { customerId?: string[] };
@@ -46,7 +48,7 @@ function validateJobForm(formData: FormData) {
     });
 }
 
-function getRawJobValues(formData: FormData): State['values'] {
+function getRawJobValues(formData: FormData): State["values"] {
     return {
         customerId: formData.get('customerId')?.toString(),
         title: formData.get('title')?.toString(),
@@ -55,10 +57,33 @@ function getRawJobValues(formData: FormData): State['values'] {
     };
 }
 
+type MutationResult<T> = { ok: true; data: T } | { ok: false; message: string };
+
+// Runs a repository call, mapping expected domain errors and null (not found) to a message.
+async function runMutation<T>(
+    mutation: () => Promise<T | null>,
+    logLabel: string,
+): Promise<MutationResult<T>> {
+    try {
+        const data = await mutation();
+        if (data === null) {
+            return { ok: false, message: 'Job not found.' };
+        }
+        return { ok: true, data };
+    } catch (error) {
+        if (error instanceof JobCustomerNotFoundError || error instanceof ActiveJobDeleteError) {
+            return { ok: false, message: error.message };
+        }
+        console.error(logLabel, error);
+        throw error;
+    }
+}
+
 export async function createJobAction(
     _prevState: State,
     formData: FormData
 ): Promise<State> {
+    const userId = await requireUserId();
     const customerId = formData.get('customerId')?.toString() ?? '';
     const isCustomerValid = IdSchema.safeParse(customerId).success;
     const validatedData = validateJobForm(formData);
@@ -74,10 +99,10 @@ export async function createJobAction(
         };
     }
 
-    const result = await createJobRecord(PLACEHOLDER_USER_ID, {
-        customerId,
-        ...validatedData.data,
-    });
+    const result = await runMutation(
+        () => createJob({ userId, customerId, ...validatedData.data }),
+        'createJobAction failed:',
+    );
 
     if (!result.ok) {
         return { message: result.message, values: getRawJobValues(formData) };
@@ -92,6 +117,7 @@ export async function updateJobAction(
     _prevState: State,
     formData: FormData
 ): Promise<State> {
+    const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
         return { message: 'Invalid job id.' };
     }
@@ -105,7 +131,10 @@ export async function updateJobAction(
         };
     }
 
-    const result = await updateJobRecord(PLACEHOLDER_USER_ID, id, validatedData.data);
+    const result = await runMutation(
+        () => updateJob(userId, id, validatedData.data),
+        'updateJobAction failed:',
+    );
 
     if (!result.ok) {
         return { message: result.message, values: getRawJobValues(formData) };
@@ -119,13 +148,14 @@ export async function updateJobAction(
 export async function deleteJobAction(
     id: string,
     _prevState: State,
-    _formData: FormData
+    _formData: FormData,
 ): Promise<State> {
+    const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
         return { message: 'Invalid job id.' };
     }
 
-    const result = await deleteJobRecord(PLACEHOLDER_USER_ID, id);
+    const result = await runMutation(() => deleteJob(userId, id), 'deleteJobAction failed:');
 
     if (!result.ok) {
         return { message: result.message };
@@ -142,13 +172,14 @@ export async function changeJobStatusAction(
     _prevState: StatusState,
     _formData: FormData
 ): Promise<StatusState> {
+    const userId = await requireUserId();
     const parsedTarget = JobStatusSchema.safeParse(target);
 
     if (!IdSchema.safeParse(id).success || !parsedTarget.success) {
         return { message: 'Invalid request.' };
     }
 
-    const job = await getJob(PLACEHOLDER_USER_ID, id);
+    const job = await getJobById(userId, id);
     if (!job) {
         return { message: 'Job not found.' };
     }
@@ -159,9 +190,11 @@ export async function changeJobStatusAction(
         };
     }
 
-    const result = await updateJobRecord(PLACEHOLDER_USER_ID, id, {
-        status: parsedTarget.data,
-    });
+    const result = await runMutation(
+        () => updateJob(userId, id, { status: parsedTarget.data }),
+        'changeJobStatusAction failed:',
+    );
+
     if (!result.ok) {
         return { message: result.message };
     }

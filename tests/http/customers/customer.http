@@ -291,11 +291,6 @@ DELETE {{baseUrl}}/api/customers/{{createCustomer.response.body.$.data.id}}
 
 ### Access another user's customer — expect 404 (ownership scoping)
 ### NOTE: this requires a second seeded user with a different userId.
-### Since PLACEHOLDER_USER_ID is currently hardcoded server-side (not
-### passed by the client), this specific case can't be driven through
-### the .http file alone yet — it needs either:
-###   (a) a query param / header override for testing, or
-###   (b) a direct repository-level check (e.g. a small script) rather
-###       than through the API.
-### Documenting this as a known limitation until auth exists — see
-### TESTING.md "Known gaps".
+### The user id now comes from the session, so this needs a second
+### account: sign in as user B and request user A's customer id (expect 404).
+### Requests without a session cookie should return 401.

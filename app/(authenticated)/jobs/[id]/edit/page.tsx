@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/PageHeader";
-import { getJob } from "@/lib/db/jobs/queries";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { getJobById } from "@/lib/db/jobs/repository";
 import { IdSchema } from "@/lib/db/jobs/schema";
-import { PLACEHOLDER_USER_ID } from "@/lib/auth/placeholder-session";
+import { requireUserId } from "@/lib/auth/session";
 import UpdateJobForm from "./update-job-form";
 
 export const metadata: Metadata = {
@@ -24,7 +24,8 @@ export default async function EditJobPage({
     notFound();
   }
 
-  const job = await getJob(PLACEHOLDER_USER_ID, id);
+  const userId = await requireUserId();
+  const job = await getJobById(userId, id);
   if (!job) {
     notFound();
   }
