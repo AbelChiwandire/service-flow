@@ -1,5 +1,6 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import type { JobWithCustomer } from "@/lib/db/jobs/repository";
+import { DataRow } from "@/components/shared/DataTable";
 import { JobStatusBadge } from "./JobStatusBadge";
 
 // scheduledDate arrives as "YYYY-MM-DD"; format it in UTC so it never shifts a day.
@@ -12,7 +13,7 @@ function formatScheduledDate(isoDate: string): string {
 
 export function JobItem({ job }: { job: JobWithCustomer }) {
   return (
-    <li className="flex flex-col gap-2 border-b border-slate-200 p-4 last:border-b-0 md:grid md:grid-cols-12 md:items-center md:gap-4">
+    <DataRow>
       <div className="md:col-span-4">
         <Link
           href={`/jobs/${job.id}`}
@@ -32,6 +33,6 @@ export function JobItem({ job }: { job: JobWithCustomer }) {
       <div className="md:col-span-2">
         <JobStatusBadge status={job.status} />
       </div>
-    </li>
+    </DataRow>
   );
 }

@@ -1,24 +1,20 @@
-﻿import type { JobWithCustomer } from "@/lib/db/jobs/repository";
+import type { JobWithCustomer } from "@/lib/db/jobs/repository";
+import { DataTable, type DataTableColumn } from "@/components/shared/DataTable";
 import { JobItem } from "./JobItem";
+
+const columns: DataTableColumn[] = [
+  { label: "Job", className: "col-span-4" },
+  { label: "Customer", className: "col-span-3" },
+  { label: "Scheduled", className: "col-span-3" },
+  { label: "Status", className: "col-span-2" },
+];
 
 export function JobList({ jobs }: { jobs: JobWithCustomer[] }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-      <div
-        aria-hidden="true"
-        className="hidden grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 md:grid"
-      >
-        <span className="col-span-4">Job</span>
-        <span className="col-span-3">Customer</span>
-        <span className="col-span-3">Scheduled</span>
-        <span className="col-span-2">Status</span>
-      </div>
-
-      <ul>
-        {jobs.map((job) => (
-          <JobItem key={job.id} job={job} />
-        ))}
-      </ul>
-    </div>
+    <DataTable columns={columns}>
+      {jobs.map((job) => (
+        <JobItem key={job.id} job={job} />
+      ))}
+    </DataTable>
   );
 }

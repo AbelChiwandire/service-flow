@@ -1,5 +1,6 @@
-﻿import { neon } from '@neondatabase/serverless';
+import { neon } from '@neondatabase/serverless';
 import { getTodayForRequest } from "../dashboard/date-utils";
+import { escapeLike } from "../like";
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -59,11 +60,6 @@ export class ActiveJobDeleteError extends Error {
         super("Cannot delete a scheduled or in-progress job. Cancel it first.");
         this.name = "ActiveJobDeleteError";
     }
-}
-
-// Escape LIKE wildcards so a search for "50%" matches literally.
-function escapeLike(value: string): string {
-    return value.replace(/[\\%_]/g, '\\$&');
 }
 
 // "upcoming" and "overdue" both mean: still scheduled, split by today's date.
