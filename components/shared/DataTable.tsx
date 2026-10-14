@@ -18,7 +18,7 @@ export function DataTable({
     <div className="overflow-hidden card-surface">
       <div
         aria-hidden="true"
-        className="table-head"
+        className="data-head"
       >
         {columns.map((column) => (
           <span key={column.label} className={column.className}>
@@ -34,7 +34,7 @@ export function DataTable({
 
 export function DataRow({ children }: { children: ReactNode }) {
   return (
-    <li className="table-row">
+    <li className="data-row">
       {children}
     </li>
   );

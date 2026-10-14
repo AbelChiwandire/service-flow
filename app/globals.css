@@ -244,10 +244,10 @@ body {
     .list-row-link {
         @apply flex min-h-16 items-center justify-between gap-4 px-4 py-4 transition-colors hover:bg-surface focus-visible:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-navy sm:px-6;
     }
-    .table-head {
+    .data-head {
         @apply hidden grid-cols-12 gap-4 border-b border-border bg-surface px-4 py-4 text-xs font-semibold uppercase tracking-wider text-foreground md:grid;
     }
-    .table-row {
+    .data-row {
         @apply flex flex-col gap-2 border-b border-border p-4 last:border-b-0 md:grid md:grid-cols-12 md:items-center md:gap-4;
     }
     .section-divider {
