@@ -1,13 +1,7 @@
 "use client";
 
 import type { State } from "@/lib/db/jobs/actions";
-import {
-  FieldErrors,
-  FormActions,
-  fieldClassName,
-  invalidFieldClassName,
-  labelClassName,
-} from "@/components/shared/form";
+import { FieldErrors, FormActions } from "@/components/shared/form";
 import { useFormFeedback } from "@/components/shared/useFormFeedback";
 
 const FIELDS = ["customerId", "title", "description", "scheduledDate"] as const;
@@ -45,18 +39,18 @@ export function JobForm({
   const { getFieldErrors, clearFieldError, resetFeedback, isMessageDismissed } =
     useFormFeedback(state, FIELDS);
   const inputClassName = (field: FieldName) =>
-    `${fieldClassName} ${getFieldErrors(field)?.length ? invalidFieldClassName : ""}`;
+    `input-field ${getFieldErrors(field)?.length ? "input-field-invalid" : ""}`;
 
   return (
     <form
       action={formAction}
       aria-busy={isPending}
       onSubmit={resetFeedback}
-      className="space-y-5"
+      className="space-y-6"
     >
       {customers ? (
         <div>
-          <label htmlFor="customerId" className={labelClassName}>
+          <label htmlFor="customerId" className="mb-1 field-label">
             Customer
           </label>
           <select
@@ -83,7 +77,7 @@ export function JobForm({
       ) : null}
 
       <div>
-        <label htmlFor="title" className={labelClassName}>
+        <label htmlFor="title" className="mb-1 field-label">
           Title
         </label>
         <input
@@ -102,8 +96,8 @@ export function JobForm({
       </div>
 
       <div>
-        <label htmlFor="description" className={labelClassName}>
-          Description <span className="font-normal text-slate-500">(optional)</span>
+        <label htmlFor="description" className="mb-1 field-label">
+          Description <span className="font-normal text-foreground">(optional)</span>
         </label>
         <textarea
           id="description"
@@ -119,7 +113,7 @@ export function JobForm({
       </div>
 
       <div>
-        <label htmlFor="scheduledDate" className={labelClassName}>
+        <label htmlFor="scheduledDate" className="mb-1 field-label">
           Scheduled date
         </label>
         <input
@@ -137,7 +131,7 @@ export function JobForm({
       </div>
 
       {state.message && !isMessageDismissed ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="error-text">
           {state.message}
         </p>
       ) : null}

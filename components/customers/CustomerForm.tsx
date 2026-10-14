@@ -1,13 +1,7 @@
 "use client";
 
 import type { State } from "@/lib/db/customer/actions";
-import {
-  FieldErrors,
-  FormActions,
-  fieldClassName,
-  invalidFieldClassName,
-  labelClassName,
-} from "@/components/shared/form";
+import { FieldErrors, FormActions } from "@/components/shared/form";
 import { useFormFeedback } from "@/components/shared/useFormFeedback";
 
 const FIELDS = ["name", "email", "phone", "address"] as const;
@@ -48,17 +42,17 @@ export function CustomerForm({
     address: state.values?.address ?? initialValues?.address ?? "",
   };
   const inputClassName = (field: FieldName) =>
-    `${fieldClassName} ${getFieldErrors(field)?.length ? invalidFieldClassName : ""}`;
+    `input-field ${getFieldErrors(field)?.length ? "input-field-invalid" : ""}`;
 
   return (
     <form
       action={formAction}
       aria-busy={isPending}
       onSubmit={resetFeedback}
-      className="space-y-5"
+      className="space-y-6"
     >
       <div>
-        <label htmlFor="name" className={labelClassName}>
+        <label htmlFor="name" className="mb-1 field-label">
           Name
         </label>
         <input
@@ -77,7 +71,7 @@ export function CustomerForm({
       </div>
 
       <div>
-        <label htmlFor="email" className={labelClassName}>
+        <label htmlFor="email" className="mb-1 field-label">
           Email
         </label>
         <input
@@ -96,7 +90,7 @@ export function CustomerForm({
       </div>
 
       <div>
-        <label htmlFor="phone" className={labelClassName}>
+        <label htmlFor="phone" className="mb-1 field-label">
           Phone
         </label>
         <input
@@ -115,7 +109,7 @@ export function CustomerForm({
       </div>
 
       <div>
-        <label htmlFor="address" className={labelClassName}>
+        <label htmlFor="address" className="mb-1 field-label">
           Address
         </label>
         <textarea
@@ -134,7 +128,7 @@ export function CustomerForm({
       </div>
 
       {state.message && !isMessageDismissed ? (
-        <div role="alert" className="text-sm text-red-600">
+        <div role="alert" className="error-text">
           <p className="font-semibold">
             {isEditing ? "Changes could not be saved." : "Customer could not be created."}
           </p>

@@ -64,7 +64,7 @@ export default async function CustomersPage({
     const hasFilters = Boolean(filters.query || filters.filter);
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-1 flex-col [&>*:nth-child(n+3)]:mt-6">
             <PageHeader
                 title="Customers"
                 description="Manage your customer information and keep every relationship in one place."
@@ -91,8 +91,8 @@ export default async function CustomersPage({
                     />
                 )
             ) : (
-                <div className="space-y-4">
-                    <p className="text-sm text-slate-600">
+                <div className="flex flex-1 flex-col gap-4">
+                    <p className="small-text">
                         {totalCount} {totalCount === 1 ? "customer" : "customers"}
                     </p>
 

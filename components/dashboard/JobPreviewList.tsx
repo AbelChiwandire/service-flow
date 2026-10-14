@@ -30,14 +30,14 @@ export default function JobPreviewList({
     emptyText,
 }: JobPreviewListProps) {
     return (
-        <section className="rounded-lg border border-slate-200 bg-white">
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-4 py-4 sm:px-5">
-                <h2 className="text-base font-semibold text-slate-900 sm:text-lg">{title}</h2>
+        <section className="card-surface">
+            <div className="panel-header">
+                <h2 className="heading-h2">{title}</h2>
 
                 {total > 0 && (
                     <Link
                         href={viewAllHref}
-                        className="shrink-0 text-sm font-medium text-primary hover:text-primary-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        className="shrink-0 text-sm font-medium text-navy hover:text-navy-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2"
                     >
                         View all ({total})
                     </Link>
@@ -45,25 +45,25 @@ export default function JobPreviewList({
             </div>
 
             {jobs.length === 0 ? (
-                <p className="px-4 py-6 text-sm text-slate-500 sm:px-5">{emptyText}</p>
+                <p className="px-4 py-6 small-text sm:px-6">{emptyText}</p>
             ) : (
-                <ul className="divide-y divide-slate-100">
+                <ul className="list-divided">
                     {jobs.map((job) => (
                         <li key={job.id}>
                             <Link
                                 href={`/jobs/${encodeURIComponent(job.id)}`}
-                                className="flex min-h-16 items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-slate-50 focus-visible:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary sm:px-5"
+                                className="list-row-link"
                             >
                                 <div className="min-w-0">
-                                    <p className="truncate font-medium text-slate-900">
+                                    <p className="truncate font-medium text-foreground">
                                         {job.title}
                                     </p>
-                                    <p className="mt-0.5 truncate text-sm text-slate-600">
+                                    <p className="mt-1 truncate small-text">
                                         {job.customerName}
                                     </p>
                                 </div>
 
-                                <p className="shrink-0 text-right text-xs text-slate-500 sm:text-sm">
+                                <p className="shrink-0 text-right sm:text-sm caption-text">
                                     {formatJobDate(job.scheduledDate)}
                                 </p>
                             </Link>

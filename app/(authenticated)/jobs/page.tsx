@@ -74,7 +74,7 @@ export default async function JobsPage({
   const hasFilters = Boolean(filters.query || filters.status || filters.due);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-1 flex-col [&>*:nth-child(n+3)]:mt-6">
       <PageHeader
         title="Jobs"
         description="Schedule work, track progress, and find any job quickly."
@@ -101,8 +101,8 @@ export default async function JobsPage({
           />
         )
       ) : (
-        <div className="space-y-4">
-          <p className="text-sm text-slate-600">
+        <div className="flex flex-1 flex-col gap-4">
+          <p className="small-text">
             {totalCount} {totalCount === 1 ? "job" : "jobs"}
           </p>
 

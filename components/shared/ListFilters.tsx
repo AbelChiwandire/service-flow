@@ -3,9 +3,6 @@
 import { useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-const fieldClassName =
-  "w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#2667FF] focus:outline-none focus:ring-1 focus:ring-[#2667FF]";
-
 export type FilterSelect = {
   // The URL param this select controls, for example "status".
   param: string;
@@ -47,7 +44,7 @@ export function ListFilters({ searchLabel, searchPlaceholder, select }: ListFilt
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <div className="row-responsive">
       <div className="flex-1">
         <label htmlFor="list-search" className="sr-only">
           {searchLabel}
@@ -58,7 +55,7 @@ export function ListFilters({ searchLabel, searchPlaceholder, select }: ListFilt
           placeholder={searchPlaceholder}
           defaultValue={searchParams.get("query") ?? ""}
           onChange={(event) => handleSearchChange(event.target.value)}
-          className={fieldClassName}
+          className="input-field"
         />
       </div>
 
@@ -71,7 +68,7 @@ export function ListFilters({ searchLabel, searchPlaceholder, select }: ListFilt
             id="list-select"
             defaultValue={searchParams.get(select.param) ?? ""}
             onChange={(event) => updateParam(select.param, event.target.value)}
-            className={fieldClassName}
+            className="input-field"
           >
             {select.options.map((option) => (
               <option key={option.value} value={option.value}>

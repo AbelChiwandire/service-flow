@@ -9,16 +9,16 @@ export const metadata: Metadata = {
 
 export default function SignupPage() {
     return (
-        <div className="flex min-h-screen flex-col bg-slate-50">
+        <div className="page-shell">
             <PublicHeader />
 
-            <main className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
-                <section className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <main className="auth-main">
+                <section className="auth-card">
                     <div className="mb-6 text-center">
-                        <h1 className="text-2xl font-bold text-slate-900">
+                        <h1 className="heading-h1">
                             Create your ServiceFlow account
                         </h1>
-                        <p className="mt-2 text-sm text-slate-600">
+                        <p className="mt-2 small-text">
                             Get started managing your service business in one workspace.
                         </p>
                     </div>

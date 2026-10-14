@@ -15,7 +15,7 @@ function SubmitButton() {
         <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-md bg-[#2667FF] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC] focus:outline-none focus:ring-2 focus:ring-[#2667FF] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full btn-primary"
         >
             {pending ? "Signing in..." : "Sign in"}
         </button>
@@ -29,11 +29,11 @@ export default function LoginForm() {
     );
 
     return (
-        <form action={formAction} className="space-y-5">
+        <form action={formAction} className="space-y-6">
             {errorMessage && (
                 <div
                     role="alert"
-                    className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+                    className="alert-error"
                 >
                     {errorMessage}
                 </div>
@@ -42,7 +42,7 @@ export default function LoginForm() {
             <div>
                 <label
                     htmlFor="email"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-1 field-label"
                 >
                     Email address
                 </label>
@@ -53,7 +53,7 @@ export default function LoginForm() {
                     type="email"
                     autoComplete="email"
                     required
-                    className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#2667FF] focus:ring-2 focus:ring-blue-100"
+                    className="input-field"
                     placeholder="you@example.com"
                 />
             </div>
@@ -62,14 +62,14 @@ export default function LoginForm() {
                 <div className="mb-2 flex items-center justify-between">
                     <label
                         htmlFor="password"
-                        className="block text-sm font-medium text-slate-700"
+                        className="field-label"
                     >
                         Password
                     </label>
 
                     <Link
                         href="#"
-                        className="text-sm font-medium text-[#2667FF] hover:text-[#3F8EFC]"
+                        className="link-primary"
                     >
                         Forgot password?
                     </Link>
@@ -82,18 +82,18 @@ export default function LoginForm() {
                     autoComplete="current-password"
                     minLength={8}
                     required
-                    className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#2667FF] focus:ring-2 focus:ring-blue-100"
+                    className="input-field"
                     placeholder="Enter your password"
                 />
             </div>
 
             <SubmitButton />
 
-            <p className="text-center text-sm text-slate-600">
+            <p className="text-center small-text">
                 Don&apos;t have an account?{" "}
                 <Link
                     href="/signup"
-                    className="font-semibold text-[#2667FF] hover:text-[#3F8EFC]"
+                    className="link-primary"
                 >
                     Create an account
                 </Link>

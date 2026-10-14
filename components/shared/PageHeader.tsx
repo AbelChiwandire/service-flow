@@ -13,14 +13,14 @@ export function PageHeader({ title, description, action, back }: PageHeaderProps
         <>
             {back ? <BackLink href={back.href} label={back.label} /> : null}
 
-            <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 mb-8 sm:flex-row sm:items-end sm:justify-between">
+            <div className="page-header">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                    <h1 className="heading-h1">
                         {title}
                     </h1>
 
                     {description ? (
-                        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                        <p className="mt-2 max-w-2xl lead-text">
                             {description}
                         </p>
                     ) : null}

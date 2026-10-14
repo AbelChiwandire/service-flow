@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 
 const navigationLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: "/dashboard.svg" },
-    { href: "/customers", label: "Customers", icon: "/customers.svg" },
-    { href: "/jobs", label: "Jobs", icon: "/jobs.svg" },
+    { href: "/dashboard", label: "Dashboard", iconClass: "icon-mask-dashboard" },
+    { href: "/customers", label: "Customers", iconClass: "icon-mask-customers" },
+    { href: "/jobs", label: "Jobs", iconClass: "icon-mask-jobs" },
 ];
 
 type SidebarNavProps = {
@@ -36,18 +35,11 @@ function SidebarNav({ label, onNavigate, collapsible }: SidebarNavProps) {
                                 href={link.href}
                                 onClick={onNavigate}
                                 aria-current={isActive ? "page" : undefined}
-                                className={`flex items-center gap-3 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2667FF] ${
-                                    isActive
-                                        ? "bg-blue-50 text-[#2667FF]"
-                                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                                }`}
+                                className={`nav-link ${isActive ? "nav-link-active" : "nav-link-idle"}`}
                             >
-                                <Image
-                                    src={link.icon}
-                                    alt=""
-                                    width={20}
-                                    height={20}
-                                    className="h-5 w-5 shrink-0"
+                                <span
+                                    aria-hidden="true"
+                                    className={`icon-mask h-5 w-5 shrink-0 ${link.iconClass}`}
                                 />
                                 <span className={labelClass}>{link.label}</span>
                             </Link>
@@ -80,8 +72,8 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
         <>
             {/* Desktop: reserves the collapsed width; the inner panel expands over content on hover */}
             <div className="hidden w-16 shrink-0 lg:block">
-                <aside className="group fixed inset-y-0 left-0 z-40 w-16 overflow-hidden border-r border-slate-200 bg-white transition-[width] duration-200 hover:w-64 has-[:focus-visible]:w-64">
-                    <div className="flex h-16 items-center border-b border-slate-200 px-3.5">
+                <aside className="group fixed inset-y-0 left-0 z-40 w-16 overflow-hidden border-r border-border bg-white transition-[width] duration-200 hover:w-64 has-[:focus-visible]:w-64">
+                    <div className="flex h-16 items-center border-b border-border px-4">
                         <Logo
                             href="/dashboard"
                             label="ServiceFlow dashboard"
@@ -103,7 +95,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                 <div
                     onClick={onClose}
                     aria-hidden="true"
-                    className={`absolute inset-0 bg-slate-900/40 transition-opacity ${
+                    className={`absolute inset-0 bg-black/40 transition-opacity ${
                         isOpen ? "opacity-100" : "opacity-0"
                     }`}
                 />
@@ -121,7 +113,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                             type="button"
                             onClick={onClose}
                             aria-label="Close navigation menu"
-                            className="shrink-0 rounded-md p-2 text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2667FF]"
+                            className="shrink-0 btn-icon"
                         >
                             <svg
                                 aria-hidden="true"

@@ -15,38 +15,38 @@ const features = [
 
 export default function Home() {
     return (
-        <div className="flex min-h-screen flex-col bg-white">
+        <div className="page-shell bg-white">
             <PublicHeader />
 
             <main className="flex-1">
-                <section className="relative overflow-hidden bg-slate-50">
+                <section className="relative overflow-hidden bg-surface">
                     <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-32">
                         <div>
-                            <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-[#2667FF]">
+                            <span className="inline-flex rounded-full bg-navy-tint px-4 py-1 text-sm font-semibold text-navy">
                                 Simple business management
                             </span>
 
-                            <h1 className="mt-6 max-w-3xl text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+                            <h1 className="mt-6 max-w-3xl heading-display">
                                 Run your service business with{" "}
-                                <span className="text-[#2667FF]">less complexity.</span>
+                                <span className="text-navy">less complexity.</span>
                             </h1>
 
-                            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+                            <p className="mt-6 max-w-2xl lead-text">
                                 ServiceFlow helps small service businesses manage customers and jobs
                                 efficiently.
                             </p>
 
-                            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                            <div className="mt-8 row-responsive">
                                 <Link
                                     href="/signup"
-                                    className="inline-flex h-12 items-center justify-center rounded-md bg-[#2667FF] px-6 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#3F8EFC]"
+                                    className="btn-primary btn-lg"
                                 >
                                     Get started
                                 </Link>
 
                                 <Link
                                     href="/login"
-                                    className="inline-flex h-12 items-center justify-center rounded-md border border-slate-300 bg-white px-6 text-sm font-semibold text-slate-700 transition-colors hover:border-[#2667FF] hover:text-[#2667FF]"
+                                    className="btn-secondary btn-lg"
                                 >
                                     Sign in
                                 </Link>
@@ -54,56 +54,56 @@ export default function Home() {
                         </div>
 
                         <div className="relative">
-                            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
-                                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <div className="card-elevated">
+                                <div className="flex items-center justify-between border-b border-border pb-4">
                                     <div>
-                                        <h2 className="mt-1 text-xl font-bold text-slate-900">
+                                        <h2 className="mt-1 heading-h2">
                                             Business overview
                                         </h2>
                                     </div>
                                 </div>
 
                                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                                    <div className="rounded-xl bg-slate-50 p-4">
-                                        <p className="text-sm text-slate-500">Total Customers</p>
-                                        <p className="mt-2 text-2xl font-bold text-slate-900">24</p>
+                                    <div className="card-muted">
+                                        <p className="small-text">Total Customers</p>
+                                        <p className="mt-2 stat-value">24</p>
                                     </div>
 
-                                    <div className="rounded-xl bg-slate-50 p-4">
-                                        <p className="text-sm text-slate-500">Total jobs</p>
-                                        <p className="mt-2 text-2xl font-bold text-slate-900">12</p>
+                                    <div className="card-muted">
+                                        <p className="small-text">Total jobs</p>
+                                        <p className="mt-2 stat-value">12</p>
                                     </div>
                                 </div>
 
-                                <div className="mt-4 rounded-xl border border-slate-200 p-4">
+                                <div className="mt-4 card-outline">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="text-sm font-semibold text-slate-900">
+                                            <p className="item-title">
                                                 Kitchen maintenance
                                             </p>
-                                            <p className="mt-1 text-xs text-slate-500">
+                                            <p className="mt-1 caption-text">
                                                 Scheduled for tomorrow
                                             </p>
                                         </div>
 
-                                        <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-[#2667FF]">
+                                        <span className="badge badge-navy">
                                             Scheduled
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className="mt-4 rounded-xl border border-slate-200 p-4">
+                                <div className="mt-4 card-outline">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="text-sm font-semibold text-slate-900">
+                                            <p className="item-title">
                                                 Office cleaning
                                             </p>
-                                            <p className="mt-1 text-xs text-slate-500">
+                                            <p className="mt-1 caption-text">
                                                 Ready for completion
                                             </p>
                                         </div>
 
-                                        <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-[#3B28CC]">
+                                        <span className="badge badge-navy">
                                             In progress
                                         </span>
                                     </div>
@@ -116,35 +116,35 @@ export default function Home() {
                 <section className="bg-white">
                     <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
                         <div className="max-w-2xl">
-                            <p className="text-sm font-semibold uppercase tracking-wider text-[#2667FF]">
+                            <p className="eyebrow-text">
                                 Everything you need
                             </p>
 
-                            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                            <h2 className="mt-4 heading-h1">
                                 Keep your day-to-day work organized.
                             </h2>
 
-                            <p className="mt-4 text-base leading-7 text-slate-600">
+                            <p className="mt-4 lead-text">
                                 ServiceFlow focuses on the workflows small service businesses use
                                 most, without adding unnecessary complexity.
                             </p>
                         </div>
 
-                        <div className="mt-10 grid gap-6 md:grid-cols-2">
+                        <div className="mt-12 grid gap-6 md:grid-cols-2">
                             {features.map((feature) => (
                                 <article
                                     key={feature.title}
-                                    className="rounded-xl border border-slate-200 bg-white p-6 transition-shadow hover:shadow-md"
+                                    className="card-feature"
                                 >
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 font-bold text-[#2667FF]">
+                                    <div className="h-10 w-10 rounded-lg font-bold icon-tile">
                                         ✓
                                     </div>
 
-                                    <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                                    <h3 className="mt-6 heading-h3">
                                         {feature.title}
                                     </h3>
 
-                                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                                    <p className="mt-2 body-text">
                                         {feature.description}
                                     </p>
                                 </article>
@@ -153,20 +153,20 @@ export default function Home() {
                     </div>
                 </section>
 
-                <section className="bg-[#2667FF]">
+                <section className="bg-navy">
                     <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
-                        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                        <h2 className="text-white heading-h1">
                             Spend less time organizing and more time serving customers.
                         </h2>
 
-                        <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-blue-100">
+                        <p className="mx-auto mt-4 max-w-2xl text-white lead-text">
                             Start building a clearer workflow for your service business with
                             ServiceFlow.
                         </p>
 
                         <Link
                             href="/signup"
-                            className="mt-8 inline-flex h-12 items-center justify-center rounded-md bg-white px-6 text-sm font-semibold text-[#2667FF] transition-colors hover:bg-blue-50"
+                            className="mt-8 btn-inverse btn-lg"
                         >
                             Create your account
                         </Link>
@@ -174,8 +174,8 @@ export default function Home() {
                 </section>
             </main>
 
-            <footer className="border-t border-slate-200 bg-white">
-                <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-slate-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+            <footer className="border-t border-border bg-white">
+                <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-foreground sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
                     <p>© 2026 ServiceFlow. All rights reserved.</p>
 
                     <p>Simple tools for small service businesses.</p>

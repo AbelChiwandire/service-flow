@@ -7,9 +7,6 @@ import { SignOutButton } from "../auth/SignoutButton";
 // Placeholder destination until the account page exists.
 const MY_ACCOUNT_HREF = "/account";
 
-const itemClassName =
-    "block w-full rounded-md px-3 py-2 text-left text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:bg-slate-100 focus-visible:outline-none";
-
 export function AccountMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -70,12 +67,12 @@ export function AccountMenu() {
                 aria-haspopup="menu"
                 aria-expanded={isOpen}
                 aria-controls="account-menu"
-                className="flex items-center gap-2 rounded-full cursor-pointer p-0.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2667FF] sm:rounded-md sm:py-1 sm:pr-1 sm:pl-3"
+                className="flex items-center gap-2 rounded-full cursor-pointer p-1 text-sm font-medium text-foreground transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy sm:rounded-md sm:py-1 sm:pr-1 sm:pl-4"
             >
                 <span className="hidden sm:inline">Account</span>
                 <span
                     aria-hidden="true"
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-[#2667FF]"
+                    className="h-9 w-9 rounded-full text-sm font-semibold icon-tile"
                 >
                     U
                 </span>
@@ -88,20 +85,20 @@ export function AccountMenu() {
                     role="menu"
                     aria-label="Account"
                     onKeyDown={handleMenuKeyDown}
-                    className="absolute right-0 top-full z-50 mt-2 w-48 rounded-lg border border-slate-200 bg-white p-1 shadow-lg"
+                    className="absolute right-0 top-full z-50 mt-2 w-48 dropdown-panel"
                 >
                     <Link
                         href={MY_ACCOUNT_HREF}
                         role="menuitem"
                         onClick={close}
-                        className={itemClassName}
+                        className="dropdown-item"
                     >
                         My Account
                     </Link>
 
-                    <div role="separator" className="my-1 border-t border-slate-200" />
+                    <div role="separator" className="my-1 border-t border-border" />
 
-                    <SignOutButton className={itemClassName} role="menuitem" />
+                    <SignOutButton className="dropdown-item" role="menuitem" />
                 </div>
             )}
         </div>

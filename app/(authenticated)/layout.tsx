@@ -6,9 +6,9 @@ export default function AuthenticatedLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-surface">
             <AuthenticatedShell>
-                <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                <main className="page-main">
                     {children}
                 </main>
             </AuthenticatedShell>

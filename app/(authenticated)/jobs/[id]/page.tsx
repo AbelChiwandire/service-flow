@@ -67,9 +67,9 @@ export default async function JobPage({
 
       <section
         aria-labelledby="job-actions-heading"
-        className="space-y-4 rounded-lg border border-slate-200 bg-white p-6"
+        className="space-y-4 card-padded"
       >
-        <h2 id="job-actions-heading" className="text-lg font-semibold text-slate-900">
+        <h2 id="job-actions-heading" className="heading-h2">
           Actions
         </h2>
 
@@ -80,7 +80,7 @@ export default async function JobPage({
         {isDeletable ? (
           <DeleteJobButton jobId={job.id} jobTitle={job.title} />
         ) : (
-          <p className="text-sm text-slate-600">
+          <p className="small-text">
             Cancel or complete this job before deleting it.
           </p>
         )}

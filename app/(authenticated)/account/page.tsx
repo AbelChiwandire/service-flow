@@ -37,8 +37,8 @@ export default async function AccountPage() {
                         email: user.email,
                     }}
                 />
-                <div className="border-t border-slate-200 pt-6">
-                    <h2 className="mb-2 text-lg font-semibold">Change password</h2>
+                <div className="section-divider">
+                    <h2 className="mb-2 heading-h2">Change password</h2>
                     <ChangePasswordFormWrapper />
                 </div>
                 <DeleteSection>

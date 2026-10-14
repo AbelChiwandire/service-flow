@@ -14,20 +14,14 @@ export default function SummaryCard({ label, value, href, tone = "default" }: Su
     return (
         <Link
             href={href}
-            className={`group block rounded-lg border bg-white p-4 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                highlight
-                    ? "border-red-200 bg-red-50/50 hover:border-red-300 hover:bg-red-50"
-                    : "border-slate-200 hover:border-primary/40"
-            }`}
+            className={`group summary-card ${highlight ? "summary-card-alert" : "summary-card-default"}`}
         >
-            <p className={`text-sm font-medium ${highlight ? "text-red-700" : "text-slate-600"}`}>
+            <p className={`label-text ${highlight ? "text-maroon" : ""}`}>
                 {label}
             </p>
 
             <p
-                className={`mt-1 text-3xl font-semibold tracking-tight ${
-                    highlight ? "text-red-700" : "text-slate-900 group-hover:text-primary"
-                }`}
+                className={`mt-1 stat-value ${highlight ? "text-maroon" : "group-hover:text-navy-hover"}`}
             >
                 {value}
             </p>

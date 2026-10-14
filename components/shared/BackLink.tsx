@@ -1,13 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export function BackLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-slate-600 transition-colors hover:text-[#2667FF]"
+      className="mb-4 inline-flex items-center gap-1 text-sm link-subtle"
     >
-      <Image src="/back-svgrepo-com.svg" alt="" width={20} height={20} aria-hidden="true" />
+      <span aria-hidden="true" className="icon-mask icon-mask-back h-5 w-5 shrink-0" />
       {label}
     </Link>
   );

@@ -10,16 +10,16 @@ type AppHeaderProps = {
 
 export function AppHeader({ isMenuOpen, onMenuClick }: AppHeaderProps) {
     return (
-        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+        <header className="sticky top-0 z-30 header-surface">
             <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                     <button
                         type="button"
                         onClick={onMenuClick}
                         aria-label="Open navigation menu"
                         aria-expanded={isMenuOpen}
                         aria-controls="mobile-navigation"
-                        className="rounded-md p-2 text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2667FF] lg:hidden"
+                        className="lg:hidden btn-icon"
                     >
                         <svg
                             aria-hidden="true"

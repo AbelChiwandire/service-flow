@@ -75,13 +75,13 @@ function StatusAction({
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex h-10 items-center justify-center rounded-md bg-[#2667FF] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC] disabled:cursor-not-allowed disabled:opacity-50"
+        className="btn-primary"
       >
         {isPending ? config.pendingLabel : config.label}
       </button>
 
       {state.message ? (
-        <p role="alert" className="mt-2 text-sm text-red-600">
+        <p role="alert" className="mt-2 error-text">
           {state.message}
         </p>
       ) : null}
@@ -100,7 +100,7 @@ export function JobStatusControl({
 
   if (transitions.length === 0) {
     return (
-      <p className="text-sm text-slate-600">
+      <p className="small-text">
         This job is {JOB_STATUS_LABELS[status].toLowerCase()}, so its status can&apos;t
         be changed.
       </p>
@@ -108,7 +108,7 @@ export function JobStatusControl({
   }
 
   return (
-    <div className="flex flex-wrap items-start gap-3">
+    <div className="flex flex-wrap items-start gap-4">
       {transitions.map((target) => {
         const config = STATUS_ACTIONS[target];
         return config ? (

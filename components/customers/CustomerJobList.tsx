@@ -119,10 +119,10 @@ export default function CustomerJobList({
   return (
     <section aria-labelledby="customer-jobs-heading" className="space-y-4">
       <div>
-        <h2 id="customer-jobs-heading" className="text-xl font-semibold text-slate-900">
+        <h2 id="customer-jobs-heading" className="heading-h2">
           Upcoming jobs
         </h2>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 small-text">
           A list of upcoming jobs for this customer.
         </p>
       </div>
@@ -146,14 +146,14 @@ export default function CustomerJobList({
               <div className="min-w-0 md:col-span-6">
                 <Link
                   href={`/jobs/${job.id}`}
-                  className="font-medium text-slate-900 transition-colors hover:text-[#2667FF]"
+                  className="link-subtle"
                 >
                   {job.title}
                 </Link>
               </div>
 
-              <p className="text-sm text-slate-600 md:col-span-3">
-                <span className="text-slate-500 md:hidden">Scheduled: </span>
+              <p className="md:col-span-3 small-text">
+                <span className="text-foreground md:hidden">Scheduled: </span>
                 {formatDate(job.scheduledDate)}
               </p>
 

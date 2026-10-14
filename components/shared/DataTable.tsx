@@ -15,10 +15,10 @@ export function DataTable({
   children: ReactNode;
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+    <div className="overflow-hidden card-surface">
       <div
         aria-hidden="true"
-        className="hidden grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 md:grid"
+        className="table-head"
       >
         {columns.map((column) => (
           <span key={column.label} className={column.className}>
@@ -34,7 +34,7 @@ export function DataTable({
 
 export function DataRow({ children }: { children: ReactNode }) {
   return (
-    <li className="flex flex-col gap-2 border-b border-slate-200 p-4 last:border-b-0 md:grid md:grid-cols-12 md:items-center md:gap-4">
+    <li className="table-row">
       {children}
     </li>
   );

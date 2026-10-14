@@ -1,32 +1,30 @@
 import type { Customer } from "@/lib/db/customer/repository";
 
-const termClassName = "text-sm font-medium text-slate-500";
-const linkClassName = "break-words transition-colors hover:text-[#2667FF] hover:underline";
 
 export default function CustomerDetails({ customer }: { customer: Customer }) {
   return (
-    <dl className="grid gap-6 rounded-lg border border-slate-200 bg-white p-6 sm:grid-cols-2">
+    <dl className="details-grid">
       <div className="min-w-0">
-        <dt className={termClassName}>Email</dt>
-        <dd className="mt-1 text-slate-900">
-          <a href={`mailto:${customer.email}`} className={linkClassName}>
+        <dt className="label-text">Email</dt>
+        <dd className="mt-1 text-foreground">
+          <a href={`mailto:${customer.email}`} className="link-inline">
             {customer.email}
           </a>
         </dd>
       </div>
 
       <div className="min-w-0">
-        <dt className={termClassName}>Phone</dt>
-        <dd className="mt-1 text-slate-900">
-          <a href={`tel:${customer.phone}`} className={linkClassName}>
+        <dt className="label-text">Phone</dt>
+        <dd className="mt-1 text-foreground">
+          <a href={`tel:${customer.phone}`} className="link-inline">
             {customer.phone}
           </a>
         </dd>
       </div>
 
       <div className="min-w-0 sm:col-span-2">
-        <dt className={termClassName}>Address</dt>
-        <dd className="mt-1 whitespace-pre-line break-words text-slate-900">
+        <dt className="label-text">Address</dt>
+        <dd className="mt-1 whitespace-pre-line break-words text-foreground">
           {customer.address}
         </dd>
       </div>

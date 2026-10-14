@@ -26,7 +26,7 @@ export function UserProfileForm({
     return (
         <form action={formAction} className="max-w-xl space-y-4">
             <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
+                <label htmlFor="name" className="mb-1 field-label">
                     Name
                 </label>
                 <input
@@ -36,11 +36,11 @@ export function UserProfileForm({
                     defaultValue={name}
                     required
                     aria-describedby="name-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    className="input-field"
                 />
                 <div id="name-error" aria-live="polite" aria-atomic="true">
                     {state.errors?.name?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
+                        <p key={error} className="mt-1 error-text">
                             {error}
                         </p>
                     ))}
@@ -50,7 +50,7 @@ export function UserProfileForm({
             <div>
                 <label
                     htmlFor="businessName"
-                    className="block text-sm font-medium text-slate-700 mb-1"
+                    className="mb-1 field-label"
                 >
                     Business name
                 </label>
@@ -61,11 +61,11 @@ export function UserProfileForm({
                     defaultValue={businessName}
                     required
                     aria-describedby="businessName-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    className="input-field"
                 />
                 <div id="businessName-error" aria-live="polite" aria-atomic="true">
                     {state.errors?.businessName?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
+                        <p key={error} className="mt-1 error-text">
                             {error}
                         </p>
                     ))}
@@ -73,7 +73,7 @@ export function UserProfileForm({
             </div>
 
             <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+                <label htmlFor="email" className="mb-1 field-label">
                     Email
                 </label>
                 <input
@@ -83,23 +83,23 @@ export function UserProfileForm({
                     defaultValue={email}
                     required
                     aria-describedby="email-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    className="input-field"
                 />
                 <div id="email-error" aria-live="polite" aria-atomic="true">
                     {state.errors?.email?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
+                        <p key={error} className="mt-1 error-text">
                             {error}
                         </p>
                     ))}
                 </div>
             </div>
 
-            {state.message ? <p className="text-sm text-red-600">{state.message}</p> : null}
+            {state.message ? <p className="error-text">{state.message}</p> : null}
 
             <button
                 type="submit"
                 disabled={isPending}
-                className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                className="btn-primary"
             >
                 {isPending ? "Saving..." : "Save Profile"}
             </button>

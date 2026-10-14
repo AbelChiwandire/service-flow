@@ -18,7 +18,7 @@ function SubmitButton() {
         <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-md bg-[#2667FF] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC] focus:outline-none focus:ring-2 focus:ring-[#2667FF] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full btn-primary"
         >
             {pending ? "Creating account..." : "Create account"}
         </button>
@@ -32,11 +32,11 @@ export default function SignupForm() {
     );
 
     return (
-        <form action={formAction} className="space-y-5">
+        <form action={formAction} className="space-y-6">
             {state.message && (
                 <div
                     role="alert"
-                    className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+                    className="alert-error"
                 >
                     {state.message}
                 </div>
@@ -45,7 +45,7 @@ export default function SignupForm() {
             <div>
                 <label
                     htmlFor="name"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-1 field-label"
                 >
                     Full name
                 </label>
@@ -60,11 +60,11 @@ export default function SignupForm() {
                     aria-describedby={
                         state.errors?.name ? "name-error" : undefined
                     }
-                    className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#2667FF] focus:ring-2 focus:ring-blue-100"
+                    className="input-field"
                     placeholder="Your full name"
                 />
                 {state.errors?.name && (
-                    <p id="name-error" className="mt-1 text-sm text-red-600">
+                    <p id="name-error" className="mt-1 error-text">
                         {state.errors.name[0]}
                     </p>
                 )}
@@ -73,7 +73,7 @@ export default function SignupForm() {
             <div>
                 <label
                     htmlFor="businessName"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-1 field-label"
                 >
                     Business name
                 </label>
@@ -90,13 +90,13 @@ export default function SignupForm() {
                             ? "businessName-error"
                             : undefined
                     }
-                    className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#2667FF] focus:ring-2 focus:ring-blue-100"
+                    className="input-field"
                     placeholder="Your business name"
                 />
                 {state.errors?.businessName && (
                     <p
                         id="businessName-error"
-                        className="mt-1 text-sm text-red-600"
+                        className="mt-1 error-text"
                     >
                         {state.errors.businessName[0]}
                     </p>
@@ -106,7 +106,7 @@ export default function SignupForm() {
             <div>
                 <label
                     htmlFor="email"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-1 field-label"
                 >
                     Email address
                 </label>
@@ -120,11 +120,11 @@ export default function SignupForm() {
                     aria-describedby={
                         state.errors?.email ? "email-error" : undefined
                     }
-                    className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#2667FF] focus:ring-2 focus:ring-blue-100"
+                    className="input-field"
                     placeholder="you@example.com"
                 />
                 {state.errors?.email && (
-                    <p id="email-error" className="mt-1 text-sm text-red-600">
+                    <p id="email-error" className="mt-1 error-text">
                         {state.errors.email[0]}
                     </p>
                 )}
@@ -133,7 +133,7 @@ export default function SignupForm() {
             <div>
                 <label
                     htmlFor="password"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-1 field-label"
                 >
                     Password
                 </label>
@@ -148,13 +148,13 @@ export default function SignupForm() {
                     aria-describedby={
                         state.errors?.password ? "password-error" : undefined
                     }
-                    className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#2667FF] focus:ring-2 focus:ring-blue-100"
+                    className="input-field"
                     placeholder="Create a password (at least 8 characters)"
                 />
                 {state.errors?.password && (
                     <p
                         id="password-error"
-                        className="mt-1 text-sm text-red-600"
+                        className="mt-1 error-text"
                     >
                         {state.errors.password[0]}
                     </p>
@@ -164,7 +164,7 @@ export default function SignupForm() {
             <div>
                 <label
                     htmlFor="confirmPassword"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-1 field-label"
                 >
                     Confirm password
                 </label>
@@ -181,13 +181,13 @@ export default function SignupForm() {
                             ? "confirmPassword-error"
                             : undefined
                     }
-                    className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#2667FF] focus:ring-2 focus:ring-blue-100"
+                    className="input-field"
                     placeholder="Confirm your password"
                 />
                 {state.errors?.confirmPassword && (
                     <p
                         id="confirmPassword-error"
-                        className="mt-1 text-sm text-red-600"
+                        className="mt-1 error-text"
                     >
                         {state.errors.confirmPassword[0]}
                     </p>
@@ -196,11 +196,11 @@ export default function SignupForm() {
 
             <SubmitButton />
 
-            <p className="text-center text-sm text-slate-600">
+            <p className="text-center small-text">
                 Already have an account?{" "}
                 <Link
                     href="/login"
-                    className="font-semibold text-[#2667FF] hover:text-[#3F8EFC]"
+                    className="link-primary"
                 >
                     Sign in
                 </Link>

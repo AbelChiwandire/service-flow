@@ -4,44 +4,44 @@ interface SummaryCardSkeletonProps {
 
 function SummaryCardSkeleton({ label }: SummaryCardSkeletonProps) {
     return (
-        <div className="block rounded-lg border border-slate-200 bg-white p-4">
-            <p className="text-sm font-medium text-slate-600">{label}</p>
+        <div className="block p-4 card-surface">
+            <p className="label-text">{label}</p>
 
-            <div aria-hidden="true" className="mt-2 h-9 w-12 animate-pulse rounded bg-slate-200" />
+            <div aria-hidden="true" className="mt-2 h-9 w-12 skeleton" />
         </div>
     );
 }
 
 function JobsPanelSkeleton() {
     return (
-        <section className="rounded-lg border border-slate-200 bg-white">
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-4 py-4 sm:px-5">
+        <section className="card-surface">
+            <div className="panel-header">
                 <div
                     aria-hidden="true"
-                    className="h-5 w-32 animate-pulse rounded bg-slate-200 sm:h-6"
+                    className="h-5 w-32 sm:h-6 skeleton"
                 />
 
-                <div aria-hidden="true" className="h-4 w-20 animate-pulse rounded bg-slate-200" />
+                <div aria-hidden="true" className="h-4 w-20 skeleton" />
             </div>
 
-            <ul className="divide-y divide-slate-100">
+            <ul className="list-divided">
                 {[1, 2, 3].map((item) => (
                     <li key={item}>
-                        <div className="flex min-h-16 items-center justify-between gap-4 px-4 py-3 sm:px-5">
+                        <div className="flex min-h-16 items-center justify-between gap-4 px-4 py-4 sm:px-6">
                             <div className="min-w-0 flex-1 space-y-2">
                                 <div
                                     aria-hidden="true"
-                                    className="h-4 w-3/4 animate-pulse rounded bg-slate-200"
+                                    className="h-4 w-3/4 skeleton"
                                 />
                                 <div
                                     aria-hidden="true"
-                                    className="h-3 w-1/2 animate-pulse rounded bg-slate-200"
+                                    className="h-3 w-1/2 skeleton"
                                 />
                             </div>
 
                             <div
                                 aria-hidden="true"
-                                className="h-3 w-20 shrink-0 animate-pulse rounded bg-slate-200 sm:h-4"
+                                className="h-3 w-20 shrink-0 sm:h-4 skeleton"
                             />
                         </div>
                     </li>
@@ -56,13 +56,13 @@ export default function DashboardSummarySkeleton() {
         <div className="space-y-8">
             <section>
                 <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-slate-900">Jobs</h2>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <h2 className="heading-h2">Jobs</h2>
+                    <p className="mt-1 small-text">
                         Overview of your current and upcoming jobs.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">
+                <div className="stat-grid">
                     <SummaryCardSkeleton label="Upcoming" />
                     <SummaryCardSkeleton label="Overdue" />
                     <SummaryCardSkeleton label="In progress" />
@@ -73,11 +73,11 @@ export default function DashboardSummarySkeleton() {
 
             <section>
                 <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-slate-900">Customers</h2>
-                    <p className="mt-1 text-sm text-slate-500">Overview of your customer base.</p>
+                    <h2 className="heading-h2">Customers</h2>
+                    <p className="mt-1 small-text">Overview of your customer base.</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">
+                <div className="stat-grid">
                     <SummaryCardSkeleton label="Customers" />
                     <SummaryCardSkeleton label="Leads" />
                 </div>

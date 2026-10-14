@@ -17,16 +17,16 @@ export function JobItem({ job }: { job: JobWithCustomer }) {
       <div className="md:col-span-4">
         <Link
           href={`/jobs/${job.id}`}
-          className="font-medium text-slate-900 transition-colors hover:text-[#2667FF]"
+          className="link-subtle"
         >
           {job.title}
         </Link>
       </div>
 
-      <p className="text-sm text-slate-600 md:col-span-3">{job.customerName}</p>
+      <p className="md:col-span-3 small-text">{job.customerName}</p>
 
-      <p className="text-sm text-slate-600 md:col-span-3">
-        <span className="text-slate-500 md:hidden">Scheduled: </span>
+      <p className="md:col-span-3 small-text">
+        <span className="text-foreground md:hidden">Scheduled: </span>
         {formatScheduledDate(job.scheduledDate)}
       </p>
 

@@ -33,16 +33,16 @@ export function Modal({ open, onClose, title, description, children }: ModalProp
         if (event.target === dialogRef.current) onClose();
       }}
       aria-labelledby={titleId}
-      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-lg border border-slate-200 bg-white p-0 text-slate-900 shadow-xl backdrop:bg-slate-900/40"
+      className="m-auto w-[calc(100%-2rem)] max-w-md p-0 text-foreground shadow-xl backdrop:bg-black/40 card-surface"
     >
       <div className="space-y-4 p-6">
         <div>
-          <h2 id={titleId} className="text-lg font-semibold text-slate-900">
+          <h2 id={titleId} className="heading-h2">
             {title}
           </h2>
 
           {description ? (
-            <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+            <p className="mt-2 body-text">{description}</p>
           ) : null}
         </div>
 

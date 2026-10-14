@@ -2,22 +2,51 @@
 
 :root {
     --background: #ffffff;
-    --foreground: #0f172a;
-    --primary: #2667ff;
-    --primary-hover: #3f8efc;
-    --accent: #3b28cc;
-    --light-accent: #87bfff;
-    --brand-background: #add7f6;
+    --foreground: #000000;
+    --navy: #172554;
+    --navy-hover: #243b6b;
+    --maroon: #7f1d1d;
+    --maroon-hover: #8b2635;
+    --green: #14532d;
+    --status-gray: #374151;
+    --surface: #f8fafc;
+    --surface-strong: #e2e8f0;
+    --border: rgb(0 0 0 / 15%);
+
+    --navy-tint: transparent;
+    --maroon-tint: transparent;
+    --green-tint: transparent;
+    --status-gray-tint: transparent;
+}
+
+/* Tints are 5% of the base color; browsers without color-mix keep transparent so text stays readable. */
+@supports (background-color: color-mix(in srgb, white, black)) {
+    :root {
+        --navy-tint: color-mix(in srgb, var(--navy) 5%, white);
+        --maroon-tint: color-mix(in srgb, var(--maroon) 5%, white);
+        --green-tint: color-mix(in srgb, var(--green) 5%, white);
+        --status-gray-tint: color-mix(in srgb, var(--status-gray) 5%, white);
+    }
 }
 
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --color-primary: var(--primary);
-    --color-primary-hover: var(--primary-hover);
-    --color-accent: var(--accent);
-    --color-light-accent: var(--light-accent);
-    --color-brand-background: var(--brand-background);
+    --color-white: var(--background);
+    --color-black: var(--foreground);
+    --color-navy: var(--navy);
+    --color-navy-hover: var(--navy-hover);
+    --color-maroon: var(--maroon);
+    --color-maroon-hover: var(--maroon-hover);
+    --color-green: var(--green);
+    --color-status-gray: var(--status-gray);
+    --color-surface: var(--surface);
+    --color-surface-strong: var(--surface-strong);
+    --color-border: var(--border);
+    --color-navy-tint: var(--navy-tint);
+    --color-maroon-tint: var(--maroon-tint);
+    --color-green-tint: var(--green-tint);
+    --color-status-gray-tint: var(--status-gray-tint);
     --font-sans: var(--font-inter);
 }
 
@@ -34,4 +63,268 @@ body {
     background: var(--background);
     color: var(--foreground);
     font-family: var(--font-inter), sans-serif;
+}
+
+.icon-mask {
+    display: block;
+    background-color: currentColor;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+}
+
+.icon-mask-dashboard {
+    mask-image: url("/dashboard.svg");
+    -webkit-mask-image: url("/dashboard.svg");
+}
+
+.icon-mask-customers {
+    mask-image: url("/customers.svg");
+    -webkit-mask-image: url("/customers.svg");
+}
+
+.icon-mask-jobs {
+    mask-image: url("/jobs.svg");
+    -webkit-mask-image: url("/jobs.svg");
+}
+
+.icon-mask-back {
+    mask-image: url("/back-svgrepo-com.svg");
+    -webkit-mask-image: url("/back-svgrepo-com.svg");
+}
+
+@layer components {
+    /* ---------- Typography ---------- */
+    .heading-display {
+        @apply text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl;
+    }
+    .heading-h1 {
+        @apply text-2xl font-bold tracking-tight text-foreground sm:text-3xl;
+    }
+    .heading-h2 {
+        @apply text-xl font-semibold text-foreground;
+    }
+    .heading-h3 {
+        @apply text-lg font-semibold text-foreground;
+    }
+    .lead-text {
+        @apply text-sm leading-6 text-foreground sm:text-base;
+    }
+    .body-text {
+        @apply text-sm leading-6 text-foreground;
+    }
+    .small-text {
+        @apply text-sm text-foreground;
+    }
+    .caption-text {
+        @apply text-xs text-foreground;
+    }
+    .label-text {
+        @apply text-sm font-medium text-foreground;
+    }
+    .item-title {
+        @apply text-sm font-semibold text-foreground;
+    }
+    .eyebrow-text {
+        @apply text-sm font-semibold uppercase tracking-wider text-navy;
+    }
+    .stat-value {
+        @apply text-2xl font-bold text-foreground;
+    }
+    .error-text {
+        @apply text-sm text-maroon;
+    }
+    .link-primary {
+        @apply font-semibold text-navy hover:text-navy-hover;
+    }
+    .link-inline {
+        @apply break-words text-foreground transition-colors hover:text-navy-hover hover:underline;
+    }
+    .link-subtle {
+        @apply font-medium text-foreground transition-colors hover:text-navy-hover;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger,
+    .btn-danger-outline,
+    .btn-inverse,
+    .btn-disabled {
+        @apply inline-flex h-10 cursor-pointer items-center justify-center rounded-md px-4 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50;
+    }
+    .btn-primary {
+        @apply bg-navy font-semibold text-white hover:bg-navy-hover;
+    }
+    .btn-secondary {
+        @apply border border-border bg-white font-medium text-foreground hover:border-navy hover:text-navy-hover;
+    }
+    .btn-danger {
+        @apply bg-maroon font-semibold text-white hover:bg-maroon-hover;
+    }
+    .btn-danger-outline {
+        @apply border border-maroon/30 bg-white font-medium text-maroon hover:bg-maroon-tint;
+    }
+    .btn-inverse {
+        @apply bg-white font-semibold text-navy hover:bg-navy-tint;
+    }
+    .btn-disabled {
+        @apply cursor-default border border-border bg-surface font-medium text-foreground;
+    }
+    .btn-lg {
+        @apply h-12 px-6;
+    }
+    .btn-icon {
+        @apply rounded-md p-2 text-foreground transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy;
+    }
+    .btn-ghost {
+        @apply inline-flex h-10 items-center justify-center rounded-md px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface;
+    }
+
+    /* ---------- Forms ---------- */
+    .input-field {
+        @apply w-full rounded-md border border-border bg-white px-4 py-2 text-sm text-foreground focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy;
+    }
+    .input-field-invalid {
+        @apply border-maroon focus:border-maroon focus:ring-maroon;
+    }
+    .field-label {
+        @apply block text-sm font-medium text-foreground;
+    }
+    .form-actions {
+        @apply flex flex-col-reverse gap-4 sm:flex-row sm:justify-end;
+    }
+    .row-responsive {
+        @apply flex flex-col gap-4 sm:flex-row;
+    }
+    .alert-error {
+        @apply rounded-md border border-maroon/30 bg-maroon-tint p-4 text-sm text-maroon;
+    }
+
+    /* ---------- Cards and panels ---------- */
+    .card-surface {
+        @apply rounded-lg border border-border bg-white;
+    }
+    .card-padded {
+        @apply rounded-lg border border-border bg-white p-6;
+    }
+    .card-elevated {
+        @apply rounded-2xl border border-border bg-white p-6 shadow-xl;
+    }
+    .card-feature {
+        @apply rounded-xl border border-border bg-white p-6 transition-shadow hover:shadow-md;
+    }
+    .card-muted {
+        @apply rounded-xl bg-surface p-4;
+    }
+    .card-outline {
+        @apply rounded-xl border border-border p-4;
+    }
+    .auth-card {
+        @apply w-full max-w-md rounded-lg border border-border bg-white p-6 shadow-sm sm:p-8;
+    }
+    .empty-panel {
+        @apply flex min-h-48 flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface p-6 text-center;
+    }
+    .details-grid {
+        @apply grid gap-6 rounded-lg border border-border bg-white p-6 sm:grid-cols-2;
+    }
+    .stat-grid {
+        @apply grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5;
+    }
+    .panel-header {
+        @apply flex items-center justify-between gap-4 border-b border-border px-4 py-4 sm:px-6;
+    }
+    .list-divided {
+        @apply divide-y divide-border;
+    }
+    .list-row-link {
+        @apply flex min-h-16 items-center justify-between gap-4 px-4 py-4 transition-colors hover:bg-surface focus-visible:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-navy sm:px-6;
+    }
+    .table-head {
+        @apply hidden grid-cols-12 gap-4 border-b border-border bg-surface px-4 py-4 text-xs font-semibold uppercase tracking-wider text-foreground md:grid;
+    }
+    .table-row {
+        @apply flex flex-col gap-2 border-b border-border p-4 last:border-b-0 md:grid md:grid-cols-12 md:items-center md:gap-4;
+    }
+    .section-divider {
+        @apply border-t border-border pt-6;
+    }
+    .dropdown-panel {
+        @apply rounded-lg border border-border bg-white p-1 shadow-lg;
+    }
+    .dropdown-item {
+        @apply block w-full rounded-md px-4 py-2 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface focus-visible:bg-surface focus-visible:outline-none;
+    }
+    .modal-dialog {
+        @apply m-auto w-[calc(100%-2rem)] max-w-md rounded-lg border border-border bg-white p-0 text-foreground shadow-xl backdrop:bg-black/40;
+    }
+
+    /* ---------- Layout ---------- */
+    .page-shell {
+        @apply flex min-h-screen flex-col bg-surface;
+    }
+    .page-main {
+        @apply mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8;
+    }
+    .page-main-centered {
+        @apply mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 py-8 sm:px-6 lg:px-8;
+    }
+    .auth-main {
+        @apply flex flex-1 items-center justify-center px-4 py-8 sm:px-6 lg:px-8;
+    }
+    .page-header {
+        @apply mb-8 flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between;
+    }
+    .header-surface {
+        @apply border-b border-border bg-white;
+    }
+
+    .nav-link {
+        @apply flex items-center gap-2 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy;
+    }
+    .nav-link-active {
+        @apply bg-navy-tint text-navy;
+    }
+    .nav-link-idle {
+        @apply text-foreground hover:bg-surface;
+    }
+    .summary-card {
+        @apply block rounded-lg border bg-white p-4 transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2;
+    }
+    .summary-card-default {
+        @apply border-border hover:border-navy/40;
+    }
+    .summary-card-alert {
+        @apply border-maroon/30 bg-maroon-tint hover:border-maroon/30 hover:bg-maroon-tint;
+    }
+
+    /* ---------- Small elements ---------- */
+    .badge {
+        @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium;
+    }
+    .badge-navy {
+        @apply bg-navy-tint text-navy;
+    }
+    .badge-green {
+        @apply bg-green-tint text-green;
+    }
+    .badge-maroon {
+        @apply bg-maroon-tint text-maroon;
+    }
+    .badge-gray {
+        @apply bg-status-gray-tint text-status-gray;
+    }
+    .icon-tile {
+        @apply flex items-center justify-center bg-navy-tint text-navy;
+    }
+    .skeleton {
+        @apply animate-pulse rounded bg-surface-strong;
+    }
+    .spinner {
+        @apply h-5 w-5 animate-spin rounded-full border-2 border-border border-t-navy;
+    }
 }
