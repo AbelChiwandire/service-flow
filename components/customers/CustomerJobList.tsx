@@ -1,14 +1,23 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { DataRow, DataTable, type DataTableColumn } from "@/components/shared/DataTable";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { ErrorMessage } from "@/components/shared/ErrorMessage";
+import { LoadingState } from "@/components/shared/LoadingState";
+import { ButtonLink } from "@/components/shared/ButtonLink";
+import { JobStatusBadge } from "@/components/jobs/JobStatusBadge";
+import { formatDate } from "@/lib/format-date";
+import type { JobStatus } from "@/lib/db/jobs/repository";
+import Link from "next/link";
 
 type Job = {
   id: string;
   customerId: string;
   title: string;
-  description: string;
+  description: string | null;
   scheduledDate: string;
-  status: string;
+  status: JobStatus;
   createdAt: string;
   updatedAt: string;
   isDeleted: boolean;
@@ -29,7 +38,7 @@ function isJob(value: unknown): value is Job {
     typeof value.id === "string" &&
     typeof value.customerId === "string" &&
     typeof value.title === "string" &&
-    typeof value.description === "string" &&
+    (typeof value.description === "string" || value.description === null) &&
     typeof value.scheduledDate === "string" &&
     typeof value.status === "string" &&
     typeof value.createdAt === "string" &&
@@ -47,37 +56,11 @@ function isJobsResponse(value: unknown): value is JobsResponse {
   );
 }
 
-function formatScheduledDate(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-}
-
-function formatStatus(status: string) {
-  return status.replaceAll("_", " ");
-}
-
-function statusClassName(status: string) {
-  switch (status) {
-    case "scheduled":
-      return "bg-sky-100 text-sky-900";
-    case "in_progress":
-      return "bg-amber-100 text-amber-950";
-    case "completed":
-      return "bg-emerald-100 text-emerald-900";
-    case "cancelled":
-      return "bg-rose-100 text-rose-900";
-    default:
-      return "bg-slate-100 text-slate-800";
-  }
-}
+const columns: DataTableColumn[] = [
+  { label: "Job", className: "col-span-6" },
+  { label: "Scheduled", className: "col-span-3" },
+  { label: "Status", className: "col-span-3" },
+];
 
 export default function CustomerJobList({
   customer,
@@ -90,7 +73,7 @@ export default function CustomerJobList({
 
   const loadJobs = useCallback(async (signal: AbortSignal) => {
     try {
-      const response = await fetch("/api/jobs", {
+      const response = await fetch(`/api/jobs?customerId=${customer.id}&due=upcoming`, {
         method: "GET",
         cache: "no-store",
         credentials: "same-origin",
@@ -134,75 +117,52 @@ export default function CustomerJobList({
   }, [loadJobs]);
 
   return (
-    <section aria-labelledby="customer-jobs-heading" className="mt-8">
-      <div className="mb-4">
-        <h2
-          id="customer-jobs-heading"
-          className="text-xl font-semibold text-slate-950"
-        >
-          Jobs
+    <section aria-labelledby="customer-jobs-heading" className="space-y-4">
+      <div>
+        <h2 id="customer-jobs-heading" className="text-xl font-semibold text-slate-900">
+          Upcoming jobs
         </h2>
         <p className="mt-1 text-sm text-slate-600">
-          Service work associated with this customer.
+          A list of upcoming jobs for this customer.
         </p>
       </div>
 
       {isLoading ? (
-        <div
-          aria-busy="true"
-          className="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm"
-        >
-          <div
-            aria-hidden="true"
-            className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#2667FF]"
-          />
-          <p role="status" className="mt-4 text-sm font-medium text-slate-600">
-            Loading jobs…
-          </p>
-        </div>
+        <LoadingState message="Loading jobs..." />
       ) : error ? (
-        <div
-          role="alert"
-          className="rounded-xl border border-rose-300 bg-white p-5 text-sm text-rose-950 shadow-sm"
-        >
-          <p className="font-semibold">Jobs couldn&apos;t be loaded.</p>
-          <p className="mt-1">{error}</p>
-        </div>
+        <ErrorMessage title="Jobs couldn't be loaded." message={error} />
       ) : jobs.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-10 text-center shadow-sm">
-          <h3 className="font-semibold text-slate-950">No jobs yet</h3>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            There are no jobs associated with this customer.
-          </p>
-        </div>
+        <EmptyState
+          title="No upcoming jobs"
+          message="There are no upcoming jobs for this customer."
+          action={
+            <ButtonLink href={`/jobs/new?customerId=${customer.id}`}>New job</ButtonLink>
+          }
+        />
       ) : (
-        <ul className="grid list-none gap-4 p-0 md:grid-cols-2">
+        <DataTable columns={columns}>
           {jobs.map((job) => (
-            <li
-              key={job.id}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <h3 className="break-words font-semibold text-slate-950">
-                  {job.title}
-                </h3>
-                <span
-                  className={`w-fit shrink-0 rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusClassName(job.status)}`}
+            <DataRow key={job.id}>
+              <div className="min-w-0 md:col-span-6">
+                <Link
+                  href={`/jobs/${job.id}`}
+                  className="font-medium text-slate-900 transition-colors hover:text-[#2667FF]"
                 >
-                  {formatStatus(job.status)}
-                </span>
+                  {job.title}
+                </Link>
               </div>
-              <dl className="mt-4 border-t border-slate-100 pt-3 text-sm">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                  <dt className="font-medium text-slate-500">Scheduled</dt>
-                  <dd className="text-slate-800">
-                    {formatScheduledDate(job.scheduledDate)}
-                  </dd>
-                </div>
-              </dl>
-            </li>
+
+              <p className="text-sm text-slate-600 md:col-span-3">
+                <span className="text-slate-500 md:hidden">Scheduled: </span>
+                {formatDate(job.scheduledDate)}
+              </p>
+
+              <div className="md:col-span-3">
+                <JobStatusBadge status={job.status} />
+              </div>
+            </DataRow>
           ))}
-        </ul>
+        </DataTable>
       )}
     </section>
   );

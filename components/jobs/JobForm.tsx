@@ -1,24 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import type { State } from "@/lib/db/jobs/actions";
+import {
+  FieldErrors,
+  FormActions,
+  fieldClassName,
+  invalidFieldClassName,
+  labelClassName,
+} from "@/components/shared/form";
+import { useFormFeedback } from "@/components/shared/useFormFeedback";
 
-const fieldClassName =
-  "w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#2667FF] focus:outline-none focus:ring-1 focus:ring-[#2667FF]";
-
-const labelClassName = "mb-1 block text-sm font-medium text-slate-700";
-
-function FieldErrors({ id, errors }: { id: string; errors?: string[] }) {
-  return (
-    <div id={`${id}-error`} aria-live="polite" aria-atomic="true">
-      {errors?.map((error) => (
-        <p key={error} className="mt-1 text-sm text-red-600">
-          {error}
-        </p>
-      ))}
-    </div>
-  );
-}
+const FIELDS = ["customerId", "title", "description", "scheduledDate"] as const;
+type FieldName = (typeof FIELDS)[number];
 
 type JobFormProps = {
   formAction: (formData: FormData) => void;
@@ -49,9 +42,18 @@ export function JobForm({
   const title = state.values?.title ?? initialValues?.title ?? "";
   const description = state.values?.description ?? initialValues?.description ?? "";
   const scheduledDate = state.values?.scheduledDate ?? initialValues?.scheduledDate ?? "";
+  const { getFieldErrors, clearFieldError, resetFeedback, isMessageDismissed } =
+    useFormFeedback(state, FIELDS);
+  const inputClassName = (field: FieldName) =>
+    `${fieldClassName} ${getFieldErrors(field)?.length ? invalidFieldClassName : ""}`;
 
   return (
-    <form action={formAction} className="space-y-5">
+    <form
+      action={formAction}
+      aria-busy={isPending}
+      onSubmit={resetFeedback}
+      className="space-y-5"
+    >
       {customers ? (
         <div>
           <label htmlFor="customerId" className={labelClassName}>
@@ -62,8 +64,10 @@ export function JobForm({
             name="customerId"
             defaultValue={customerId}
             required
+            onChange={() => clearFieldError("customerId")}
+            aria-invalid={Boolean(getFieldErrors("customerId")?.length)}
             aria-describedby="customerId-error"
-            className={fieldClassName}
+            className={inputClassName("customerId")}
           >
             <option value="" disabled>
               Select a customer
@@ -74,7 +78,7 @@ export function JobForm({
               </option>
             ))}
           </select>
-          <FieldErrors id="customerId" errors={state.errors?.customerId} />
+          <FieldErrors id="customerId" errors={getFieldErrors("customerId")} />
         </div>
       ) : null}
 
@@ -89,10 +93,12 @@ export function JobForm({
           defaultValue={title}
           required
           maxLength={255}
+          onChange={() => clearFieldError("title")}
+          aria-invalid={Boolean(getFieldErrors("title")?.length)}
           aria-describedby="title-error"
-          className={fieldClassName}
+          className={inputClassName("title")}
         />
-        <FieldErrors id="title" errors={state.errors?.title} />
+        <FieldErrors id="title" errors={getFieldErrors("title")} />
       </div>
 
       <div>
@@ -104,10 +110,12 @@ export function JobForm({
           name="description"
           defaultValue={description}
           rows={4}
+          onChange={() => clearFieldError("description")}
+          aria-invalid={Boolean(getFieldErrors("description")?.length)}
           aria-describedby="description-error"
-          className={fieldClassName}
+          className={inputClassName("description")}
         />
-        <FieldErrors id="description" errors={state.errors?.description} />
+        <FieldErrors id="description" errors={getFieldErrors("description")} />
       </div>
 
       <div>
@@ -120,34 +128,21 @@ export function JobForm({
           type="date"
           defaultValue={scheduledDate}
           required
+          onChange={() => clearFieldError("scheduledDate")}
+          aria-invalid={Boolean(getFieldErrors("scheduledDate")?.length)}
           aria-describedby="scheduledDate-error"
-          className={fieldClassName}
+          className={inputClassName("scheduledDate")}
         />
-        <FieldErrors id="scheduledDate" errors={state.errors?.scheduledDate} />
+        <FieldErrors id="scheduledDate" errors={getFieldErrors("scheduledDate")} />
       </div>
 
-      {state.message ? (
+      {state.message && !isMessageDismissed ? (
         <p role="alert" className="text-sm text-red-600">
           {state.message}
         </p>
       ) : null}
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Link
-          href={cancelHref}
-          className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition-colors hover:border-slate-400"
-        >
-          Cancel
-        </Link>
-
-        <button
-          type="submit"
-          disabled={isPending}
-          className="inline-flex h-10 items-center justify-center rounded-md bg-[#2667FF] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isPending ? "Saving..." : submitLabel}
-        </button>
-      </div>
+      <FormActions cancelHref={cancelHref} submitLabel={submitLabel} isPending={isPending} />
     </form>
   );
 }

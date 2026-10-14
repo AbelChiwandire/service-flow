@@ -1,10 +1,11 @@
 import { cache } from "react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { JobDetails } from "@/components/jobs/JobDetails";
 import { JobStatusControl } from "@/components/jobs/JobStatusControl";
+import { ButtonLink } from "@/components/shared/ButtonLink";
+import { DeleteSection } from "@/components/shared/DeleteSection";
 import { DeleteJobButton } from "@/components/jobs/DeleteJobButton";
 import { getJobById } from "@/lib/db/jobs/repository";
 import { getCustomerById } from "@/lib/db/customer/repository";
@@ -54,13 +55,11 @@ export default async function JobPage({
       <PageHeader
         title={job.title}
         description={`Job for ${job.customerName}`}
+        back={{ href: "/jobs", label: "Back to jobs" }}
         action={
-          <Link
-            href={`/jobs/${job.id}/edit`}
-            className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition-colors hover:border-[#2667FF] hover:text-[#2667FF]"
-          >
+          <ButtonLink href={`/jobs/${job.id}/edit`} variant="secondary">
             Edit job
-          </Link>
+          </ButtonLink>
         }
       />
 
@@ -75,24 +74,17 @@ export default async function JobPage({
         </h2>
 
         <JobStatusControl jobId={job.id} status={job.status} />
-
-        <div className="border-t border-slate-200 pt-4">
-          {isDeletable ? (
-            <DeleteJobButton jobId={job.id} />
-          ) : (
-            <p className="text-sm text-slate-600">
-              Cancel or complete this job before deleting it.
-            </p>
-          )}
-        </div>
       </section>
 
-      <Link
-        href="/jobs"
-        className="inline-block text-sm font-medium text-slate-600 transition-colors hover:text-[#2667FF]"
-      >
-        &larr; Back to jobs
-      </Link>
+      <DeleteSection>
+        {isDeletable ? (
+          <DeleteJobButton jobId={job.id} jobTitle={job.title} />
+        ) : (
+          <p className="text-sm text-slate-600">
+            Cancel or complete this job before deleting it.
+          </p>
+        )}
+      </DeleteSection>
     </div>
   );
 }

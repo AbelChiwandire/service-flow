@@ -41,6 +41,7 @@ export interface JobListParams {
     pageSize?: number;
     status?: JobStatus;
     due?: DueFilter;
+    customerId?: string;
     sort?: "asc" | "desc";
 }
 
@@ -79,7 +80,7 @@ function jobsFrom() {
 
 // The single definition of "which jobs match". Used by the list, the count and the page count.
 function jobFilters(userId: string, params: JobListParams, today: string) {
-    const { query = "", status, due } = params;
+    const { query = "", status, due, customerId } = params;
     const searchTerm = `%${escapeLike(query)}%`;
 
     return sql`
@@ -91,6 +92,7 @@ function jobFilters(userId: string, params: JobListParams, today: string) {
             OR jobs.description ILIKE ${searchTerm}
             OR customers.name ILIKE ${searchTerm}
         )
+        ${customerId ? sql`AND jobs."customerId" = ${customerId}` : sql``}
         ${status ? sql`AND jobs.status = ${status}` : sql``}
         ${dueFilter(due, today)}
     `;
@@ -139,17 +141,6 @@ export async function getJobsTotalPages(
 ): Promise<number> {
     const { pageSize = ITEMS_PER_PAGE } = params;
     return Math.ceil((await countJobs(userId, params)) / pageSize);
-}
-
-export async function getJobsByCustomer(userId: string, customerId: string): Promise<Job[]> {
-    const rows = await sql`
-        SELECT id, "userId", "customerId", title, description, "scheduledDate"::text AS "scheduledDate", status, "createdAt", "updatedAt", "isDeleted", "deletedAt"
-        FROM jobs
-        WHERE "userId" = ${userId}
-        AND "customerId" = ${customerId}
-        AND "isDeleted" = false
-    `;
-    return rows as unknown as Job[];
 }
 
 export async function getJobById(userId: string, id: string): Promise<Job | null> {

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import {
@@ -13,6 +12,7 @@ import CustomerList from "@/components/customers/CustomerList";
 import { CustomerFilters } from "@/components/customers/CustomerFilters";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { ButtonLink } from "@/components/shared/ButtonLink";
 import { Pagination } from "@/components/shared/Pagination";
 
 export const metadata: Metadata = {
@@ -24,9 +24,6 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 type SearchParams = Record<string, string | string[] | undefined>;
-
-const primaryLinkClassName =
-    "inline-flex h-10 items-center justify-center rounded-md bg-[#2667FF] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC]";
 
 export default async function CustomersPage({
     searchParams,
@@ -72,9 +69,7 @@ export default async function CustomersPage({
                 title="Customers"
                 description="Manage your customer information and keep every relationship in one place."
                 action={
-                    <Link href="/customers/new" className={primaryLinkClassName}>
-                        Add customer
-                    </Link>
+                    <ButtonLink href="/customers/new">Add customer</ButtonLink>
                 }
             />
 
@@ -91,9 +86,7 @@ export default async function CustomersPage({
                         title="No customers yet"
                         message="Add your first customer to start scheduling jobs."
                         action={
-                            <Link href="/customers/new" className={primaryLinkClassName}>
-                                Add customer
-                            </Link>
+                            <ButtonLink href="/customers/new">Add customer</ButtonLink>
                         }
                     />
                 )

@@ -1,10 +1,16 @@
-import { Header } from "@/components/Header";
+import type { Metadata } from "next";
+import { PublicHeader } from "@/components/layout/PublicHeader";
 import SignupForm from "./signup-form";
+
+export const metadata: Metadata = {
+    title: "Create account",
+    description: "Create a ServiceFlow account to manage your customers and jobs.",
+};
 
 export default function SignupPage() {
     return (
         <div className="flex min-h-screen flex-col bg-slate-50">
-            <Header />
+            <PublicHeader />
 
             <main className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
                 <section className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:p-8">

@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/PageHeader";
+import { ButtonLink } from "@/components/shared/ButtonLink";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { getCustomers } from "@/lib/db/customer/repository";
 import { requireUserId } from "@/lib/auth/session";
@@ -37,20 +37,14 @@ export default async function NewJobPage({
       <PageHeader
         title="New job"
         description="Schedule work for one of your customers."
+        back={{ href: "/jobs", label: "Back to jobs" }}
       />
 
       {customers.length === 0 ? (
         <EmptyState
           title="Add a customer first"
           message="Every job belongs to a customer. Add one, then come back to schedule the job."
-          action={
-            <Link
-              href="/customers/new"
-              className="inline-flex h-10 items-center justify-center rounded-md bg-[#2667FF] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC]"
-            >
-              Add a customer
-            </Link>
-          }
+          action={<ButtonLink href="/customers/new">Add a customer</ButtonLink>}
         />
       ) : (
         <div className="max-w-xl">

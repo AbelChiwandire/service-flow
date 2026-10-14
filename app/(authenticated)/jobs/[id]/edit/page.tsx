@@ -32,7 +32,11 @@ export default async function EditJobPage({
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Edit job" description="Update the details of this job." />
+      <PageHeader
+        title="Edit job"
+        description="Update the details of this job."
+        back={{ href: `/jobs/${job.id}`, label: "Back to job" }}
+      />
 
       <div className="max-w-xl">
         <UpdateJobForm

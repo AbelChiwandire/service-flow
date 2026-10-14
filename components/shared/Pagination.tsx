@@ -14,10 +14,11 @@ const disabledClassName =
 
 export function Pagination({
   currentPage,
-  totalPages,
+  totalPages: rawTotalPages,
   getPageHref,
 }: PaginationProps) {
-  if (totalPages <= 1) return null;
+  // An empty result still counts as one page, so the controls never disappear.
+  const totalPages = Math.max(1, rawTotalPages);
 
   return (
     <nav aria-label="Pagination" className="flex items-center justify-between">

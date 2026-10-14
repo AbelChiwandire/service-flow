@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { JobList } from "@/components/jobs/JobList";
 import { JobFilters } from "@/components/jobs/JobFilters";
+import { ButtonLink } from "@/components/shared/ButtonLink";
 import { Pagination } from "@/components/shared/Pagination";
 import {
   ITEMS_PER_PAGE,
@@ -30,9 +30,6 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 type SearchParams = Record<string, string | string[] | undefined>;
-
-const primaryLinkClassName =
-  "inline-flex h-10 items-center justify-center rounded-md bg-[#2667FF] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#3F8EFC]";
 
 export default async function JobsPage({
   searchParams,
@@ -82,9 +79,7 @@ export default async function JobsPage({
         title="Jobs"
         description="Schedule work, track progress, and find any job quickly."
         action={
-          <Link href="/jobs/new" className={primaryLinkClassName}>
-            New job
-          </Link>
+          <ButtonLink href="/jobs/new">New job</ButtonLink>
         }
       />
 
@@ -101,9 +96,7 @@ export default async function JobsPage({
             title="No jobs yet"
             message="Schedule your first job to start tracking work for your customers."
             action={
-              <Link href="/jobs/new" className={primaryLinkClassName}>
-                New job
-              </Link>
+              <ButtonLink href="/jobs/new">New job</ButtonLink>
             }
           />
         )
