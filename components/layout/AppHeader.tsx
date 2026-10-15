@@ -6,9 +6,10 @@ import { Logo } from "./Logo";
 type AppHeaderProps = {
     isMenuOpen: boolean;
     onMenuClick: () => void;
+    userInitial: string;
 };
 
-export function AppHeader({ isMenuOpen, onMenuClick }: AppHeaderProps) {
+export function AppHeader({ isMenuOpen, onMenuClick, userInitial }: AppHeaderProps) {
     return (
         <header className="sticky top-0 z-30 header-surface">
             <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -39,7 +40,7 @@ export function AppHeader({ isMenuOpen, onMenuClick }: AppHeaderProps) {
                     </div>
                 </div>
 
-                <AccountMenu />
+                <AccountMenu userInitial={userInitial} />
             </div>
         </header>
     );

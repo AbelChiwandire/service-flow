@@ -6,7 +6,7 @@ import { SignOutButton } from "../auth/SignoutButton";
 
 const MY_ACCOUNT_HREF = "/account";
 
-export function AccountMenu() {
+export function AccountMenu({ userInitial }: { userInitial: string }) {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
@@ -73,7 +73,7 @@ export function AccountMenu() {
                     aria-hidden="true"
                     className="h-9 w-9 rounded-full text-sm font-semibold icon-tile"
                 >
-                    U
+                    {userInitial}
                 </span>
             </button>
 

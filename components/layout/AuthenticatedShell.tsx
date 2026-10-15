@@ -6,8 +6,10 @@ import { AppSidebar } from "./AppSidebar";
 
 export function AuthenticatedShell({
     children,
+    userInitial,
 }: Readonly<{
     children: React.ReactNode;
+    userInitial: string;
 }>) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -16,7 +18,11 @@ export function AuthenticatedShell({
             <AppSidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
             <div className="flex min-w-0 flex-1 flex-col">
-                <AppHeader isMenuOpen={isMenuOpen} onMenuClick={() => setIsMenuOpen(true)} />
+                <AppHeader
+                    isMenuOpen={isMenuOpen}
+                    onMenuClick={() => setIsMenuOpen(true)}
+                    userInitial={userInitial}
+                />
 
                 <main className="flex min-w-0 flex-1 flex-col">
                     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8">
