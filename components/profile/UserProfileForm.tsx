@@ -48,10 +48,7 @@ export function UserProfileForm({
             </div>
 
             <div>
-                <label
-                    htmlFor="businessName"
-                    className="mb-1 field-label"
-                >
+                <label htmlFor="businessName" className="mb-1 field-label">
                     Business name
                 </label>
                 <input
@@ -96,11 +93,7 @@ export function UserProfileForm({
 
             {state.message ? <p className="error-text">{state.message}</p> : null}
 
-            <button
-                type="submit"
-                disabled={isPending}
-                className="btn-primary"
-            >
+            <button type="submit" disabled={isPending} className="btn-primary">
                 {isPending ? "Saving..." : "Save Profile"}
             </button>
         </form>

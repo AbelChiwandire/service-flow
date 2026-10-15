@@ -15,13 +15,9 @@ export default function LoginPage() {
             <main className="auth-main">
                 <section className="auth-card">
                     <div className="mb-6 text-center">
-                        <h1 className="heading-h1">
-                            Sign in to ServiceFlow
-                        </h1>
+                        <h1 className="heading-h1">Sign in to ServiceFlow</h1>
 
-                        <p className="mt-2 small-text">
-                            Access your service business workspace.
-                        </p>
+                        <p className="mt-2 small-text">Access your service business workspace.</p>
                     </div>
 
                     <LoginForm />

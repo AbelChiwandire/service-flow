@@ -29,10 +29,7 @@ export default async function DashboardSummary({ userId }: { userId: string }) {
                 title="Get started with ServiceFlow"
                 message="Add your first customer to start managing your customers and service jobs."
                 action={
-                    <Link
-                        href="/customers/new"
-                        className="btn-primary"
-                    >
+                    <Link href="/customers/new" className="btn-primary">
                         Add your first customer
                     </Link>
                 }
@@ -45,9 +42,7 @@ export default async function DashboardSummary({ userId }: { userId: string }) {
             <section>
                 <div className="mb-4">
                     <h2 className="heading-h2">Jobs</h2>
-                    <p className="mt-1 small-text">
-                        Overview of your current and upcoming jobs.
-                    </p>
+                    <p className="mt-1 small-text">Overview of your current and upcoming jobs.</p>
                 </div>
 
                 <div className="stat-grid">

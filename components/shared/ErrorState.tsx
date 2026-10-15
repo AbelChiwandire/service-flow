@@ -16,11 +16,7 @@ export function ErrorState({ onRetry, homeHref, homeLabel }: ErrorStateProps) {
                 message="We could not load this page. Please try again."
                 action={
                     <div className="row-responsive">
-                        <button
-                            type="button"
-                            onClick={onRetry}
-                            className="btn-primary"
-                        >
+                        <button type="button" onClick={onRetry} className="btn-primary">
                             Try again
                         </button>
 

@@ -9,10 +9,7 @@ export function LoadingState({ message = "Loading..." }: LoadingStateProps) {
             role="status"
             aria-live="polite"
         >
-            <span
-                className="spinner"
-                aria-hidden="true"
-            />
+            <span className="spinner" aria-hidden="true" />
 
             <span className="small-text">{message}</span>
         </div>

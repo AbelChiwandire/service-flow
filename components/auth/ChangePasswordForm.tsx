@@ -12,10 +12,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
     return (
         <form action={formAction} className="max-w-xl space-y-4">
             <div>
-                <label
-                    htmlFor="currentPassword"
-                    className="mb-1 field-label"
-                >
+                <label htmlFor="currentPassword" className="mb-1 field-label">
                     Current password
                 </label>
                 <input
@@ -37,10 +34,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
             </div>
 
             <div>
-                <label
-                    htmlFor="newPassword"
-                    className="mb-1 field-label"
-                >
+                <label htmlFor="newPassword" className="mb-1 field-label">
                     New password
                 </label>
                 <input
@@ -63,10 +57,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
             </div>
 
             <div>
-                <label
-                    htmlFor="confirmNewPassword"
-                    className="mb-1 field-label"
-                >
+                <label htmlFor="confirmNewPassword" className="mb-1 field-label">
                     Confirm new password
                 </label>
                 <input
@@ -90,11 +81,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
 
             {state.message ? <p className="error-text">{state.message}</p> : null}
 
-            <button
-                type="submit"
-                disabled={isPending}
-                className="btn-primary"
-            >
+            <button type="submit" disabled={isPending} className="btn-primary">
                 {isPending ? "Changing password..." : "Change password"}
             </button>
         </form>

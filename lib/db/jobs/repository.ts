@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import { neon } from "@neondatabase/serverless";
 import { getTodayForRequest } from "../dashboard/date-utils";
 import { escapeLike } from "../like";
 

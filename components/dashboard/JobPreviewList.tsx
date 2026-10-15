@@ -58,9 +58,7 @@ export default function JobPreviewList({
                                     <p className="truncate font-medium text-foreground">
                                         {job.title}
                                     </p>
-                                    <p className="mt-1 truncate small-text">
-                                        {job.customerName}
-                                    </p>
+                                    <p className="mt-1 truncate small-text">{job.customerName}</p>
                                 </div>
 
                                 <p className="shrink-0 text-right sm:text-sm caption-text">

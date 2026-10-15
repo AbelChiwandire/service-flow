@@ -8,17 +8,11 @@ export function PublicHeader() {
                 <Logo href="/" label="ServiceFlow home" />
 
                 <div className="flex items-center gap-2">
-                    <Link
-                        href="/login"
-                        className="btn-ghost"
-                    >
+                    <Link href="/login" className="btn-ghost">
                         Sign in
                     </Link>
 
-                    <Link
-                        href="/signup"
-                        className="btn-primary"
-                    >
+                    <Link href="/signup" className="btn-primary">
                         Get started
                     </Link>
                 </div>

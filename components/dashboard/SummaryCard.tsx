@@ -16,9 +16,7 @@ export default function SummaryCard({ label, value, href, tone = "default" }: Su
             href={href}
             className={`group summary-card ${highlight ? "summary-card-alert" : "summary-card-default"}`}
         >
-            <p className={`label-text ${highlight ? "text-maroon" : ""}`}>
-                {label}
-            </p>
+            <p className={`label-text ${highlight ? "text-maroon" : ""}`}>{label}</p>
 
             <p
                 className={`mt-1 stat-value ${highlight ? "text-maroon" : "group-hover:text-navy-hover"}`}

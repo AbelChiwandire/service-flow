@@ -15,9 +15,7 @@ export default function SignupPage() {
             <main className="auth-main">
                 <section className="auth-card">
                     <div className="mb-6 text-center">
-                        <h1 className="heading-h1">
-                            Create your ServiceFlow account
-                        </h1>
+                        <h1 className="heading-h1">Create your ServiceFlow account</h1>
                         <p className="mt-2 small-text">
                             Get started managing your service business in one workspace.
                         </p>

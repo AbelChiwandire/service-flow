@@ -68,9 +68,7 @@ export default async function CustomersPage({
             <PageHeader
                 title="Customers"
                 description="Manage your customer information and keep every relationship in one place."
-                action={
-                    <ButtonLink href="/customers/new">Add customer</ButtonLink>
-                }
+                action={<ButtonLink href="/customers/new">Add customer</ButtonLink>}
             />
 
             <CustomerFilters />
@@ -85,9 +83,7 @@ export default async function CustomersPage({
                     <EmptyState
                         title="No customers yet"
                         message="Add your first customer to start scheduling jobs."
-                        action={
-                            <ButtonLink href="/customers/new">Add customer</ButtonLink>
-                        }
+                        action={<ButtonLink href="/customers/new">Add customer</ButtonLink>}
                     />
                 )
             ) : (

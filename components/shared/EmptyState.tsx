@@ -7,7 +7,12 @@ interface EmptyStateProps {
     action?: ReactNode;
 }
 
-export function EmptyState({ icon = "+", title = "Nothing here yet", message, action }: EmptyStateProps) {
+export function EmptyState({
+    icon = "+",
+    title = "Nothing here yet",
+    message,
+    action,
+}: EmptyStateProps) {
     return (
         <div className="empty-panel">
             <div className="h-12 w-12 rounded-full icon-tile">

@@ -8,9 +8,7 @@ export default function AuthenticatedLayout({
     return (
         <div className="min-h-screen bg-surface">
             <AuthenticatedShell>
-                <main className="page-main">
-                    {children}
-                </main>
+                <main className="page-main">{children}</main>
             </AuthenticatedShell>
         </div>
     );

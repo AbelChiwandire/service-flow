@@ -15,15 +15,9 @@ export function PageHeader({ title, description, action, back }: PageHeaderProps
 
             <div className="page-header">
                 <div>
-                    <h1 className="heading-h1">
-                        {title}
-                    </h1>
+                    <h1 className="heading-h1">{title}</h1>
 
-                    {description ? (
-                        <p className="mt-2 max-w-2xl lead-text">
-                            {description}
-                        </p>
-                    ) : null}
+                    {description ? <p className="mt-2 max-w-2xl lead-text">{description}</p> : null}
                 </div>
 
                 {action ? <div className="shrink-0">{action}</div> : null}

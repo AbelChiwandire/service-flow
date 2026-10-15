@@ -37,17 +37,11 @@ export default function Home() {
                             </p>
 
                             <div className="mt-8 row-responsive">
-                                <Link
-                                    href="/signup"
-                                    className="btn-primary btn-lg"
-                                >
+                                <Link href="/signup" className="btn-primary btn-lg">
                                     Get started
                                 </Link>
 
-                                <Link
-                                    href="/login"
-                                    className="btn-secondary btn-lg"
-                                >
+                                <Link href="/login" className="btn-secondary btn-lg">
                                     Sign in
                                 </Link>
                             </div>
@@ -57,9 +51,7 @@ export default function Home() {
                             <div className="card-elevated">
                                 <div className="flex items-center justify-between border-b border-border pb-4">
                                     <div>
-                                        <h2 className="mt-1 heading-h2">
-                                            Business overview
-                                        </h2>
+                                        <h2 className="mt-1 heading-h2">Business overview</h2>
                                     </div>
                                 </div>
 
@@ -78,34 +70,26 @@ export default function Home() {
                                 <div className="mt-4 card-outline">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="item-title">
-                                                Kitchen maintenance
-                                            </p>
+                                            <p className="item-title">Kitchen maintenance</p>
                                             <p className="mt-1 caption-text">
                                                 Scheduled for tomorrow
                                             </p>
                                         </div>
 
-                                        <span className="badge badge-navy">
-                                            Scheduled
-                                        </span>
+                                        <span className="badge badge-navy">Scheduled</span>
                                     </div>
                                 </div>
 
                                 <div className="mt-4 card-outline">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="item-title">
-                                                Office cleaning
-                                            </p>
+                                            <p className="item-title">Office cleaning</p>
                                             <p className="mt-1 caption-text">
                                                 Ready for completion
                                             </p>
                                         </div>
 
-                                        <span className="badge badge-navy">
-                                            In progress
-                                        </span>
+                                        <span className="badge badge-navy">In progress</span>
                                     </div>
                                 </div>
                             </div>
@@ -116,9 +100,7 @@ export default function Home() {
                 <section className="bg-white">
                     <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
                         <div className="max-w-2xl">
-                            <p className="eyebrow-text">
-                                Everything you need
-                            </p>
+                            <p className="eyebrow-text">Everything you need</p>
 
                             <h2 className="mt-4 heading-h1">
                                 Keep your day-to-day work organized.
@@ -132,21 +114,14 @@ export default function Home() {
 
                         <div className="mt-12 grid gap-6 md:grid-cols-2">
                             {features.map((feature) => (
-                                <article
-                                    key={feature.title}
-                                    className="card-feature"
-                                >
+                                <article key={feature.title} className="card-feature">
                                     <div className="h-10 w-10 rounded-lg font-bold icon-tile">
                                         ✓
                                     </div>
 
-                                    <h3 className="mt-6 heading-h3">
-                                        {feature.title}
-                                    </h3>
+                                    <h3 className="mt-6 heading-h3">{feature.title}</h3>
 
-                                    <p className="mt-2 body-text">
-                                        {feature.description}
-                                    </p>
+                                    <p className="mt-2 body-text">{feature.description}</p>
                                 </article>
                             ))}
                         </div>
@@ -164,10 +139,7 @@ export default function Home() {
                             ServiceFlow.
                         </p>
 
-                        <Link
-                            href="/signup"
-                            className="mt-8 btn-inverse btn-lg"
-                        >
+                        <Link href="/signup" className="mt-8 btn-inverse btn-lg">
                             Create your account
                         </Link>
                     </div>
