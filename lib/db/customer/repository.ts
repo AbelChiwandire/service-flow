@@ -90,14 +90,6 @@ export async function countCustomers(
     return Number(rows[0].count);
 }
 
-export async function getCustomersTotalPages(
-    userId: string,
-    params: CustomerListParams = {},
-): Promise<number> {
-    const { pageSize = ITEMS_PER_PAGE } = params;
-    return Math.ceil((await countCustomers(userId, params)) / pageSize);
-}
-
 export async function getCustomerById(userId: string, id: string): Promise<Customer | null> {
     const rows = await sql`
         SELECT *

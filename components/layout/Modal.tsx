@@ -11,7 +11,7 @@ type ModalProps = {
 };
 
 // Built on the native <dialog> element, which handles focus trapping,
-// the Escape key and the backdrop. Swap for shadcn Dialog if shadcn is added later.
+// the Escape key and the backdrop.
 export function Modal({ open, onClose, title, description, children }: ModalProps) {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const titleId = useId();

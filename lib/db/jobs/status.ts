@@ -7,8 +7,7 @@ export const JOB_STATUS_LABELS: Record<JobStatus, string> = {
     cancelled: "Cancelled",
 };
 
-// Proposed MVP rules (the spec leaves exact transitions to the team):
-// work moves forward, and completed/cancelled are final.
+// Work moves forward, and completed/cancelled are final.
 export const JOB_STATUS_TRANSITIONS: Record<JobStatus, JobStatus[]> = {
     scheduled: ["in_progress", "cancelled"],
     in_progress: ["completed", "cancelled"],

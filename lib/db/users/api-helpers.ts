@@ -1,38 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { IdSchema } from "./schema";
+﻿import { NextResponse } from "next/server";
+import { handleApiErrors, validateId as validateUuid } from "@/lib/api-helpers";
 import { EmailAlreadyExistsError } from "./repository";
 
+export { parseJsonBody } from "@/lib/api-helpers";
+
 export function validateId(id: string): NextResponse | null {
-    if (!IdSchema.safeParse(id).success) {
-        return NextResponse.json({ error: "Invalid user id." }, { status: 400 });
-    }
-    return null;
+    return validateUuid(id, "Invalid user id.");
 }
 
-type JsonBodyResult = { ok: true; body: unknown } | { ok: false; response: NextResponse };
-
-export async function parseJsonBody(request: NextRequest): Promise<JsonBodyResult> {
-    const body = await request.json().catch(() => null);
-    if (body === null) {
-        return {
-            ok: false,
-            response: NextResponse.json({ error: "Invalid JSON body." }, { status: 400 }),
-        };
-    }
-    return { ok: true, body };
-}
-
-export async function withApiErrorHandling(
+export function withApiErrorHandling(
     logLabel: string,
     handler: () => Promise<NextResponse>,
 ): Promise<NextResponse> {
-    try {
-        return await handler();
-    } catch (error) {
-        if (error instanceof EmailAlreadyExistsError) {
-            return NextResponse.json({ error: error.message }, { status: 409 });
-        }
-        console.error(logLabel, error);
-        return NextResponse.json({ error: "Internal server error." }, { status: 500 });
-    }
+    return handleApiErrors(logLabel, handler, (error) =>
+        error instanceof EmailAlreadyExistsError ? 409 : null,
+    );
 }

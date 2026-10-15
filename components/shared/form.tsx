@@ -12,16 +12,6 @@ export function FieldErrors({ id, errors }: { id: string; errors?: string[] }) {
     );
 }
 
-export function FormMessage({ message }: { message?: string | null }) {
-    if (!message) return null;
-
-    return (
-        <p role="alert" className="error-text">
-            {message}
-        </p>
-    );
-}
-
 export function FormActions({
     cancelHref,
     submitLabel,

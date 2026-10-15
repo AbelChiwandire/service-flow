@@ -83,7 +83,6 @@ export async function signupAction(prevState: State, formData: FormData): Promis
         throw error;
     }
 
-    // TODO: once auth exists, log the new user in here instead of redirecting to a login page
     redirect("/login");
 }
 

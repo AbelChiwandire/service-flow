@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { SignOutButton } from "../auth/SignoutButton";
 
-// Placeholder destination until the account page exists.
 const MY_ACCOUNT_HREF = "/account";
 
 export function AccountMenu() {

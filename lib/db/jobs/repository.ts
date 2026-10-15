@@ -135,14 +135,6 @@ export async function countJobs(userId: string, params: JobListParams = {}): Pro
     return Number(rows[0].count);
 }
 
-export async function getJobsTotalPages(
-    userId: string,
-    params: JobListParams = {},
-): Promise<number> {
-    const { pageSize = ITEMS_PER_PAGE } = params;
-    return Math.ceil((await countJobs(userId, params)) / pageSize);
-}
-
 export async function getJobById(userId: string, id: string): Promise<Job | null> {
     const rows = await sql`
         SELECT id, "userId", "customerId", title, description, "scheduledDate"::text AS "scheduledDate", status, "createdAt", "updatedAt", "isDeleted", "deletedAt"
