@@ -12,10 +12,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
     return (
         <form action={formAction} className="max-w-xl space-y-4">
             <div>
-                <label
-                    htmlFor="currentPassword"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="currentPassword" className="mb-1 field-label">
                     Current password
                 </label>
                 <input
@@ -24,12 +21,13 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
                     type="password"
                     required
                     autoComplete="current-password"
+                    placeholder="Enter your current password"
                     aria-describedby="currentPassword-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    className="input-field"
                 />
                 <div id="currentPassword-error" aria-live="polite" aria-atomic="true">
                     {state.errors?.currentPassword?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
+                        <p key={error} className="mt-1 error-text">
                             {error}
                         </p>
                     ))}
@@ -37,10 +35,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
             </div>
 
             <div>
-                <label
-                    htmlFor="newPassword"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="newPassword" className="mb-1 field-label">
                     New password
                 </label>
                 <input
@@ -50,12 +45,13 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
                     required
                     minLength={8}
                     autoComplete="new-password"
+                    placeholder="Create a new password (at least 8 characters)"
                     aria-describedby="newPassword-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    className="input-field"
                 />
                 <div id="newPassword-error" aria-live="polite" aria-atomic="true">
                     {state.errors?.newPassword?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
+                        <p key={error} className="mt-1 error-text">
                             {error}
                         </p>
                     ))}
@@ -63,10 +59,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
             </div>
 
             <div>
-                <label
-                    htmlFor="confirmNewPassword"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="confirmNewPassword" className="mb-1 field-label">
                     Confirm new password
                 </label>
                 <input
@@ -76,25 +69,22 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
                     required
                     minLength={8}
                     autoComplete="new-password"
+                    placeholder="Confirm your new password"
                     aria-describedby="confirmNewPassword-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    className="input-field"
                 />
                 <div id="confirmNewPassword-error" aria-live="polite" aria-atomic="true">
                     {state.errors?.confirmNewPassword?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
+                        <p key={error} className="mt-1 error-text">
                             {error}
                         </p>
                     ))}
                 </div>
             </div>
 
-            {state.message ? <p className="text-sm text-red-600">{state.message}</p> : null}
+            {state.message ? <p className="error-text">{state.message}</p> : null}
 
-            <button
-                type="submit"
-                disabled={isPending}
-                className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-            >
+            <button type="submit" disabled={isPending} className="btn-primary">
                 {isPending ? "Changing password..." : "Change password"}
             </button>
         </form>

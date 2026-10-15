@@ -2,204 +2,157 @@
 
 ## Overview
 
-ServiceFlow uses a simple, consistent visual system designed for a professional service-business management application. The design system establishes shared defaults for color, typography, spacing, layout, responsiveness, and UI components.
+ServiceFlow uses a small, consistent visual system built only with **Tailwind CSS v4**. There is no third-party component library (such as shadcn/ui). Colors are CSS variables, and repeated UI patterns are semantic classes defined in a custom Tailwind component layer.
 
-These conventions provide a common starting point for implementation. Individual values and component styling may be refined during development when practical UI requirements become clearer.
+Everything described here lives in [`app/globals.css`](../app/globals.css), which is the single source of truth for colors and shared component styles.
 
 ## Color Palette
 
-ServiceFlow uses a blue and indigo palette as its primary brand identity.
+The palette is intentionally small. One color is used per role, plus a hover variant where needed.
 
-| Role                   | Color       | Hex       |
-| ---------------------- | ----------- | --------- |
-| Primary                | Deep Blue   | `#2667FF` |
-| Primary Hover/Active   | Bright Blue | `#3F8EFC` |
-| Accent                 | Indigo      | `#3B28CC` |
-| Light Accent           | Sky Blue    | `#87BFFF` |
-| Light Brand Background | Light Blue  | `#ADD7F6` |
+| Variable           | Value              | Role                                                |
+| ------------------ | ------------------ | --------------------------------------------------- |
+| `--background`     | `#ffffff`          | Page background                                     |
+| `--foreground`     | `#000000`          | All body text, headings, and gray-looking text      |
+| `--navy`           | `#172554`          | Primary actions, links, active states, text on blue |
+| `--navy-hover`     | `#243b6b`          | Hover state for navy buttons                        |
+| `--maroon`         | `#7f1d1d`          | Errors, destructive actions, cancelled status       |
+| `--maroon-hover`   | `#8b2635`          | Hover state for maroon buttons                      |
+| `--green`          | `#14532d`          | Completed status                                    |
+| `--status-gray`    | `#374151`          | Scheduled status (the only gray text)               |
+| `--surface`        | `#f8fafc`          | Subtle surfaces (table headers, app background)     |
+| `--surface-strong` | `#e2e8f0`          | Skeletons and stronger neutral fills                |
+| `--border`         | `rgb(0 0 0 / 15%)` | Borders and dividers                                |
 
-### Semantic Usage
+Tint variables (`--navy-tint`, `--maroon-tint`, `--green-tint`, `--status-gray-tint`) are 5% mixes of the base color with white (`color-mix`). They are used for badge and hover backgrounds, and fall back to transparent in browsers without `color-mix`.
 
-- **Primary (`#2667FF`)** — primary actions, important links, and key interactive elements.
-- **Primary Hover/Active (`#3F8EFC`)** — hover and active variations of primary interactions.
-- **Accent (`#3B28CC`)** — stronger emphasis and selected states where additional contrast is appropriate.
-- **Light Accent (`#87BFFF`)** — subtle highlights and secondary branded elements.
-- **Light Brand Background (`#ADD7F6`)** — branded background sections and supporting visual areas.
+All variables are exposed to Tailwind through `@theme inline`, so utilities such as `text-navy`, `bg-maroon`, and `bg-navy-tint` work as expected.
 
-Neutral colors such as white, gray, and slate may be used for the main application background, surfaces, borders, and supporting text. The branded colors should not be used for every UI element.
+### Color rules
 
-Color should not be the only method used to communicate meaning. Statuses and important states should also use text, icons, or other visual indicators.
+- Text is black (`foreground`). Gray text is not used, except for the scheduled status.
+- Any text that is blue is **navy**. Any text that is red is **maroon**.
+- White text only sits on navy or maroon backgrounds, which keeps contrast accessible.
+- Lighter tints are used for hover effects, backgrounds, and borders only, never for text.
+- Indigo, red, and multi-step shade scales (200–800) are not used.
+- Color is never the only signal; statuses always include their text label.
+
+### Job status badges
+
+| Status      | Text color    | Background (5% tint) |
+| ----------- | ------------- | -------------------- |
+| Scheduled   | `status-gray` | gray tint            |
+| In progress | `navy`        | navy tint            |
+| Completed   | `green`       | green tint           |
+| Cancelled   | `maroon`      | maroon tint          |
 
 ## Typography
 
-ServiceFlow uses **Inter** as its primary font family.
+ServiceFlow uses **Inter** (via `next/font/google`) as its font family. The type scale is applied through component classes so that similar elements look identical everywhere.
 
-Typography should use Tailwind's standard type scale rather than introducing unnecessary custom sizes.
+| Class             | Utilities                                           | Use                         |
+| ----------------- | --------------------------------------------------- | --------------------------- |
+| `heading-display` | large responsive display size, bold, tight tracking | Landing page hero only      |
+| `heading-h1`      | `text-2xl font-bold tracking-tight sm:text-3xl`     | Page titles (`PageHeader`)  |
+| `heading-h2`      | `text-xl font-semibold`                             | Section headings            |
+| `heading-h3`      | `text-lg font-semibold`                             | Sub-section / card headings |
+| `body-text`       | `text-sm leading-6 sm:text-base`                    | Paragraphs                  |
+| `small-text`      | `text-sm`                                           | Supporting text             |
+| `label-text`      | small, medium weight                                | Detail labels               |
+| `field-label`     | small, medium weight                                | Form labels                 |
+| `stat-value`      | `text-2xl font-bold`                                | Dashboard numbers           |
 
-### Hierarchy
+## Spacing
 
-- **Page titles** — large and bold.
-- **Section headings** — medium to large and semibold.
-- **Body text** — regular weight and readable size.
-- **Labels** — medium weight.
-- **Supporting text** — smaller and visually muted.
+Spacing follows an 8px grid using standard Tailwind steps only:
 
-Typography should establish a clear hierarchy while remaining consistent across pages.
+| Token | Tailwind | Size |
+| ----- | -------- | ---- |
+| xs    | `1`      | 4px  |
+| sm    | `2`      | 8px  |
+| md    | `4`      | 16px |
+| lg    | `6`      | 24px |
+| xl    | `8`      | 32px |
+| xxl   | `12`     | 48px |
+
+No arbitrary values (`p-[17px]`) or inline styles are used. The landing page is a deliberate exception and uses larger section padding (`py-16` to `py-32`).
+
+## Component Layer
+
+Repeated UI is defined once under `@layer components` in `globals.css` using `@apply`. Unique, placement-specific layout (parent flex or grid, one-off margins) stays inline in the component.
+
+| Group            | Classes                                                                                                                                                                                                                                                                                               |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Typography       | `heading-display`, `heading-h1`–`h3`, `lead-text`, `body-text`, `small-text`, `caption-text`, `label-text`, `item-title`, `eyebrow-text`, `stat-value`, `error-text`, `link-primary`, `link-inline`, `link-subtle`                                                                                    |
+| Buttons          | `btn-primary`, `btn-secondary`, `btn-danger`, `btn-danger-outline`, `btn-inverse`, `btn-disabled`, `btn-lg`, `btn-icon`, `btn-ghost`                                                                                                                                                                  |
+| Forms            | `input-field`, `input-field-invalid`, `field-label`, `form-actions`, `row-responsive`, `alert-error`                                                                                                                                                                                                  |
+| Cards and panels | `card-surface`, `card-padded`, `card-elevated`, `card-feature`, `card-muted`, `card-outline`, `auth-card`, `empty-panel`, `details-grid`, `stat-grid`, `panel-header`, `list-divided`, `list-row-link`, `data-head`, `data-row`, `section-divider`, `dropdown-panel`, `dropdown-item`, `modal-dialog` |
+| Layout           | `page-shell`, `page-main`, `page-main-centered`, `auth-main`, `page-header`, `header-surface`                                                                                                                                                                                                         |
+| Small elements   | `nav-link` (+ `-active`, `-idle`), `summary-card` (+ `-default`, `-alert`), `badge` (+ `-navy`, `-green`, `-maroon`, `-gray`), `icon-tile`, `skeleton`, `spinner`                                                                                                                                     |
+
+Notes:
+
+- Tailwind's `@apply` cannot apply custom classes, so each class lists its utilities in full.
+- The utilities layer overrides the components layer, so an inline utility such as `w-full` or `h-12` can adjust a component class where needed.
+- Avoid class names that collide with built-in Tailwind utilities. For example, `table-row` is a Tailwind utility (`display: table-row`), which is why the list layout classes are named `data-row` and `data-head`.
 
 ## Layout Patterns
-
-ServiceFlow uses a consistent page structure throughout the application:
 
 ```text
 Header / Navigation
         ↓
-Page Header
+Page Header (title, description, primary action)
         ↓
-Main Content
+Filters (search, status)
         ↓
-Lists / Forms / Cards / Other Content
+Content (list, form, or details)
+        ↓
+Pagination (pinned to the bottom of the page)
 ```
 
-### Page Layout
-
-Authenticated pages should generally:
-
-- Use a centered content container.
-- Maintain consistent horizontal padding.
-- Use a page header containing the page title and, when appropriate, a primary action.
-- Organize related content into clear sections.
-- Use cards when they help group or distinguish information rather than wrapping every element in a card.
-
-### Lists and Data
-
-Business data should primarily use row or table-based presentations on larger screens.
-
-On smaller screens, the same domain item component may change to a more compact card-like presentation. Separate desktop and mobile components should not be created unless their implementations become meaningfully different.
-
-## Spacing
-
-ServiceFlow uses Tailwind's standard spacing scale.
-
-The project should prefer standard Tailwind spacing utilities rather than arbitrary pixel values.
-
-General conventions include:
-
-- Small internal spacing — approximately `2` to `3`.
-- Normal component spacing — approximately `4`.
-- Larger component or section spacing — approximately `6`.
-- Major page sections — approximately `8` or greater.
-
-The exact spacing may vary according to the component, but related components should use consistent spacing patterns.
+- Authenticated pages are wrapped in `AuthenticatedShell`: a sidebar on desktop and a slide-out menu on small screens, with an account menu in the header.
+- Every authenticated page starts with the shared `PageHeader`.
+- Lists use `DataTable` / `DataRow`: a column header row and grid rows on `md+`, stacked card-like rows on small screens. The same item component serves both.
+- Pagination sits at the bottom of the viewport area even when a list has few entries.
 
 ## Responsive Design
 
-ServiceFlow follows a **mobile-first** approach.
+ServiceFlow is **mobile-first**. Layout changes use Tailwind responsive variants (`sm:`, `md:`, `lg:`). Forms stay usable without horizontal scrolling, and all buttons are 40px tall (48px for `btn-lg`) for touch use.
 
-Responsive behavior should be implemented using Tailwind's responsive utilities.
+## Shared Components
 
-The interface should:
+Shared UI lives in `components/shared/` and `components/layout/`:
 
-- Begin with a usable mobile layout.
-- Expand and reorganize content for larger screens.
-- Adapt navigation to available screen space.
-- Allow lists and tables to change presentation on smaller screens.
-- Keep forms usable without horizontal scrolling.
-- Maintain usable interactive controls on touch devices.
+| Component                                   | Purpose                                          |
+| ------------------------------------------- | ------------------------------------------------ |
+| `PageHeader`                                | Page title, description, and primary action      |
+| `ButtonLink`                                | Link styled as a primary or secondary button     |
+| `ConfirmActionButton`                       | Two-step confirmation for destructive actions    |
+| `DeleteSection`                             | Destructive-action section on detail pages       |
+| `DataTable` / `DataRow`                     | Responsive list layout                           |
+| `ListFilters`, `Pagination`                 | Search/filter controls and paging                |
+| `BackLink`                                  | Back navigation on detail and form pages         |
+| `FieldErrors`, `FormMessage`, `FormActions` | Form validation and action layout (`form.tsx`)   |
+| `LoadingState`                              | Loading spinner and message                      |
+| `EmptyState`                                | Empty lists and sections, with optional icon     |
+| `ErrorMessage`                              | Inline error text                                |
+| `ErrorState`                                | Full error panel with retry, used by `error.tsx` |
+| `Modal`                                     | Native `<dialog>` wrapper                        |
 
-## Shared UI Library
+## Application States
 
-ServiceFlow will use **shadcn/ui** for common interface primitives.
+- **Loading:** `loading.tsx` in the authenticated area, `LoadingState`, and `DashboardSummarySkeleton`.
+- **Empty:** `EmptyState` for lists and dashboard sections with no data.
+- **Error:** `app/error.tsx` and `app/(authenticated)/error.tsx` render `ErrorState` with a retry button.
+- **Not found:** `app/not-found.tsx` and `app/(authenticated)/not-found.tsx`, used by pages that call `notFound()`.
 
-Common primitives may include:
+## Interaction Conventions
 
-- `Button`
-- `Input`
-- `Label`
-- `Select`
-- `Dialog`
-- `AlertDialog`
-- `Badge`
-- `Card`
-- `Table`
-- Form-related primitives
+- **Buttons:** primary (navy) for the main action, secondary (outlined) for supporting actions, danger (maroon) for destructive actions. The Account page uses the same navy buttons as the rest of the app.
+- **Forms:** consistent label placement, `input-field` styling, inline field errors, and an invalid-state border.
+- **Dialogs:** the shared `Modal`, built on the native `<dialog>` element.
+- **Focus:** buttons and inputs show a visible focus outline.
 
-These primitives provide the foundation for ServiceFlow's domain-specific components.
+## Principle
 
-For example:
-
-```text
-shadcn/ui primitives
-        ↓
-ServiceFlow domain components
-        ↓
-ServiceFlow pages
-```
-
-Domain components such as `CustomerForm`, `JobDetails`, and `InvoiceDetails` should compose these shared primitives rather than repeatedly implementing their own basic UI controls.
-
-shadcn/ui components may be customized when necessary to meet ServiceFlow's design requirements.
-
-## UI Interaction Conventions
-
-### Buttons
-
-- **Primary** — important or primary actions.
-- **Secondary** — supporting actions.
-- **Outline/Ghost** — lower-emphasis actions where appropriate.
-- **Destructive** — actions that remove or permanently change data.
-
-### Status Indicators
-
-Statuses should use badges or similarly compact visual indicators that include the status text. Color may reinforce the meaning but should not be the only indicator.
-
-Examples include:
-
-- `Scheduled`
-- `In Progress`
-- `Completed`
-- `Cancelled`
-
-### Dialogs
-
-Dialogs should use shadcn/ui's `Dialog` or `AlertDialog` primitives rather than creating a separate application-wide modal implementation.
-
-The job-completion invoice workflow is an example of a domain-specific interaction that can be implemented using these shared dialog primitives.
-
-### Forms
-
-Forms should maintain consistent:
-
-- Label placement
-- Field spacing
-- Input styling
-- Validation messages
-- Error presentation
-- Action placement
-
-### Application States
-
-Shared components should be used for common application states:
-
-- `LoadingState` — loading operations and page content.
-- `EmptyState` — pages or sections with no data.
-- `ErrorMessage` — errors that need to be presented to the user.
-
-## Tailwind Conventions
-
-Tailwind utility classes should be used directly for component styling.
-
-The project should:
-
-- Prefer existing Tailwind utilities over custom CSS when practical.
-- Use the established design tokens and semantic colors rather than repeatedly introducing raw values.
-- Use responsive variants for layout changes.
-- Use state variants such as `hover:`, `focus:`, and `disabled:` for interaction states.
-- Avoid arbitrary values unless the design genuinely requires them.
-
-The design system is intended to provide consistent defaults while allowing components to evolve as implementation and usability requirements become clearer.
-
-## Design System Principle
-
-ServiceFlow should favor **consistency and simplicity over unnecessary visual complexity**.
-
-The design system establishes shared foundations for the application, while detailed component styling can be refined during implementation without requiring the entire design system to be redesigned.
+Favor **consistency and simplicity**: one color per role, one class per repeated pattern, and the standard Tailwind scale throughout.

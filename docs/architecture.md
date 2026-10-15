@@ -2,381 +2,147 @@
 
 ## Overview
 
-ServiceFlow is a full-stack service-business management application built with Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, PostgreSQL, and Auth.js.
+ServiceFlow is a full-stack service-business management application built with:
 
-The application allows service businesses to manage customers, jobs, job statuses, and basic invoices. The MVP focuses on straightforward customer and job management rather than full accounting or complex business administration.
+- **Next.js 16** (App Router) and **React 19**
+- **TypeScript** (strict mode)
+- **Tailwind CSS v4** with a custom component layer
+- **Neon PostgreSQL** via `@neondatabase/serverless` (raw SQL, no ORM)
+- **Auth.js** (`next-auth` v5 beta) with a credentials provider and JWT sessions
+- **Zod** for input validation, **bcrypt** for password hashing
+- **ESLint** and **Prettier**
+
+Users manage customers and jobs. Invoicing was planned but could not be added due to time constraints, so it is not part of the application.
 
 ## Routes
 
-### Public Routes
+### Public
 
-| Route     | Purpose                    | Priority |
-| --------- | -------------------------- | -------- |
-| `/`       | Landing page / entry point | P1       |
-| `/login`  | Sign in                    | P1       |
-| `/signup` | Create account             | P1       |
+| Route     | Purpose                                           |
+| --------- | ------------------------------------------------- |
+| `/`       | Landing page (signed-in users go to `/dashboard`) |
+| `/login`  | Sign in                                           |
+| `/signup` | Create account                                    |
 
-### Authenticated Routes
+### Authenticated
 
-| Route                  | Purpose                           | Priority |
-| ---------------------- | --------------------------------- | -------- |
-| `/dashboard`           | Authenticated overview            | P2       |
-| `/customers`           | Customer list                     | P1       |
-| `/customers/new`       | Create customer                   | P1       |
-| `/customers/[id]`      | View customer and associated jobs | P1       |
-| `/customers/[id]/edit` | Edit customer                     | P1       |
-| `/jobs`                | Job list                          | P1       |
-| `/jobs/new`            | Create job                        | P1       |
-| `/jobs/[id]`           | View job details                  | P1       |
-| `/jobs/[id]/edit`      | Edit job                          | P1       |
-| `/invoices`            | Invoice list                      | P2       |
-| `/invoices/[id]`       | View invoice                      | P2       |
-| `/invoices/[id]/edit`  | Edit invoice                      | P2       |
+| Route                  | Purpose                                       |
+| ---------------------- | --------------------------------------------- |
+| `/dashboard`           | Overview of jobs and customers                |
+| `/customers`           | Customer list (search, filter, paging)        |
+| `/customers/new`       | Create customer                               |
+| `/customers/[id]`      | Customer details and their jobs               |
+| `/customers/[id]/edit` | Edit customer                                 |
+| `/jobs`                | Job list (search, status, due, sort, paging)  |
+| `/jobs/new`            | Create job                                    |
+| `/jobs/[id]`           | Job details and status control                |
+| `/jobs/[id]/edit`      | Edit job                                      |
+| `/account`             | Edit profile, change password, delete account |
 
-There is no `/invoices/new` route because invoice creation is part of the job-completion workflow.
+Access control is enforced by `proxy.ts` (Next.js middleware) using `auth.config.ts`: every route except `/`, `/login`, and `/signup` requires a session. Signed-in users visiting `/` or `/login` are redirected to `/dashboard`. API routes are excluded from the proxy matcher and check the session themselves.
 
-There are no separate `/delete` or `/status` routes. Deletion and status changes are handled through the appropriate entity interface.
+There are no separate `/delete` or `/status` pages; deletion and status changes happen on the entity's details page.
 
-## Application Structure
+Special files: `app/error.tsx`, `app/not-found.tsx`, `app/(authenticated)/error.tsx`, `app/(authenticated)/not-found.tsx`, and `app/(authenticated)/loading.tsx`.
 
-The application is logically divided into public and authenticated areas:
+## Project Structure
 
 ```text
-ServiceFlow
-├── Public Area
-│   ├── Landing Page
-│   ├── Login
-│   └── Signup
-│
-└── Authenticated Area
-    ├── Dashboard
-    ├── Customers
-    │   ├── List
-    │   ├── Create
-    │   ├── Details
-    │   └── Edit
-    ├── Jobs
-    │   ├── List
-    │   ├── Create
-    │   ├── Details
-    │   └── Edit
-    └── Invoices
-        ├── List
-        ├── Details
-        └── Edit
+app/
+  (authenticated)/       Route group with the app shell (sidebar, header)
+    account/ customers/ dashboard/ jobs/
+  api/                   REST route handlers (auth, customers, jobs, users)
+  login/ signup/         Public auth pages
+  globals.css            Color variables and the component layer
+  layout.tsx page.tsx    Root layout (Inter font) and landing page
+components/
+  auth/ customers/ dashboard/ jobs/ profile/   Domain components
+  layout/                App shell, header, sidebar, modal, logo
+  shared/                Reusable UI (tables, forms, states, pagination)
+lib/
+  auth/                  Session helpers and sign-in/sign-out actions
+  db/
+    customer/ jobs/ users/ dashboard/   repository, schema, actions, api-helpers
+  sql/setup.sql          Database schema
+auth.ts auth.config.ts proxy.ts          Auth.js setup and route protection
+docs/                    Project documentation
 ```
 
-"Public Area" and "Authenticated Area" are conceptual groupings for documentation. They do not require physical folders with those exact names. Next.js route groups or another folder organization may be used during implementation.
+## Layers
 
-## Component Architecture
+Each domain (`customer`, `jobs`, `users`) in `lib/db/` follows the same split:
 
-The application follows this logical hierarchy:
+| File             | Responsibility                                                           |
+| ---------------- | ------------------------------------------------------------------------ |
+| `schema.ts`      | Zod schemas and field-error formatting                                   |
+| `repository.ts`  | SQL queries and domain errors; always scoped by `userId`                 |
+| `actions.ts`     | Server Actions used by forms (validate, call repository, revalidate)     |
+| `api-helpers.ts` | Shared API helpers (id validation, JSON parsing, error → status mapping) |
 
 ```text
-Routes
-   ↓
-Pages
-   ↓
-Reusable Domain Components
-   ↓
-Shared UI Primitives
+Page (Server Component)
+   ↓ reads via repository
+Domain components (Client Components only when interactive)
+   ↓ submit
+Server Actions / API routes
+   ↓ validate (Zod) → authorize (session) → repository
+Neon PostgreSQL
 ```
 
-Pages are responsible for composing the interface for a route. Reusable components contain domain-specific presentation and behavior, while shared UI primitives provide common interface elements.
+- **Pages** are Server Components that load data and compose the interface.
+- **Forms** use Server Actions with `useActionState`; validation errors come back as field-level messages.
+- **API routes** expose the same operations over HTTP for external clients. Both paths use the same schemas and repositories.
+- **Authorization** is enforced in the data layer: repository functions take the session's `userId`, so one user can never read another user's rows, regardless of UI visibility.
 
-### Shared Application Components
+## Components
 
-- `Header`
-- `Navigation`
-- `PageHeader`
-- `LoadingState`
-- `EmptyState`
-- `ErrorMessage`
+### Shared (`components/shared`)
 
-Shared UI primitives from shadcn/ui may also be used as needed, including:
+`PageHeader`, `ButtonLink`, `BackLink`, `ConfirmActionButton`, `DeleteSection`, `DataTable` / `DataRow`, `ListFilters`, `Pagination`, `LoadingState`, `EmptyState`, `ErrorMessage`, `ErrorState`, `TimeZoneSync`, `form.tsx` (`FieldErrors`, `FormMessage`, `FormActions`), and the `useFormFeedback` hook.
 
-- `Button`
-- `Input`
-- `Dialog`
-- `AlertDialog`
-- `Badge`
-- `Select`
-- Other primitives as required
+### Layout (`components/layout`)
 
-### Customer Components
+`AuthenticatedShell`, `AppHeader`, `AppSidebar`, `AccountMenu`, `PublicHeader`, `Logo`, `Modal`.
 
-- `CustomerList`
-- `CustomerItem`
-- `CustomerForm`
-- `CustomerDetails`
-- `CustomerJobList`
+### Domain
 
-### Job Components
+- **Customers:** `CustomerList`, `CustomerItem`, `CustomerForm`, `CustomerDetails`, `CustomerJobList`, `CustomerFilters`, `CreateCustomerForm`, `UpdateCustomerForm`, `DeleteCustomerButton`
+- **Jobs:** `JobList`, `JobItem`, `JobForm`, `JobDetails`, `JobFilters`, `JobStatusBadge`, `JobStatusControl`, `CreateJobForm`, `UpdateJobForm`, `DeleteJobButton`
+- **Dashboard:** `DashboardSummary`, `DashboardSummarySkeleton`, `SummaryCard`, `UpcomingJobs`, `OverdueJobs`, `JobPreviewList`
+- **Auth and profile:** `LoginForm`, `SignupForm`, `ChangePasswordForm`, `ChangePasswordFormWrapper`, `UserProfileForm`, `UpdateProfileForm`, `SignoutButton`, `DeleteAccountButton`
 
-- `JobList`
-- `JobItem`
-- `JobForm`
-- `JobDetails`
-- `JobStatusBadge`
-
-The job domain also includes the job-completion and invoice-creation workflow.
-
-### Invoice Components
-
-- `InvoiceList`
-- `InvoiceItem`
-- `InvoiceDetails`
-- `InvoiceForm`
-
-### Dashboard Components
-
-- `DashboardSummary`
-- `SummaryCard`
-- `UpcomingJobs`
-- `OutstandingInvoices`
-
-Components such as `CustomerActions`, `JobActions`, `JobStatusControl`, `InvoiceStatus`, and `RecentActivity` are not planned as separate components initially. They may be introduced later if implementation complexity justifies them.
+Responsive behavior is a presentation concern: the same `*Item` component renders as a table row on `md+` and as a compact card on small screens. Separate desktop and mobile components are not created.
 
 ## Naming Conventions
 
-ServiceFlow will use consistent naming conventions for routes, files, components, and variables to make the codebase predictable across the team.
+- Components, types, and interfaces: **PascalCase** (`CustomerForm`, `JobStatus`). Component files match the component name.
+- Route files in `app/` follow Next.js conventions only (`page.tsx`, `route.ts`, `layout.tsx`); all other components live in `components/`.
+- Routes use lowercase plural resources: `/customers`, `/jobs`, with `/new`, `/[id]`, `/[id]/edit`.
+- Variables and functions: **camelCase**. Fixed lookup tables: **UPPER_SNAKE_CASE** (`JOB_STATUS_LABELS`, `ITEMS_PER_PAGE`).
+- Database columns: **camelCase**, matching the TypeScript layer.
+- CSS component classes: lowercase kebab-case, named by role (`btn-primary`, `card-surface`).
 
-### Components
+## Key Workflows
 
-React components use **PascalCase**.
+### Authentication
 
-Examples:
+1. `POST /api/users` or the signup form creates the account (bcrypt-hashed password).
+2. The credentials provider in `auth.ts` verifies email and password and issues a JWT session containing the user id.
+3. `proxy.ts` redirects unauthenticated requests to `/login`.
 
-- `CustomerList`
-- `CustomerForm`
-- `JobDetails`
-- `JobStatusBadge`
-- `SummaryCard`
-
-Component names should describe their responsibility rather than their location or implementation details.
-
-### Component Files
-
-Component files should use the same name as their primary component.
-
-Examples:
+### Job status
 
 ```text
-CustomerList.tsx
-CustomerForm.tsx
-JobDetails.tsx
-SummaryCard.tsx
+scheduled ──► in_progress ──► completed
+    └────────────┴──────────► cancelled
 ```
 
-Lowercase or kebab-case file naming may be used where required by a framework convention or for route files.
+`completed` and `cancelled` are final. The job details page offers only valid next statuses, and the Server Action rejects invalid transitions. A job must be cancelled before it can be deleted, and a customer with scheduled or in-progress jobs cannot be deleted. Deletes are soft deletes.
 
-### Routes
+### Dashboard
 
-Application routes use **lowercase, plural resource names** for entity collections.
+The dashboard shows summary cards (Upcoming, Overdue, In progress, Completed, Total jobs, Total customers, Leads) that link to filtered lists, plus Upcoming and Overdue job previews. A skeleton is shown while it loads, and a first-run empty state guides new users.
 
-Examples:
+## Out of Scope
 
-```text
-/customers
-/jobs
-/invoices
-```
-
-Standard resource operations follow this pattern:
-
-```text
-/entity
-/entity/new
-/entity/[id]
-/entity/[id]/edit
-```
-
-Dynamic route segments use Next.js's `[id]` convention.
-
-### Variables and Functions
-
-Variables and functions use **camelCase**.
-
-Examples:
-
-```text
-customer
-customerId
-scheduledDate
-createCustomer
-updateJob
-```
-
-Boolean variables should use names that communicate their boolean nature when appropriate, such as `isLoading` or `isPaid`.
-
-### Types and Interfaces
-
-TypeScript types and interfaces use **PascalCase**.
-
-Examples:
-
-```text
-Customer
-Job
-Invoice
-CustomerFormData
-JobStatus
-```
-
-### Constants
-
-Constants that represent fixed values should use **UPPER_SNAKE_CASE** when appropriate.
-
-Examples:
-
-```text
-JOB_STATUSES
-MAX_PAGE_SIZE
-```
-
-Not every `const` variable needs this convention. Normal local constants should continue to use camelCase.
-
-### Database Fields
-
-Database fields use **camelCase** to remain consistent with the TypeScript application layer.
-
-Examples:
-
-```text
-userId
-customerId
-scheduledDate
-createdAt
-updatedAt
-```
-
-### General Naming Principle
-
-Names should be descriptive and use the terminology established by the application's domain model. The same concepts should use the same names throughout the database, API, components, and UI wherever practical.
-
-## Domain Relationship
-
-The primary application workflow is:
-
-```text
-User
-  ↓
-Customers
-  ↓
-Customer
-  ↓
-Jobs
-  ↓
-Job Status
-  ↓
-Completed
-  ↓
-Invoice
-```
-
-The dashboard provides an overview of information from these domains:
-
-```text
-User
-  ↓
-Dashboard
-  ├── Summary Cards
-  ├── Upcoming Jobs
-  └── Outstanding Invoices
-```
-
-## Job Completion and Invoice Workflow
-
-Invoices are created only when a job is completed.
-
-Changing a job's status to `Completed` initiates an invoice-creation interaction using a dialog.
-
-The workflow is:
-
-```text
-Job in previous status
-        ↓
-User selects "Completed"
-        ↓
-Invoice creation dialog opens
-        ↓
-User enters invoice information
-        ↓
-Invoice successfully created
-        ↓
-Job becomes "Completed"
-```
-
-If the user cancels the dialog or invoice creation fails, the job remains in its previous status.
-
-Job status and invoicing remain conceptually separate. There is no combined "Complete & Invoice" status or separate action that mixes the two concepts.
-
-This establishes the MVP business rule:
-
-> Every completed job has exactly one invoice.
-
-A job may exist without an invoice while it is not completed.
-
-## Implementation Priority
-
-### Phase 1 — Foundation
-
-1. `Header`
-2. `Navigation`
-3. `PageHeader`
-4. `LoadingState`
-5. `EmptyState`
-6. `ErrorMessage`
-7. Public authentication interfaces
-8. Authenticated layout
-
-### Phase 2 — Customers
-
-9. `CustomerList`
-10. `CustomerItem`
-11. `CustomerForm`
-12. `CustomerDetails`
-13. `CustomerJobList`
-
-### Phase 3 — Jobs
-
-14. `JobList`
-15. `JobItem`
-16. `JobForm`
-17. `JobDetails`
-18. `JobStatusBadge`
-19. Job completion and invoice-creation workflow
-
-### Phase 4 — Invoices
-
-20. `InvoiceList`
-21. `InvoiceItem`
-22. `InvoiceDetails`
-23. `InvoiceForm`
-
-### Phase 5 — Dashboard
-
-24. `DashboardSummary`
-25. `SummaryCard`
-26. `UpcomingJobs`
-27. `OutstandingInvoices`
-
-The customer and job workflow is the primary MVP focus. The dashboard is lower priority and can be implemented after the core customer, job, and invoice workflows are functional.
-
-## Responsive Design Principle
-
-Business data should primarily use rows or tables on desktop and tablet-sized screens.
-
-On smaller screens, the same `*Item` component may change its layout to a compact card-like presentation.
-
-Separate components such as `CustomerRow` and `CustomerCard` should not be created unless the desktop and mobile implementations become meaningfully different.
-
-Responsive behavior is therefore considered a presentation concern rather than a reason to duplicate domain components.
-
-## Component Architecture Principle
-
-ServiceFlow should favor **small, reusable components with clear responsibilities**.
-
-Domain components should compose shared UI primitives rather than repeatedly implementing common interface behavior.
-
-The architecture should remain simple enough for the team to understand and maintain while allowing components to become more specialized when actual implementation complexity requires it.
+Invoicing (not added due to time), payment processing, accounting, tax, recurring billing, CRM/ERP features, and role-based access control.

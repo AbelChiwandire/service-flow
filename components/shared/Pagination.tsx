@@ -1,49 +1,44 @@
 import Link from "next/link";
 
 type PaginationProps = {
-  currentPage: number;
-  totalPages: number;
-  getPageHref: (page: number) => string;
+    currentPage: number;
+    totalPages: number;
+    getPageHref: (page: number) => string;
 };
 
-const enabledClassName =
-  "rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-[#2667FF] hover:text-[#2667FF]";
-
-const disabledClassName =
-  "rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-400";
-
 export function Pagination({
-  currentPage,
-  totalPages,
-  getPageHref,
+    currentPage,
+    totalPages: rawTotalPages,
+    getPageHref,
 }: PaginationProps) {
-  if (totalPages <= 1) return null;
+    // An empty result still counts as one page, so the controls never disappear.
+    const totalPages = Math.max(1, rawTotalPages);
 
-  return (
-    <nav aria-label="Pagination" className="flex items-center justify-between">
-      {currentPage > 1 ? (
-        <Link href={getPageHref(currentPage - 1)} className={enabledClassName}>
-          Previous
-        </Link>
-      ) : (
-        <span aria-disabled="true" className={disabledClassName}>
-          Previous
-        </span>
-      )}
+    return (
+        <nav aria-label="Pagination" className="mt-auto flex items-center justify-between pt-4">
+            {currentPage > 1 ? (
+                <Link href={getPageHref(currentPage - 1)} className="btn-secondary">
+                    Previous
+                </Link>
+            ) : (
+                <span aria-disabled="true" className="btn-disabled">
+                    Previous
+                </span>
+            )}
 
-      <p className="text-sm text-slate-600">
-        Page {currentPage} of {totalPages}
-      </p>
+            <p className="small-text">
+                Page {currentPage} of {totalPages}
+            </p>
 
-      {currentPage < totalPages ? (
-        <Link href={getPageHref(currentPage + 1)} className={enabledClassName}>
-          Next
-        </Link>
-      ) : (
-        <span aria-disabled="true" className={disabledClassName}>
-          Next
-        </span>
-      )}
-    </nav>
-  );
+            {currentPage < totalPages ? (
+                <Link href={getPageHref(currentPage + 1)} className="btn-secondary">
+                    Next
+                </Link>
+            ) : (
+                <span aria-disabled="true" className="btn-disabled">
+                    Next
+                </span>
+            )}
+        </nav>
+    );
 }

@@ -1,7 +1,7 @@
 ﻿"use server";
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireUserId } from "@/lib/auth/session";
 import {
     JobFormSchema,
@@ -9,9 +9,9 @@ import {
     IdSchema,
     formatValidationErrors,
     type JobFormErrors,
-} from './schema';
-import { JOB_STATUS_LABELS, canTransition } from './status';
-import type { JobStatus } from './repository';
+} from "./schema";
+import { JOB_STATUS_LABELS, canTransition } from "./status";
+import type { JobStatus } from "./repository";
 import {
     createJob,
     getJobById,
@@ -40,20 +40,20 @@ export type StatusState = {
 
 function validateJobForm(formData: FormData) {
     return JobFormSchema.safeParse({
-        title: formData.get('title'),
-        description: formData.get('description'),
-        scheduledDate: formData.get('scheduledDate'),
+        title: formData.get("title"),
+        description: formData.get("description"),
+        scheduledDate: formData.get("scheduledDate"),
         // Status is changed from the job details page, not from these forms.
-        status: formData.get('status') ?? undefined,
+        status: formData.get("status") ?? undefined,
     });
 }
 
 function getRawJobValues(formData: FormData): State["values"] {
     return {
-        customerId: formData.get('customerId')?.toString(),
-        title: formData.get('title')?.toString(),
-        description: formData.get('description')?.toString(),
-        scheduledDate: formData.get('scheduledDate')?.toString(),
+        customerId: formData.get("customerId")?.toString(),
+        title: formData.get("title")?.toString(),
+        description: formData.get("description")?.toString(),
+        scheduledDate: formData.get("scheduledDate")?.toString(),
     };
 }
 
@@ -67,7 +67,7 @@ async function runMutation<T>(
     try {
         const data = await mutation();
         if (data === null) {
-            return { ok: false, message: 'Job not found.' };
+            return { ok: false, message: "Job not found." };
         }
         return { ok: true, data };
     } catch (error) {
@@ -79,12 +79,9 @@ async function runMutation<T>(
     }
 }
 
-export async function createJobAction(
-    _prevState: State,
-    formData: FormData
-): Promise<State> {
+export async function createJobAction(_prevState: State, formData: FormData): Promise<State> {
     const userId = await requireUserId();
-    const customerId = formData.get('customerId')?.toString() ?? '';
+    const customerId = formData.get("customerId")?.toString() ?? "";
     const isCustomerValid = IdSchema.safeParse(customerId).success;
     const validatedData = validateJobForm(formData);
 
@@ -92,16 +89,16 @@ export async function createJobAction(
         return {
             errors: {
                 ...(validatedData.success ? {} : formatValidationErrors(validatedData.error)),
-                ...(isCustomerValid ? {} : { customerId: ['Select a customer.'] }),
+                ...(isCustomerValid ? {} : { customerId: ["Select a customer."] }),
             },
-            message: 'Missing or invalid fields. Failed to create job.',
+            message: "Missing or invalid fields. Failed to create job.",
             values: getRawJobValues(formData),
         };
     }
 
     const result = await runMutation(
         () => createJob({ userId, customerId, ...validatedData.data }),
-        'createJobAction failed:',
+        "createJobAction failed:",
     );
 
     if (!result.ok) {
@@ -115,25 +112,25 @@ export async function createJobAction(
 export async function updateJobAction(
     id: string,
     _prevState: State,
-    formData: FormData
+    formData: FormData,
 ): Promise<State> {
     const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid job id.' };
+        return { message: "Invalid job id." };
     }
 
     const validatedData = validateJobForm(formData);
     if (!validatedData.success) {
         return {
             errors: formatValidationErrors(validatedData.error),
-            message: 'Missing or invalid fields. Failed to update job.',
+            message: "Missing or invalid fields. Failed to update job.",
             values: getRawJobValues(formData),
         };
     }
 
     const result = await runMutation(
         () => updateJob(userId, id, validatedData.data),
-        'updateJobAction failed:',
+        "updateJobAction failed:",
     );
 
     if (!result.ok) {
@@ -152,10 +149,10 @@ export async function deleteJobAction(
 ): Promise<State> {
     const userId = await requireUserId();
     if (!IdSchema.safeParse(id).success) {
-        return { message: 'Invalid job id.' };
+        return { message: "Invalid job id." };
     }
 
-    const result = await runMutation(() => deleteJob(userId, id), 'deleteJobAction failed:');
+    const result = await runMutation(() => deleteJob(userId, id), "deleteJobAction failed:");
 
     if (!result.ok) {
         return { message: result.message };
@@ -170,18 +167,18 @@ export async function changeJobStatusAction(
     id: string,
     target: JobStatus,
     _prevState: StatusState,
-    _formData: FormData
+    _formData: FormData,
 ): Promise<StatusState> {
     const userId = await requireUserId();
     const parsedTarget = JobStatusSchema.safeParse(target);
 
     if (!IdSchema.safeParse(id).success || !parsedTarget.success) {
-        return { message: 'Invalid request.' };
+        return { message: "Invalid request." };
     }
 
     const job = await getJobById(userId, id);
     if (!job) {
-        return { message: 'Job not found.' };
+        return { message: "Job not found." };
     }
 
     if (!canTransition(job.status, parsedTarget.data)) {
@@ -192,7 +189,7 @@ export async function changeJobStatusAction(
 
     const result = await runMutation(
         () => updateJob(userId, id, { status: parsedTarget.data }),
-        'changeJobStatusAction failed:',
+        "changeJobStatusAction failed:",
     );
 
     if (!result.ok) {

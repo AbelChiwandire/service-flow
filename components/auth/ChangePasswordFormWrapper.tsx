@@ -6,7 +6,7 @@ import { ChangePasswordForm } from "@/components/auth/ChangePasswordForm";
 
 const initialState: PasswordChangeState = { message: null, errors: {} };
 
-export default function ChangePasswordFormWrapper({}: object) {
+export function ChangePasswordFormWrapper({}: object) {
     const boundChangePasswordAction = changePasswordAction;
     const [state, formAction, isPending] = useActionState(boundChangePasswordAction, initialState);
 

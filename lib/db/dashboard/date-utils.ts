@@ -1,6 +1,6 @@
-﻿import { cookies } from "next/headers";
+import { cookies } from "next/headers";
 
-export const TIME_ZONE_COOKIE = "tz";
+const TIME_ZONE_COOKIE = "tz";
 
 const FALLBACK_TIME_ZONE = process.env.APP_TIME_ZONE ?? "UTC";
 
@@ -15,7 +15,7 @@ function isValidTimeZone(timeZone: string | undefined): timeZone is string {
 }
 
 // Today's calendar date as 'YYYY-MM-DD' in the given time zone.
-export function getToday(timeZone: string = FALLBACK_TIME_ZONE): string {
+function getToday(timeZone: string = FALLBACK_TIME_ZONE): string {
     return new Intl.DateTimeFormat("en-CA", {
         timeZone,
         year: "numeric",

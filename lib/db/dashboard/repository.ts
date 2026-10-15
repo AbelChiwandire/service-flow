@@ -7,7 +7,7 @@ const PREVIEW_SIZE = 5;
 // The only job fields the dashboard displays.
 export type DashboardJob = Pick<JobWithCustomer, "id" | "title" | "scheduledDate" | "customerName">;
 
-export interface DashboardCounts {
+interface DashboardCounts {
     upcoming: number;
     overdue: number;
     inProgress: number;

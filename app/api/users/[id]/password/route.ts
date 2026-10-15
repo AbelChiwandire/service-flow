@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { PasswordChangeFormSchema, formatPasswordChangeErrors } from "@/lib/db/users/schema";
 import { getUserAuthById, updatePassword } from "@/lib/db/users/repository";
+import { authorizeSelf } from "@/lib/auth/session";
 import { validateId, parseJsonBody, withApiErrorHandling } from "@/lib/db/users/api-helpers";
 
 const SALT_ROUNDS = 10;
@@ -10,6 +11,9 @@ type RouteParams = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
+    const authError = await authorizeSelf(id);
+    if (authError) return authError;
+
     const idError = validateId(id);
     if (idError) return idError;
 
@@ -47,8 +51,3 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         return NextResponse.json({ data: { message: "Password updated." } });
     });
 }
-
-// SECURITY GAP — NOT PRODUCTION SAFE: same ownership gap as /api/users/[id] —
-// this does not check the caller IS user `id`, only that they know the
-// current password for that id. Once auth exists, this must also be
-// restricted to the session's own user id.

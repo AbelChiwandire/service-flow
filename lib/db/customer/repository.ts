@@ -1,8 +1,9 @@
 import { neon } from "@neondatabase/serverless";
+import { escapeLike } from "../like";
 
 const sql = neon(process.env.DATABASE_URL!);
 
-const ITEMS_PER_PAGE = 10;
+export const ITEMS_PER_PAGE = 10;
 
 export interface Customer {
     id: string;
@@ -35,7 +36,7 @@ export interface CustomerListParams {
 // The single definition of "which customers match". Used by the list, the count and the page count.
 function customerFilters(userId: string, params: CustomerListParams) {
     const { query = "", filter } = params;
-    const searchTerm = `%${query}%`;
+    const searchTerm = `%${escapeLike(query)}%`;
 
     return sql`
         customers."userId" = ${userId}
@@ -87,14 +88,6 @@ export async function countCustomers(
         WHERE ${customerFilters(userId, params)}
     `;
     return Number(rows[0].count);
-}
-
-export async function getCustomersTotalPages(
-    userId: string,
-    params: CustomerListParams = {},
-): Promise<number> {
-    const { pageSize = ITEMS_PER_PAGE } = params;
-    return Math.ceil((await countCustomers(userId, params)) / pageSize);
 }
 
 export async function getCustomerById(userId: string, id: string): Promise<Customer | null> {

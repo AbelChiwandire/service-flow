@@ -1,27 +1,27 @@
 import type { ReactNode } from "react";
+import { BackLink } from "./BackLink";
 
 interface PageHeaderProps {
     title: string;
     description?: string;
     action?: ReactNode;
+    back?: { href: string; label: string };
 }
 
-export function PageHeader({ title, description, action }: PageHeaderProps) {
+export function PageHeader({ title, description, action, back }: PageHeaderProps) {
     return (
-        <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 mb-8 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-                <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                    {title}
-                </h1>
+        <>
+            {back ? <BackLink href={back.href} label={back.label} /> : null}
 
-                {description ? (
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
-                        {description}
-                    </p>
-                ) : null}
+            <div className="page-header">
+                <div>
+                    <h1 className="heading-h1">{title}</h1>
+
+                    {description ? <p className="mt-2 max-w-2xl lead-text">{description}</p> : null}
+                </div>
+
+                {action ? <div className="shrink-0">{action}</div> : null}
             </div>
-
-            {action ? <div className="shrink-0">{action}</div> : null}
-        </div>
+        </>
     );
 }

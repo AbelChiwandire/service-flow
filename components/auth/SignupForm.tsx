@@ -1,147 +1,158 @@
 "use client";
 
-import type { State } from "@/lib/db/users/actions";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
+import Link from "next/link";
 
-type SignupFormProps = {
-    formAction: (formData: FormData) => void;
-    state: State;
-    isPending: boolean;
-};
+import { signupAction, type State } from "@/lib/db/users/actions";
 
-export function SignupForm({ formAction, state, isPending }: SignupFormProps) {
-    const name = state.values?.name ?? "";
-    const businessName = state.values?.businessName ?? "";
-    const email = state.values?.email ?? "";
+const initialState: State = {};
+
+function SubmitButton() {
+    const { pending } = useFormStatus();
 
     return (
-        <form action={formAction} className="max-w-xl space-y-4">
+        <button type="submit" disabled={pending} className="w-full btn-primary">
+            {pending ? "Creating account..." : "Create account"}
+        </button>
+    );
+}
+
+export function SignupForm() {
+    const [state, formAction] = useActionState(signupAction, initialState);
+
+    return (
+        <form action={formAction} className="space-y-6">
+            {state.message && (
+                <div role="alert" className="alert-error">
+                    {state.message}
+                </div>
+            )}
+
             <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
-                    Name
+                <label htmlFor="name" className="mb-1 field-label">
+                    Full name
                 </label>
                 <input
                     id="name"
                     name="name"
                     type="text"
-                    defaultValue={name}
+                    autoComplete="name"
                     required
-                    aria-describedby="name-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    minLength={2}
+                    aria-invalid={Boolean(state.errors?.name)}
+                    aria-describedby={state.errors?.name ? "name-error" : undefined}
+                    className="input-field"
+                    placeholder="Your full name"
                 />
-                <div id="name-error" aria-live="polite" aria-atomic="true">
-                    {state.errors?.name?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
-                            {error}
-                        </p>
-                    ))}
-                </div>
+                {state.errors?.name && (
+                    <p id="name-error" className="mt-1 error-text">
+                        {state.errors.name[0]}
+                    </p>
+                )}
             </div>
 
             <div>
-                <label
-                    htmlFor="businessName"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="businessName" className="mb-1 field-label">
                     Business name
                 </label>
                 <input
                     id="businessName"
                     name="businessName"
                     type="text"
-                    defaultValue={businessName}
+                    autoComplete="organization"
                     required
-                    aria-describedby="businessName-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    minLength={2}
+                    aria-invalid={Boolean(state.errors?.businessName)}
+                    aria-describedby={state.errors?.businessName ? "businessName-error" : undefined}
+                    className="input-field"
+                    placeholder="Your business name"
                 />
-                <div id="businessName-error" aria-live="polite" aria-atomic="true">
-                    {state.errors?.businessName?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
-                            {error}
-                        </p>
-                    ))}
-                </div>
+                {state.errors?.businessName && (
+                    <p id="businessName-error" className="mt-1 error-text">
+                        {state.errors.businessName[0]}
+                    </p>
+                )}
             </div>
 
             <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
-                    Email
+                <label htmlFor="email" className="mb-1 field-label">
+                    Email address
                 </label>
                 <input
                     id="email"
                     name="email"
                     type="email"
-                    defaultValue={email}
+                    autoComplete="email"
                     required
-                    aria-describedby="email-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    aria-invalid={Boolean(state.errors?.email)}
+                    aria-describedby={state.errors?.email ? "email-error" : undefined}
+                    className="input-field"
+                    placeholder="you@example.com"
                 />
-                <div id="email-error" aria-live="polite" aria-atomic="true">
-                    {state.errors?.email?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
-                            {error}
-                        </p>
-                    ))}
-                </div>
+                {state.errors?.email && (
+                    <p id="email-error" className="mt-1 error-text">
+                        {state.errors.email[0]}
+                    </p>
+                )}
             </div>
 
             <div>
-                <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1">
+                <label htmlFor="password" className="mb-1 field-label">
                     Password
                 </label>
                 <input
                     id="password"
                     name="password"
                     type="password"
-                    required
-                    minLength={8}
                     autoComplete="new-password"
-                    aria-describedby="password-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    minLength={8}
+                    required
+                    aria-invalid={Boolean(state.errors?.password)}
+                    aria-describedby={state.errors?.password ? "password-error" : undefined}
+                    className="input-field"
+                    placeholder="Create a password (at least 8 characters)"
                 />
-                <div id="password-error" aria-live="polite" aria-atomic="true">
-                    {state.errors?.password?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
-                            {error}
-                        </p>
-                    ))}
-                </div>
+                {state.errors?.password && (
+                    <p id="password-error" className="mt-1 error-text">
+                        {state.errors.password[0]}
+                    </p>
+                )}
             </div>
 
             <div>
-                <label
-                    htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-slate-700 mb-1"
-                >
+                <label htmlFor="confirmPassword" className="mb-1 field-label">
                     Confirm password
                 </label>
                 <input
                     id="confirmPassword"
                     name="confirmPassword"
                     type="password"
-                    required
-                    minLength={8}
                     autoComplete="new-password"
-                    aria-describedby="confirmPassword-error"
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
+                    minLength={8}
+                    required
+                    aria-invalid={Boolean(state.errors?.confirmPassword)}
+                    aria-describedby={
+                        state.errors?.confirmPassword ? "confirmPassword-error" : undefined
+                    }
+                    className="input-field"
+                    placeholder="Confirm your password"
                 />
-                <div id="confirmPassword-error" aria-live="polite" aria-atomic="true">
-                    {state.errors?.confirmPassword?.map((error) => (
-                        <p key={error} className="mt-1 text-sm text-red-600">
-                            {error}
-                        </p>
-                    ))}
-                </div>
+                {state.errors?.confirmPassword && (
+                    <p id="confirmPassword-error" className="mt-1 error-text">
+                        {state.errors.confirmPassword[0]}
+                    </p>
+                )}
             </div>
 
-            {state.message ? <p className="text-sm text-red-600">{state.message}</p> : null}
+            <SubmitButton />
 
-            <button
-                type="submit"
-                disabled={isPending}
-                className="rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-            >
-                {isPending ? "Signing up..." : "Sign Up"}
-            </button>
+            <p className="text-center small-text">
+                Already have an account?{" "}
+                <Link href="/login" className="link-primary">
+                    Sign in
+                </Link>
+            </p>
         </form>
     );
 }
