@@ -1,26 +1,3 @@
-<!--
-Sync Impact Report
-Version change: [none] → 1.0.0 (initial ratification)
-Modified principles: n/a (new document)
-Added sections:
-  - Core Principles (I–X: Strict TypeScript, Next.js Architecture,
-    Utility-First Interface, Proportional Testing, Clear Boundaries and
-    Naming, Focused MVP Scope, Explicit Data and Business Rules,
-    Authentication and Data Protection, Boundary Validation and Safe Errors,
-    Collaborative Quality)
-  - Technology Constraints
-  - Development Workflow and Collaboration
-  - Governance
-Removed sections: none
-Templates requiring updates:
-  ✅ .specify/templates/plan-template.md (generic gate reference, no changes needed)
-  ✅ .specify/templates/spec-template.md (no principle-specific references found)
-  ✅ .specify/templates/tasks-template.md (no principle-specific references found)
-  ✅ .specify/templates/checklist-template.md (no principle-specific references found)
-  ⚠ No command files found under .specify/templates/commands/ — none to update
-Follow-up TODOs: none
--->
-
 # ServiceFlow Constitution
 
 ## Core Principles
@@ -35,7 +12,7 @@ ServiceFlow MUST use Next.js App Router and file-based routing. Server Component
 
 ### III. Utility-First Interface
 
-Tailwind CSS MUST be the primary styling system. UI styling MUST follow a utility-first approach. Custom CSS MUST only be used when necessary. Shared UI patterns SHOULD be implemented as reusable components.
+Tailwind CSS MUST be the primary styling system, with no third-party component library. Colors MUST be defined once as CSS variables in `app/globals.css`, and repeated UI patterns MUST be defined as semantic classes in the `@layer components` block using `@apply`. Placement-specific layout stays as inline utilities. Custom CSS MUST only be used when necessary.
 
 ### IV. Proportional Testing
 
@@ -47,11 +24,11 @@ Names MUST be clear and descriptive and follow TypeScript, React, and Next.js co
 
 ### VI. Focused MVP Scope
 
-ServiceFlow MUST remain a focused MVP for managing customers, jobs, and minimal invoice records. Features MUST satisfy an approved requirement before implementation. The product MUST NOT expand into a full accounting, CRM, ERP, or enterprise management system without explicit approval. When several designs satisfy a requirement, the simplest solution SHOULD be preferred.
+ServiceFlow MUST remain a focused MVP for managing customers and jobs. Features MUST satisfy an approved requirement before implementation. The product MUST NOT expand into a full accounting, CRM, ERP, or enterprise management system without explicit approval. When several designs satisfy a requirement, the simplest solution SHOULD be preferred.
 
 ### VII. Explicit Data and Business Rules
 
-Customers MUST belong to the authenticated business or user, and jobs MUST be associated with customers. A completed job MAY have one associated minimal invoice. An MVP invoice MUST contain an amount and due date and MAY contain a paid date. Payment processing, accounting, tax calculations, recurring billing, and other advanced billing features MUST NOT be introduced unless explicitly required.
+Customers MUST belong to the authenticated business or user, and jobs MUST be associated with customers. Job statuses and their allowed transitions MUST be defined in one place. Customers and jobs are soft-deleted. Invoicing was planned but not delivered due to time constraints; payment processing, accounting, tax calculations, and billing features MUST NOT be introduced unless explicitly required.
 
 ### VIII. Authentication and Data Protection
 
@@ -67,7 +44,7 @@ Developers MUST work on feature branches rather than directly on the main branch
 
 ## Technology Constraints
 
-The application MUST use Next.js with the App Router, TypeScript in strict mode, Tailwind CSS, ESLint, and Prettier. New technologies MUST NOT be added to the baseline stack without team approval. The product scope is limited to small service businesses managing customers, jobs, and minimal invoices.
+The application MUST use Next.js with the App Router, TypeScript in strict mode, Tailwind CSS, Neon PostgreSQL, Auth.js, Zod, ESLint, and Prettier. New technologies MUST NOT be added to the baseline stack without team approval. The product scope is limited to small service businesses managing customers and jobs.
 
 ## Development Workflow and Collaboration
 
@@ -89,4 +66,8 @@ Versioning follows semantic versioning:
 - MINOR for new principles or materially expanded obligations.
 - PATCH for clarifications that do not change required behavior.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-11 | **Last Amended**: 2026-09-11
+**Version**: 1.1.0 | **Ratified**: 2026-09-11 | **Last Amended**: 2026-10-15
+
+## Amendment History
+
+- **1.1.0 (2026-10-15)**: Removed invoicing from scope (not delivered due to time). Principle III now describes the CSS-variable and @layer components styling system. Technology constraints list the delivered stack.
