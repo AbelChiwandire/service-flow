@@ -66,13 +66,6 @@ export default function LoginForm() {
                     >
                         Password
                     </label>
-
-                    <Link
-                        href="#"
-                        className="link-primary"
-                    >
-                        Forgot password?
-                    </Link>
                 </div>
 
                 <input

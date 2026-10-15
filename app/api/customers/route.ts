@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { CustomerFormSchema, formatValidationErrors } from "@/lib/db/customer/schema";
 import { getCustomers, createCustomer } from "@/lib/db/customer/repository";
+import { parseCustomerFilter, parsePage, parseQuery } from "@/lib/db/dashboard/search-params";
 import { getSessionUserId, unauthorizedResponse } from "@/lib/auth/session";
 import { parseJsonBody, withApiErrorHandling } from "@/lib/db/customer/api-helpers";
 
-export async function GET() {
+// GET /api/customers -> the user's customers. Supports query, filter (leads) and page.
+export async function GET(request: NextRequest) {
     const userId = await getSessionUserId();
     if (!userId) return unauthorizedResponse();
     return withApiErrorHandling("GET /api/customers failed:", async () => {
-        const customers = await getCustomers(userId);
+        const searchParams = request.nextUrl.searchParams;
+        const customers = await getCustomers(userId, {
+            query: parseQuery(searchParams.get("query") ?? undefined).slice(0, 100) || undefined,
+            filter: parseCustomerFilter(searchParams.get("filter") ?? undefined),
+            page: parsePage(searchParams.get("page") ?? undefined),
+        });
         return NextResponse.json({ data: customers });
     });
 }

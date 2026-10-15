@@ -14,11 +14,14 @@ import {
 } from '@/lib/db/jobs/repository';
 import { getCustomerById } from '@/lib/db/customer/repository';
 import { validateId, parseJsonBody, withApiErrorHandling } from '@/lib/db/jobs/api-helpers';
-import { requireUserId } from '@/lib/auth/session';
+import { getSessionUserId, unauthorizedResponse } from '@/lib/auth/session';
 
 // GET /api/jobs -> the user's jobs. Supports query, status, due, sort, page and
 // customerId (only that customer's jobs).
 export async function GET(request: NextRequest) {
+    const userId = await getSessionUserId();
+    if (!userId) return unauthorizedResponse();
+
     const searchParams = request.nextUrl.searchParams;
     const customerId = searchParams.get('customerId');
 
@@ -28,7 +31,6 @@ export async function GET(request: NextRequest) {
     }
 
     return withApiErrorHandling('GET /api/jobs failed:', async () => {
-        const userId = await requireUserId();
         if (customerId !== null) {
             const customer = await getCustomerById(userId, customerId);
             if (!customer) {
@@ -50,6 +52,9 @@ export async function GET(request: NextRequest) {
 }
 // POST /api/jobs: the customer is part of the body ({ customerId, title, ... }).
 export async function POST(request: NextRequest) {
+    const userId = await getSessionUserId();
+    if (!userId) return unauthorizedResponse();
+
     const bodyResult = await parseJsonBody(request);
     if (!bodyResult.ok) return bodyResult.response;
 
@@ -74,7 +79,6 @@ export async function POST(request: NextRequest) {
     }
 
     return withApiErrorHandling('POST /api/jobs failed:', async () => {
-        const userId = await requireUserId();
         const job = await createJob({
             userId: userId,
             customerId: customerIdResult.data,

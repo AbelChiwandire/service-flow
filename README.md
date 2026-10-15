@@ -99,7 +99,7 @@ For other hosts, run `npm run build` and `npm start` with the same environment v
 
 ## API Reference
 
-All endpoints are under `/api`, accept and return JSON, and respond with `{ "data": ... }` on success or `{ "error": "message" }` on failure. Validation failures return `400` with `{ "error": "Missing or invalid fields.", "details": { field: [messages] } }`. Ids must be UUIDs (`400` otherwise). Authenticated endpoints use the Auth.js session cookie and return `401 { "error": "Unauthorized." }` without one. Customers and jobs are always scoped to the signed-in user, so another user's records return `404`.
+All endpoints are under `/api`, accept and return JSON, and respond with `{ "data": ... }` on success or `{ "error": "message" }` on failure. Validation failures return `400` with `{ "error": "Missing or invalid fields.", "details": { field: [messages] } }`. Ids must be UUIDs (`400` otherwise). Authenticated endpoints use the Auth.js session cookie and return `401 { "error": "Unauthorized." }` without one. The `/api/users/{id}` endpoints also return `403` when the session belongs to a different user. Customers and jobs are always scoped to the signed-in user, so another user's records return `404`.
 
 ### Auth
 
@@ -121,13 +121,13 @@ All endpoints are under `/api`, accept and return JSON, and respond with `{ "dat
 
 ### Customers
 
-| Method | Endpoint              | Description                                                          |
-| ------ | --------------------- | -------------------------------------------------------------------- |
-| GET    | `/api/customers`      | The user's customers, newest first (first page of 10)                |
-| POST   | `/api/customers`      | Body `{ name, email, phone, address }`. `201`                        |
-| GET    | `/api/customers/{id}` | Retrieve a customer. `404` if not found                              |
-| PATCH  | `/api/customers/{id}` | Partial update of the fields above                                   |
-| DELETE | `/api/customers/{id}` | Soft delete. `409` if the customer has scheduled or in-progress jobs |
+| Method | Endpoint              | Description                                                                                  |
+| ------ | --------------------- | -------------------------------------------------------------------------------------------- |
+| GET    | `/api/customers`      | The user's customers, newest first (10 per page). Query: `query`, `filter` (`leads`), `page` |
+| POST   | `/api/customers`      | Body `{ name, email, phone, address }`. `201`                                                |
+| GET    | `/api/customers/{id}` | Retrieve a customer. `404` if not found                                                      |
+| PATCH  | `/api/customers/{id}` | Partial update of the fields above                                                           |
+| DELETE | `/api/customers/{id}` | Soft delete. `409` if the customer has scheduled or in-progress jobs                         |
 
 ### Jobs
 
@@ -161,10 +161,7 @@ Status values: `scheduled`, `in_progress`, `completed`, `cancelled`.
 
 **Known issues**
 
-- **Users API is not ownership-checked.** `GET`, `PATCH`, and `DELETE /api/users/{id}` and `PATCH /api/users/{id}/password` do not verify that the caller is that user. They must be restricted to the session's own id (401 or 403) before the API is exposed publicly. The UI uses Server Actions scoped to the session and is not affected.
-- **`/api/jobs` (list and create) behaves incorrectly when signed out.** It uses the page-oriented `requireUserId` helper, which redirects instead of returning `401`, and the surrounding error handler turns that into a `500`. It should use `getSessionUserId` and `unauthorizedResponse` like the other routes.
 - **Status transitions are not enforced by the REST API.** `PATCH /api/jobs/{id}` accepts any valid status; the transition rules are applied by the UI's Server Action only.
-- **`GET /api/customers` has no query parameters**, so it returns only the first page of 10.
 - **No automated tests.** Validation, authorization, and the status rules are verified manually.
 - **No rate limiting** on sign-in or sign-up, and no email verification or password reset.
 - ESLint reports 8 unused `_prevState` / `_formData` warnings in server action signatures.
