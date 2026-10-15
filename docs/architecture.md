@@ -106,17 +106,17 @@ Neon PostgreSQL
 
 ### Domain
 
-- **Customers:** `CustomerList`, `CustomerItem`, `CustomerForm`, `CustomerDetails`, `CustomerJobList`, `CustomerFilters`, `DeleteCustomerButton`
-- **Jobs:** `JobList`, `JobItem`, `JobForm`, `JobDetails`, `JobFilters`, `JobStatusBadge`, `JobStatusControl`, `DeleteJobButton`
+- **Customers:** `CustomerList`, `CustomerItem`, `CustomerForm`, `CustomerDetails`, `CustomerJobList`, `CustomerFilters`, `CreateCustomerForm`, `UpdateCustomerForm`, `DeleteCustomerButton`
+- **Jobs:** `JobList`, `JobItem`, `JobForm`, `JobDetails`, `JobFilters`, `JobStatusBadge`, `JobStatusControl`, `CreateJobForm`, `UpdateJobForm`, `DeleteJobButton`
 - **Dashboard:** `DashboardSummary`, `DashboardSummarySkeleton`, `SummaryCard`, `UpcomingJobs`, `OverdueJobs`, `JobPreviewList`
-- **Auth and profile:** `LoginForm`, `SignupForm`, `ChangePasswordForm`, `UserProfileForm`, `SignoutButton`, `DeleteAccountButton`
+- **Auth and profile:** `LoginForm`, `SignupForm`, `ChangePasswordForm`, `ChangePasswordFormWrapper`, `UserProfileForm`, `UpdateProfileForm`, `SignoutButton`, `DeleteAccountButton`
 
 Responsive behavior is a presentation concern: the same `*Item` component renders as a table row on `md+` and as a compact card on small screens. Separate desktop and mobile components are not created.
 
 ## Naming Conventions
 
 - Components, types, and interfaces: **PascalCase** (`CustomerForm`, `JobStatus`). Component files match the component name.
-- Route files follow Next.js conventions (`page.tsx`, `route.ts`); route-local form files are kebab-case (`create-job-form.tsx`).
+- Route files in `app/` follow Next.js conventions only (`page.tsx`, `route.ts`, `layout.tsx`); all other components live in `components/`.
 - Routes use lowercase plural resources: `/customers`, `/jobs`, with `/new`, `/[id]`, `/[id]/edit`.
 - Variables and functions: **camelCase**. Fixed lookup tables: **UPPER_SNAKE_CASE** (`JOB_STATUS_LABELS`, `ITEMS_PER_PAGE`).
 - Database columns: **camelCase**, matching the TypeScript layer.

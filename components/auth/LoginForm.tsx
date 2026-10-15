@@ -12,38 +12,25 @@ function SubmitButton() {
     const { pending } = useFormStatus();
 
     return (
-        <button
-            type="submit"
-            disabled={pending}
-            className="w-full btn-primary"
-        >
+        <button type="submit" disabled={pending} className="w-full btn-primary">
             {pending ? "Signing in..." : "Sign in"}
         </button>
     );
 }
 
-export default function LoginForm() {
-    const [errorMessage, formAction] = useActionState(
-        authenticate,
-        initialState,
-    );
+export function LoginForm() {
+    const [errorMessage, formAction] = useActionState(authenticate, initialState);
 
     return (
         <form action={formAction} className="space-y-6">
             {errorMessage && (
-                <div
-                    role="alert"
-                    className="alert-error"
-                >
+                <div role="alert" className="alert-error">
                     {errorMessage}
                 </div>
             )}
 
             <div>
-                <label
-                    htmlFor="email"
-                    className="mb-1 field-label"
-                >
+                <label htmlFor="email" className="mb-1 field-label">
                     Email address
                 </label>
 
@@ -60,10 +47,7 @@ export default function LoginForm() {
 
             <div>
                 <div className="mb-2 flex items-center justify-between">
-                    <label
-                        htmlFor="password"
-                        className="field-label"
-                    >
+                    <label htmlFor="password" className="field-label">
                         Password
                     </label>
                 </div>
@@ -84,10 +68,7 @@ export default function LoginForm() {
 
             <p className="text-center small-text">
                 Don&apos;t have an account?{" "}
-                <Link
-                    href="/signup"
-                    className="link-primary"
-                >
+                <Link href="/signup" className="link-primary">
                     Create an account
                 </Link>
             </p>

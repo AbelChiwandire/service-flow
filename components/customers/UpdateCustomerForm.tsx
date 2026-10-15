@@ -16,7 +16,7 @@ type UpdateCustomerFormProps = {
     };
 };
 
-export default function UpdateCustomerForm({ customerId, initialValues }: UpdateCustomerFormProps) {
+export function UpdateCustomerForm({ customerId, initialValues }: UpdateCustomerFormProps) {
     const boundUpdateCustomerAction = updateCustomerAction.bind(null, customerId);
     const [state, formAction, isPending] = useActionState(boundUpdateCustomerAction, initialState);
 

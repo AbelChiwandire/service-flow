@@ -4,7 +4,7 @@ import { ButtonLink } from "@/components/shared/ButtonLink";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { getCustomers } from "@/lib/db/customer/repository";
 import { requireUserId } from "@/lib/auth/session";
-import CreateJobForm from "./create-job-form";
+import { CreateJobForm } from "@/components/jobs/CreateJobForm";
 
 export const metadata: Metadata = {
   title: "New job",

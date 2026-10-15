@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import CustomerForm from "./create-customer-form";
+import { CreateCustomerForm } from "@/components/customers/CreateCustomerForm";
 import { requireUserId } from "@/lib/auth/session";
 import { PageHeader } from "@/components/shared/PageHeader";
 
@@ -22,7 +22,7 @@ export default async function NewCustomerPage() {
       />
 
       <div className="max-w-xl">
-        <CustomerForm />
+        <CreateCustomerForm />
       </div>
     </div>
   );

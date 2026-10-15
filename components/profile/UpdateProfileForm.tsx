@@ -14,7 +14,7 @@ type UpdateProfileFormProps = {
     };
 };
 
-export default function UpdateProfileForm({ initialValues }: UpdateProfileFormProps) {
+export function UpdateProfileForm({ initialValues }: UpdateProfileFormProps) {
     const boundUpdateUserProfileAction = updateUserProfileAction;
     const [state, formAction, isPending] = useActionState(
         boundUpdateUserProfileAction,

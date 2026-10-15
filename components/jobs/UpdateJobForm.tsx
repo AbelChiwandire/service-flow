@@ -7,29 +7,26 @@ import { JobForm } from "@/components/jobs/JobForm";
 const initialState: State = { message: null, errors: {} };
 
 type UpdateJobFormProps = {
-  jobId: string;
-  initialValues: {
-    title: string;
-    description: string | null;
-    scheduledDate: string;
-  };
+    jobId: string;
+    initialValues: {
+        title: string;
+        description: string | null;
+        scheduledDate: string;
+    };
 };
 
-export default function UpdateJobForm({ jobId, initialValues }: UpdateJobFormProps) {
-  const boundUpdateJobAction = updateJobAction.bind(null, jobId);
-  const [state, formAction, isPending] = useActionState(
-    boundUpdateJobAction,
-    initialState
-  );
+export function UpdateJobForm({ jobId, initialValues }: UpdateJobFormProps) {
+    const boundUpdateJobAction = updateJobAction.bind(null, jobId);
+    const [state, formAction, isPending] = useActionState(boundUpdateJobAction, initialState);
 
-  return (
-    <JobForm
-      formAction={formAction}
-      state={state}
-      isPending={isPending}
-      submitLabel="Save changes"
-      cancelHref="/jobs"
-      initialValues={initialValues}
-    />
-  );
+    return (
+        <JobForm
+            formAction={formAction}
+            state={state}
+            isPending={isPending}
+            submitLabel="Save changes"
+            cancelHref="/jobs"
+            initialValues={initialValues}
+        />
+    );
 }

@@ -7,28 +7,22 @@ import { JobForm } from "@/components/jobs/JobForm";
 const initialState: State = { message: null, errors: {} };
 
 type CreateJobFormProps = {
-  customers: { id: string; name: string }[];
-  defaultCustomerId?: string;
+    customers: { id: string; name: string }[];
+    defaultCustomerId?: string;
 };
 
-export default function CreateJobForm({
-  customers,
-  defaultCustomerId,
-}: CreateJobFormProps) {
-  const [state, formAction, isPending] = useActionState(
-    createJobAction,
-    initialState
-  );
+export function CreateJobForm({ customers, defaultCustomerId }: CreateJobFormProps) {
+    const [state, formAction, isPending] = useActionState(createJobAction, initialState);
 
-  return (
-    <JobForm
-      formAction={formAction}
-      state={state}
-      isPending={isPending}
-      submitLabel="Create job"
-      cancelHref="/jobs"
-      customers={customers}
-      initialValues={{ customerId: defaultCustomerId }}
-    />
-  );
+    return (
+        <JobForm
+            formAction={formAction}
+            state={state}
+            isPending={isPending}
+            submitLabel="Create job"
+            cancelHref="/jobs"
+            customers={customers}
+            initialValues={{ customerId: defaultCustomerId }}
+        />
+    );
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PublicHeader } from "@/components/layout/PublicHeader";
-import LoginForm from "./login-form";
+import { LoginForm } from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = {
     title: "Sign in",

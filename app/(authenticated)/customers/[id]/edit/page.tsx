@@ -4,7 +4,7 @@ import { getCustomerById } from "@/lib/db/customer/repository";
 import { IdSchema } from "@/lib/db/customer/schema";
 import { requireUserId } from "@/lib/auth/session";
 import { PageHeader } from "@/components/shared/PageHeader";
-import UpdateCustomerForm from "./update-customer-form";
+import { UpdateCustomerForm } from "@/components/customers/UpdateCustomerForm";
 
 export const metadata: Metadata = {
     title: "Edit customer",

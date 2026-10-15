@@ -5,8 +5,8 @@ import { requireUserId } from "@/lib/auth/session";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { DeleteSection } from "@/components/shared/DeleteSection";
 import { DeleteAccountButton } from "@/components/profile/DeleteAccountButton";
-import UpdateProfileForm from "./update-profile-form";
-import ChangePasswordFormWrapper from "./change-password-form";
+import { UpdateProfileForm } from "@/components/profile/UpdateProfileForm";
+import { ChangePasswordFormWrapper } from "@/components/auth/ChangePasswordFormWrapper";
 
 export const metadata: Metadata = {
     title: "Account",

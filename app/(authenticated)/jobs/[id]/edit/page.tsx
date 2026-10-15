@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { getJobById } from "@/lib/db/jobs/repository";
 import { IdSchema } from "@/lib/db/jobs/schema";
 import { requireUserId } from "@/lib/auth/session";
-import UpdateJobForm from "./update-job-form";
+import { UpdateJobForm } from "@/components/jobs/UpdateJobForm";
 
 export const metadata: Metadata = {
   title: "Edit job",

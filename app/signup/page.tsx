@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PublicHeader } from "@/components/layout/PublicHeader";
-import SignupForm from "./signup-form";
+import { SignupForm } from "@/components/auth/SignupForm";
 
 export const metadata: Metadata = {
     title: "Create account",
