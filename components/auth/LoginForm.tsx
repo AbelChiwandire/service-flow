@@ -1,62 +1,96 @@
-// PLACEHOLDER: Login form component for user authentication
-// The login form will be implemented in the auth UI branch
-// This is for testing purposes only
-
 "use client";
 
 import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
+import Link from "next/link";
+
 import { authenticate } from "@/lib/auth/actions";
-import { useSearchParams } from "next/navigation";
-export function LoginForm() {
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
-    const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
+
+const initialState: string | undefined = undefined;
+
+function SubmitButton() {
+    const { pending } = useFormStatus();
+
+    return (
+        <button
+            type="submit"
+            disabled={pending}
+            className="w-full btn-primary"
+        >
+            {pending ? "Signing in..." : "Sign in"}
+        </button>
+    );
+}
+
+export default function LoginForm() {
+    const [errorMessage, formAction] = useActionState(
+        authenticate,
+        initialState,
+    );
 
     return (
         <form action={formAction} className="space-y-6">
-            <input type="hidden" name="redirectTo" value={callbackUrl} />
-            <div className="space-y-2">
-                <label htmlFor="email" className="field-label">
-                    Email
-                </label>
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    required
-                    className="input-field"
-                />
-            </div>
-            <div className="space-y-2">
-                <label htmlFor="password" className="field-label">
-                    Password
-                </label>
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    autoComplete="current-password"
-                    minLength={8}
-                    required
-                    className="input-field"
-                />
-            </div>
-            <button
-                aria-disabled={isPending}
-                type="submit"
-                className="w-full btn-primary"
-            >
-                {isPending ? "Signing in..." : "Sign In"}
-            </button>
             {errorMessage && (
-                <p
+                <div
                     role="alert"
                     className="alert-error"
                 >
                     {errorMessage}
-                </p>
+                </div>
             )}
+
+            <div>
+                <label
+                    htmlFor="email"
+                    className="mb-1 field-label"
+                >
+                    Email address
+                </label>
+
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="input-field"
+                    placeholder="you@example.com"
+                />
+            </div>
+
+            <div>
+                <div className="mb-2 flex items-center justify-between">
+                    <label
+                        htmlFor="password"
+                        className="field-label"
+                    >
+                        Password
+                    </label>
+                </div>
+
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    minLength={8}
+                    required
+                    className="input-field"
+                    placeholder="Enter your password"
+                />
+            </div>
+
+            <SubmitButton />
+
+            <p className="text-center small-text">
+                Don&apos;t have an account?{" "}
+                <Link
+                    href="/signup"
+                    className="link-primary"
+                >
+                    Create an account
+                </Link>
+            </p>
         </form>
     );
 }
