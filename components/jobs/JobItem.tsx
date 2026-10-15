@@ -20,7 +20,11 @@ export function JobItem({ job }: { job: JobWithCustomer }) {
                 </Link>
             </div>
 
-            <p className="md:col-span-3 small-text">{job.customerName}</p>
+            <p className="md:col-span-3 small-text">
+                <Link href={`/customers/${job.customerId}`} className="link-inline">
+                    {job.customerName}
+                </Link>
+            </p>
 
             <p className="md:col-span-3 small-text">
                 <span className="text-foreground md:hidden">Scheduled: </span>
