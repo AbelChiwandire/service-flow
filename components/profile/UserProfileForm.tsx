@@ -34,6 +34,7 @@ export function UserProfileForm({
                     name="name"
                     type="text"
                     defaultValue={name}
+                    placeholder="Your full name"
                     required
                     aria-describedby="name-error"
                     className="input-field"
@@ -56,6 +57,7 @@ export function UserProfileForm({
                     name="businessName"
                     type="text"
                     defaultValue={businessName}
+                    placeholder="Your business name"
                     required
                     aria-describedby="businessName-error"
                     className="input-field"
@@ -78,6 +80,7 @@ export function UserProfileForm({
                     name="email"
                     type="email"
                     defaultValue={email}
+                    placeholder="you@example.com"
                     required
                     aria-describedby="email-error"
                     className="input-field"

@@ -87,6 +87,7 @@ export function JobForm({
                     name="title"
                     type="text"
                     defaultValue={title}
+                    placeholder="e.g. Fix leaking kitchen tap"
                     required
                     maxLength={255}
                     onChange={() => clearFieldError("title")}
@@ -105,6 +106,7 @@ export function JobForm({
                     id="description"
                     name="description"
                     defaultValue={description}
+                    placeholder="Add any details about the job"
                     rows={4}
                     onChange={() => clearFieldError("description")}
                     aria-invalid={Boolean(getFieldErrors("description")?.length)}

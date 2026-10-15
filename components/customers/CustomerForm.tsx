@@ -62,6 +62,7 @@ export function CustomerForm({
                     name="name"
                     type="text"
                     autoComplete="name"
+                    placeholder="Customer's full name"
                     required
                     defaultValue={values.name}
                     onChange={() => clearFieldError("name")}
@@ -81,6 +82,7 @@ export function CustomerForm({
                     name="email"
                     type="email"
                     autoComplete="email"
+                    placeholder="customer@example.com"
                     required
                     defaultValue={values.email}
                     onChange={() => clearFieldError("email")}
@@ -100,6 +102,7 @@ export function CustomerForm({
                     name="phone"
                     type="tel"
                     autoComplete="tel"
+                    placeholder="Customer's phone number"
                     required
                     defaultValue={values.phone}
                     onChange={() => clearFieldError("phone")}
@@ -118,6 +121,7 @@ export function CustomerForm({
                     id="address"
                     name="address"
                     autoComplete="street-address"
+                    placeholder="Customer's street address"
                     required
                     rows={3}
                     defaultValue={values.address}

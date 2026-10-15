@@ -21,6 +21,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
                     type="password"
                     required
                     autoComplete="current-password"
+                    placeholder="Enter your current password"
                     aria-describedby="currentPassword-error"
                     className="input-field"
                 />
@@ -44,6 +45,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
                     required
                     minLength={8}
                     autoComplete="new-password"
+                    placeholder="Create a new password (at least 8 characters)"
                     aria-describedby="newPassword-error"
                     className="input-field"
                 />
@@ -67,6 +69,7 @@ export function ChangePasswordForm({ formAction, state, isPending }: ChangePassw
                     required
                     minLength={8}
                     autoComplete="new-password"
+                    placeholder="Confirm your new password"
                     aria-describedby="confirmNewPassword-error"
                     className="input-field"
                 />

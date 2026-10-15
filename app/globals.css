@@ -172,7 +172,7 @@ body {
         @apply bg-white font-semibold text-navy hover:bg-navy-tint;
     }
     .btn-disabled {
-        @apply cursor-default border border-border bg-surface font-medium text-foreground;
+        @apply cursor-not-allowed border border-border bg-surface font-medium text-foreground aria-disabled:opacity-100;
     }
     .btn-lg {
         @apply h-12 px-6;
